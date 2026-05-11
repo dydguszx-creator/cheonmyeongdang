@@ -5,18 +5,24 @@ module.exports = async function(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
-  if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
+  if (req.method !== 'POST') { res.status(405).json({ error: 'not allowed' }); return; }
 
   try {
-    // body 읽기 (스트리밍)
-    let rawBody = '';
-    await new Promise((resolve, reject) => {
-      req.on('data', chunk => rawBody += chunk);
-      req.on('end', resolve);
-      req.on('error', reject);
-    });
+    // body 읽기 - req.body 있으면 사용, 없으면 스트리밍
+    let parsed;
+    if (req.body) {
+      parsed = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    } else {
+      let raw = '';
+      await new Promise((resolve, reject) => {
+        req.on('data', chunk => raw += chunk);
+        req.on('end', resolve);
+        req.on('error', reject);
+      });
+      parsed = JSON.parse(raw);
+    }
 
-    const { prompt, apiKey } = JSON.parse(rawBody);
+    const { prompt, apiKey } = parsed;
     if (!prompt || !apiKey) { res.status(400).json({ error: 'missing params' }); return; }
 
     const body = JSON.stringify({
@@ -42,7 +48,7 @@ module.exports = async function(req, res) {
         response.on('data', chunk => data += chunk);
         response.on('end', () => {
           try { resolve(JSON.parse(data)); }
-          catch(e) { reject(new Error('JSON parse error: ' + data.substring(0, 100))); }
+          catch(e) { reject(new Error('parse error')); }
         });
       });
       request.on('error', reject);
