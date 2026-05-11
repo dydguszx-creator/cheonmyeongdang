@@ -296,75 +296,116 @@ function buildBasicPromptPart1() {
     + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n\n';
 
   return common
-    + '아래 5개 섹션만 작성하세요:\n\n'
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
     + '---\n【1. 사주 구조 분석】\n'
-    + '사주팔자 8글자 도표(년/월/일/시 × 천간/지지) · 오행 분포 표 · 신강/신약 판단 근거 · 용신·희신·기신 도출 · 일간 성격 핵심 요약\n'
-    + '---\n【2. 성격·적성 분석】\n'
-    + '일간과 십성 기반 핵심 성격 · 강점 · 약점·주의 습관 · 타고난 적성 직종 3~5가지 · 인간관계 패턴\n'
-    + '---\n【3. 재물·직업운】\n'
-    + '재성 분석 · 관성 분석 · 직업 유형 · 재물 운용 조언 · 커리어 전환 시기 · 현재 상황 맞춤 조언\n'
-    + '---\n【4. 연애·결혼운】\n'
-    + '배우자궁 분석 · 연애 스타일·이상형 · 결혼 적령기·인연 시기 · 잘 맞는 오행·띠 · 주의할 연애 패턴\n'
-    + '---\n【5. 건강운】\n'
-    + '취약 장기·신체 부위 · 주의 질환 경향 · 스트레스·정신건강 관리법 · 연령대별 주의 시기 · 생활 습관 조언\n';
+    + '사주팔자 8글자 도표(년/월/일/시 × 천간/지지) · 오행 분포 표 · 신강/신약 판단 근거 · 용신·희신·기신 도출 · 일간 성격 핵심 요약\n';
+}
+
+function makeBase(info, curDate) {
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
+    + '[고객 정보]\n' + info + '\n\n'
+    + '[작성 원칙]\n'
+    + '- 전문가가 고객 옆에서 직접 설명해주듯 자연스럽게 써주세요. AI 보고서 느낌 X\n'
+    + '- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로 말해주세요.\n'
+    + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어 써주세요.\n'
+    + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
+    + '- 현재 기준 시점: ' + curDate + '\n'
+    + '- 사주의 신강/신약, 용신·희신·기신을 파악 후 해석하세요.\n'
+    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n'
+    + '- 반드시 아래 구조로 작성하세요:\n'
+    + '  1. [한눈에 보기] 핵심 한 문장\n'
+    + '  2. 한자 정리 표\n'
+    + '  3. ■ 이모지 소제목별 본문\n'
+    + '  4. [핵심 요약 3줄]\n'
+    + '  5. 지금 당장 할 수 있는 것: (한 줄)\n\n';
 }
 
 function buildBasicPromptPart2() {
-  var info = buildInfo();
-  var now = new Date();
-  var curDate = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 기준';
-
-  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
-    + '[고객 정보]\n' + info + '\n\n'
-    + '[작성 원칙]\n'
-    + '- 전문가가 고객 옆에서 직접 설명해주듯, 사람이 쓴 것처럼 자연스럽게 써주세요.\n'
-    + '- 좋은 건 확실히 좋다고, 나쁘거나 조심해야 할 건 가감 없이 팩트로 말해주세요.\n'
-    + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어서 써주세요.\n'
-    + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
-    + '- 현재 기준 시점: ' + curDate + '\n'
-    + '- 각 섹션 최소 600자 이상, 풍부하게 작성하세요.\n'
-    + '- 각 섹션 구조: [한눈에 보기] → 한자표 → 소제목 본문 → [핵심 요약 3줄] → 지금 당장 할 수 있는 것\n'
-    + '- 사주의 신강/신약, 용신·희신·기신을 먼저 파악한 후 각 항목을 해석하세요.\n'
-    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n\n'
-    + '아래 2개 섹션만 작성하세요:\n\n'
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
+    + '---\n【2. 성격·적성 분석】\n'
+    + '일간과 십성 기반 핵심 성격 · 강점 · 약점·주의 습관 · 타고난 적성 직종 3~5가지 · 인간관계 패턴\n';
+}
+function buildBasicPromptPart3() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
+    + '---\n【3. 재물·직업운】\n'
+    + '재성 분석 · 관성 분석 · 직업 유형 · 재물 운용 조언 · 커리어 전환 시기 · 현재 상황 맞춤 조언\n';
+}
+function buildBasicPromptPart4() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
+    + '---\n【4. 연애·결혼운】\n'
+    + '배우자궁 분석 · 연애 스타일·이상형 · 결혼 적령기·인연 시기 · 잘 맞는 오행·띠 · 주의할 연애 패턴\n';
+}
+function buildBasicPromptPart5() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
+    + '---\n【5. 건강운】\n'
+    + '취약 장기·신체 부위 · 주의 질환 경향 · 스트레스·정신건강 관리법 · 연령대별 주의 시기 · 생활 습관 조언\n';
+}
+function buildBasicPromptPart6() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
     + '---\n【6. 부모·자녀 관계】\n'
-    + '부모궁 분석 · 자녀궁 분석 · 자녀 인연 시기 · 양육 스타일 · 가족 내 역할\n'
+    + '부모궁 분석 · 자녀궁 분석 · 자녀 인연 시기 · 양육 스타일 · 가족 내 역할\n';
+}
+function buildBasicPromptPart7() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
     + '---\n【7. 대운 흐름 분석】\n'
     + '전체 대운 목록(10년 단위 표) · 현재 대운 상세 분석 · 직전·다음 대운 비교 · 지금 해야 할 행동\n';
 }
-
-function buildBasicPromptPart3() {
-  var info = buildInfo();
-  var now = new Date();
-  var curDate = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 기준';
-  var sy = now.getFullYear(), ey = sy + 9;
-
-  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
-    + '[고객 정보]\n' + info + '\n\n'
-    + '[작성 원칙]\n'
-    + '- 전문가가 고객 옆에서 직접 설명해주듯, 사람이 쓴 것처럼 자연스럽게 써주세요.\n'
-    + '- 좋은 건 확실히 좋다고, 나쁘거나 조심해야 할 건 가감 없이 팩트로 말해주세요.\n'
-    + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어서 써주세요.\n'
-    + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
-    + '- 현재 기준 시점: ' + curDate + '\n'
-    + '- 각 섹션 최소 600자 이상, 풍부하게 작성하세요.\n'
-    + '- 각 섹션 구조: [한눈에 보기] → 한자표 → 소제목 본문 → [핵심 요약 3줄] → 지금 당장 할 수 있는 것\n'
-    + '- 사주의 신강/신약, 용신·희신·기신을 먼저 파악한 후 각 항목을 해석하세요.\n'
-    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n\n'
-    + '아래 2개 섹션만 작성하세요:\n\n'
-    + '---\n【8. 연도별 세운 분석】\n'
-    + sy + '년부터 ' + ey + '년까지 10개년 분석\n'
-    + '각 연도는 반드시 아래 형식을 그대로 지켜서 작성:\n\n'
+function buildBasicPromptPart8() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  var sy = now.getFullYear();
+  return makeBase(info, curDate)
+    + '【8. 연도별 세운 분석】에서 ' + sy + '년~' + (sy+4) + '년 5개년만 작성하세요.\n\n'
+    + '각 연도 형식:\n'
     + '### 🗓️ YYYY년 干支년\n'
     + '💰 재물·직업: (내용)\n'
     + '❤️ 연애·가족: (내용)\n'
     + '🌿 건강 주의: (내용)\n'
     + '✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
     + '📝 총평: 첫째 줄.\n둘째 줄.\n\n'
-    + '각 연도 사이에 반드시 빈 줄 삽입.\n'
+    + '각 연도 사이 빈 줄 삽입.\n';
+}
+function buildBasicPromptPart9() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  var sy = now.getFullYear();
+  return makeBase(info, curDate)
+    + '【8. 연도별 세운 분석】에서 ' + (sy+5) + '년~' + (sy+9) + '년 5개년만 작성하세요.\n\n'
+    + '각 연도 형식:\n'
+    + '### 🗓️ YYYY년 干支년\n'
+    + '💰 재물·직업: (내용)\n'
+    + '❤️ 연애·가족: (내용)\n'
+    + '🌿 건강 주의: (내용)\n'
+    + '✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
+    + '📝 총평: 첫째 줄.\n둘째 줄.\n\n'
+    + '각 연도 사이 빈 줄 삽입.\n';
+}
+function buildBasicPromptPart10() {
+  var info = buildInfo(); var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth()+1) + '월 기준';
+  return makeBase(info, curDate)
+    + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
     + '---\n【9. 종합 조언】\n'
     + '이 사주의 가장 큰 강점 · 인생 반복 패턴과 극복법 · 현재 시기 행동 지침 3가지 · 용신 활용법(색상·방향·음식·생활습관) · 따뜻하고 솔직한 마무리 메시지\n\n'
-    + '---\n"천명당은 당신의 방향을 응원합니다. 🌙"';
+    + '"천명당은 당신의 방향을 응원합니다. 🌙"\n';
 }
 
 function buildBasicPrompt() {
@@ -499,9 +540,16 @@ async function doAnalyze() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prompt1: buildBasicPromptPart1(),
-        prompt2: buildBasicPromptPart2(),
-        prompt3: buildBasicPromptPart3(),
+        p1: buildBasicPromptPart1(),
+        p2: buildBasicPromptPart2(),
+        p3: buildBasicPromptPart3(),
+        p4: buildBasicPromptPart4(),
+        p5: buildBasicPromptPart5(),
+        p6: buildBasicPromptPart6(),
+        p7: buildBasicPromptPart7(),
+        p8: buildBasicPromptPart8(),
+        p9: buildBasicPromptPart9(),
+        p10: buildBasicPromptPart10(),
         apiKey: apiKey
       })
     });

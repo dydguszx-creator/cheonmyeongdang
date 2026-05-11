@@ -45,15 +45,14 @@ export default async function handler(req, res) {
       return "";
     };
 
-    // 3개 파트 동시 호출
-    const [part1, part2, part3] = await Promise.all([
-      callAPI(parsed.prompt1 || ""),
-      callAPI(parsed.prompt2 || ""),
-      callAPI(parsed.prompt3 || "")
-    ]);
+    const prompts = [
+      parsed.p1, parsed.p2, parsed.p3, parsed.p4, parsed.p5,
+      parsed.p6, parsed.p7, parsed.p8, parsed.p9, parsed.p10
+    ];
 
-    const combined = [part1, part2, part3].filter(Boolean).join("\n\n");
-    res.status(200).json({ part1, part2, part3, combined });
+    const results = await Promise.all(prompts.map(p => callAPI(p || "")));
+    const combined = results.filter(Boolean).join("\n\n");
+    res.status(200).json({ combined });
 
   } catch(e) {
     res.status(200).json({ error: e.message });
