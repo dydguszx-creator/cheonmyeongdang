@@ -393,7 +393,7 @@ function doGenerate() {
   document.getElementById('pdfBtn').textContent = '② 분석 완료 후 활성화됩니다';
   document.getElementById('pdfHint').style.display = 'none';
   document.getElementById('loadingCard').style.display = 'none';
-  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('resultBox').style.display = 'none';
   document.getElementById('manualCard').style.display = 'none';
   document.getElementById('err2').style.display = 'none';
   document.getElementById('apiKeyCard').style.display = 'block';
@@ -463,7 +463,7 @@ async function doAnalyze() {
   document.getElementById('analyzeBtn').textContent = '분석 중...';
   document.getElementById('analyzeBtn').className = 'btn btn-gray';
   document.getElementById('loadingCard').style.display = 'block';
-  document.getElementById('resultCard').style.display = 'none';
+  document.getElementById('resultBox').style.display = 'none';
   document.getElementById('manualCard').style.display = 'none';
   document.getElementById('apiKeyCard').style.display = 'none';
   document.getElementById('err2').style.display = 'none';
