@@ -8,7 +8,6 @@ module.exports = async function(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'not allowed' }); return; }
 
   try {
-    // body 읽기 - req.body 있으면 사용, 없으면 스트리밍
     let parsed;
     if (req.body) {
       parsed = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
@@ -47,19 +46,25 @@ module.exports = async function(req, res) {
         let data = '';
         response.on('data', chunk => data += chunk);
         response.on('end', () => {
-          try { resolve(JSON.parse(data)); }
-          catch(e) { reject(new Error('parse error')); }
+          // 항상 응답 반환 (오류도 포함)
+          try {
+            const parsed = JSON.parse(data);
+            resolve(parsed);
+          } catch(e) {
+            resolve({ error: 'parse error', raw: data.substring(0, 200) });
+          }
         });
       });
-      request.on('error', reject);
-      request.setTimeout(55000, () => { request.destroy(); reject(new Error('timeout')); });
+      request.on('error', (e) => resolve({ error: 'request error: ' + e.message }));
+      request.setTimeout(55000, () => { request.destroy(); resolve({ error: 'timeout' }); });
       request.write(body);
       request.end();
     });
 
+    // 항상 200으로 반환 (클라이언트에서 오류 확인)
     res.status(200).json(result);
 
   } catch(e) {
-    res.status(500).json({ error: e.message });
+    res.status(200).json({ error: e.message });
   }
 };
