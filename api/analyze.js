@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     if (!apiKey) { res.status(400).json({ error: "missing apiKey" }); return; }
 
     const callAPI = async (prompt) => {
+      if (!prompt) return "";
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
@@ -40,16 +41,19 @@ export default async function handler(req, res) {
       });
       const data = await response.json();
       if (data.content && data.content[0]) return data.content[0].text || "";
+      if (data.error) return "[오류: " + data.error.message + "]";
       return "";
     };
 
-    // 두 파트 동시 호출
-    const [part1, part2] = await Promise.all([
-      callAPI(parsed.prompt1 || parsed.prompt || ""),
-      callAPI(parsed.prompt2 || "")
+    // 3개 파트 동시 호출
+    const [part1, part2, part3] = await Promise.all([
+      callAPI(parsed.prompt1 || ""),
+      callAPI(parsed.prompt2 || ""),
+      callAPI(parsed.prompt3 || "")
     ]);
 
-    res.status(200).json({ part1, part2, combined: part1 + "\n\n" + part2 });
+    const combined = [part1, part2, part3].filter(Boolean).join("\n\n");
+    res.status(200).json({ part1, part2, part3, combined });
 
   } catch(e) {
     res.status(200).json({ error: e.message });
