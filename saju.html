@@ -125,10 +125,11 @@ textarea{resize:vertical;line-height:1.7}
   </div>
 
   <!-- API 키 입력 -->
-  <div class="card" id="apiKeyCard">
-    <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:6px">🔑 API 키 설정</div>
-    <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-size:12px"/>
-    <div style="font-size:10px;color:#aaa;margin-top:5px">한번 입력하면 브라우저에 저장돼요</div>
+  <div class="card" id="apiKeyCard" style="border:2px solid #C9A84C">
+    <div style="font-size:13px;font-weight:700;color:#1C2B3A;margin-bottom:8px">🔑 API 키 입력 (필수)</div>
+    <input type="text" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-size:12px;border:1px solid #C9A84C"/>
+    <div style="font-size:10px;color:#aaa;margin-top:5px">platform.anthropic.com → API Keys에서 복사한 키를 붙여넣으세요</div>
+    <div id="apiKeyErr" style="color:#e74c3c;font-size:12px;margin-top:6px;display:none">⚠️ API 키를 입력해주세요!</div>
   </div>
 
   <!-- 자동 분석 버튼 -->
@@ -452,11 +453,11 @@ async function doAnalyze() {
   }
 
   if (!apiKey) {
-    // API 키 없으면 수동 방식으로 폴백
-    document.getElementById('manualCard').style.display = 'block';
+    document.getElementById('apiKeyErr').style.display = 'block';
     document.getElementById('apiKeyCard').style.display = 'block';
     return;
   }
+  document.getElementById('apiKeyErr').style.display = 'none';
 
   // 로딩 시작
   document.getElementById('analyzeBtn').disabled = true;
