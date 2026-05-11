@@ -518,11 +518,12 @@ async function doAnalyze() {
 
   } catch(e) {
     stopLoading();
+    alert('오류: ' + e.message);
     document.getElementById('loadingCard').style.display = 'none';
     document.getElementById('apiKeyCard').style.display = 'block';
     document.getElementById('manualCard').style.display = 'block';
     var errEl = document.getElementById('err2');
-    errEl.textContent = '⚠️ API 오류: ' + e.message + ' — 아래 수동 방식을 이용해주세요.';
+    errEl.textContent = '⚠️ ' + e.message;
     errEl.style.display = 'block';
     document.getElementById('analyzeBtn').textContent = '✨ AI 자동 분석 시작';
     document.getElementById('analyzeBtn').className = 'btn btn-dark';
