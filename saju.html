@@ -489,6 +489,12 @@ async function doAnalyze() {
     if (data.content && data.content.length > 0) {
       resultText = data.content.map(function(c){ return c.text || ''; }).join('');
     }
+    
+    // 디버그: 응답 확인
+    if (!resultText) {
+      alert('응답 내용: ' + JSON.stringify(data).substring(0, 300));
+      throw new Error('분석 결과가 비어있어요: ' + JSON.stringify(data).substring(0, 200));
+    }
 
     // 결과 표시
     document.getElementById('loadingCard').style.display = 'none';
