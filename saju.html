@@ -143,7 +143,15 @@ textarea{resize:vertical;line-height:1.7}
     </div>
   </div>
 
-  <!-- 수동 복사 방식 (API 키 없을 때 폴백) -->
+  <!-- 결과 텍스트 (API 자동 + 수동 공용) -->
+  <div id="resultBox" style="display:none" class="card">
+    <div style="font-size:13px;font-weight:700;color:#27ae60;margin-bottom:8px" id="resultTitle">✓ 분석 완료!</div>
+    <textarea id="result" rows="6" oninput="onResultInput()" style="font-size:11px;color:#555;background:#f8f8f8"></textarea>
+    <div class="char-count" id="charCount"></div>
+    <div class="result-ok" id="resultOk">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
+  </div>
+
+  <!-- 수동 복사 방식 -->
   <div id="manualCard" style="display:none">
     <div class="card">
       <div class="step-row">
@@ -159,19 +167,10 @@ textarea{resize:vertical;line-height:1.7}
         <div><div class="step-title">Claude 답변 전체 붙여넣기</div>
           <div class="step-desc">답변 전체 복사 → 아래에 붙여넣기</div></div>
       </div>
-      <textarea id="result" rows="8" oninput="onResultInput()" placeholder="Claude의 분석 결과를 여기에 붙여넣으세요."></textarea>
-      <div class="char-count" id="charCount"></div>
-      <div class="result-ok" id="resultOk">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
+      <textarea id="resultManual" rows="8" oninput="onManualInput()" placeholder="Claude의 분석 결과를 여기에 붙여넣으세요."></textarea>
+      <div class="char-count" id="charCountManual"></div>
+      <div class="result-ok" id="resultOkManual">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
     </div>
-  </div>
-
-  <!-- 결과 미리보기 -->
-  <div id="resultCard" style="display:none" class="card">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div style="font-size:13px;font-weight:700;color:#27ae60">✓ 분석 완료!</div>
-      <div id="resultCharCount" style="font-size:11px;color:#aaa"></div>
-    </div>
-    <textarea id="result" rows="6" oninput="onResultInput()" style="font-size:11px;color:#555;background:#f8f8f8"></textarea>
   </div>
 
   <div id="err2" class="err"></div>
@@ -397,6 +396,7 @@ function doGenerate() {
   document.getElementById('resultCard').style.display = 'none';
   document.getElementById('manualCard').style.display = 'none';
   document.getElementById('err2').style.display = 'none';
+  document.getElementById('apiKeyCard').style.display = 'block';
 
   // 버튼 초기화
   var analyzeBtn = document.getElementById('analyzeBtn');
@@ -500,12 +500,12 @@ async function doAnalyze() {
 
     // 결과 표시
     document.getElementById('loadingCard').style.display = 'none';
-    document.getElementById('resultCard').style.display = 'block';
+    document.getElementById('resultBox').style.display = 'block';
+    document.getElementById('resultTitle').textContent = '✓ 분석 완료! (' + resultText.length.toLocaleString() + '자)';
     var resultEl = document.getElementById('result');
     if (resultEl) {
       resultEl.value = resultText;
-      var charCount = document.getElementById('resultCharCount');
-      if (charCount) charCount.textContent = resultText.length.toLocaleString() + '자';
+      var ev = new Event('input'); resultEl.dispatchEvent(ev);
     }
     document.getElementById('pdfBtn').className = 'btn btn-dark';
     document.getElementById('pdfBtn').textContent = '📄 PDF 저장';
@@ -514,8 +514,6 @@ async function doAnalyze() {
     document.getElementById('analyzeBtn').className = 'btn btn-dark';
     document.getElementById('analyzeBtn').disabled = false;
     document.getElementById('apiKeyCard').style.display = 'none';
-    // 자동으로 onResultInput 트리거해서 PDF 버튼 활성화
-    if (resultEl) { var ev = new Event('input'); resultEl.dispatchEvent(ev); }
 
   } catch(e) {
     stopLoading();
@@ -586,15 +584,26 @@ function doCopy() {
 }
 
 function onResultInput() {
-  var val = document.getElementById('result').value;
+  var val = document.getElementById('result') ? document.getElementById('result').value : '';
   var len = val.length;
   var cnt = document.getElementById('charCount');
-  cnt.textContent = len > 0 ? len.toLocaleString() + '자 입력됨' : '';
+  if (cnt) cnt.textContent = len > 0 ? len.toLocaleString() + '자' : '';
+  var ok = len > 200;
+  document.getElementById('resultOk').style.display = ok ? 'block' : 'none';
+  document.getElementById('pdfBtn').className = ok ? 'btn btn-dark' : 'btn btn-gray';
+  document.getElementById('pdfBtn').textContent = ok ? '📄 PDF 저장' : '② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfHint').style.display = ok ? 'block' : 'none';
+}
+
+function onManualInput() {
+  var val = document.getElementById('resultManual') ? document.getElementById('resultManual').value : '';
+  var len = val.length;
+  var cnt = document.getElementById('charCountManual');
+  if (cnt) cnt.textContent = len > 0 ? len.toLocaleString() + '자 입력됨' : '';
   var ok = len > 200;
   var sn2 = document.getElementById('sn2');
-  sn2.className = 'snum ' + (ok ? 'snum-done' : 'snum-gray');
-  sn2.textContent = ok ? '✓' : '2';
-  document.getElementById('resultOk').style.display = ok ? 'block' : 'none';
+  if (sn2) { sn2.className = 'snum ' + (ok ? 'snum-done' : 'snum-gray'); sn2.textContent = ok ? '✓' : '2'; }
+  document.getElementById('resultOkManual').style.display = ok ? 'block' : 'none';
   document.getElementById('pdfBtn').className = ok ? 'btn btn-dark' : 'btn btn-gray';
   document.getElementById('pdfBtn').textContent = ok ? '📄 PDF 저장' : '② 결과 붙여넣기 후 활성화됩니다';
   document.getElementById('pdfHint').style.display = ok ? 'block' : 'none';
@@ -769,10 +778,13 @@ function renderBody(raw) {
 // ── PDF 생성 ──
 
 function buildPDF() {
-  var result = document.getElementById('result').value.trim();
+  // API 자동 분석 결과 또는 수동 붙여넣기 결과 읽기
+  var autoResult = document.getElementById('result') ? document.getElementById('result').value.trim() : '';
+  var manualResult = document.getElementById('resultManual') ? document.getElementById('resultManual').value.trim() : '';
+  var result = autoResult.length > manualResult.length ? autoResult : manualResult;
   var err = document.getElementById('err2');
   if (result.length < 100) {
-    err.textContent = '분석 결과를 먼저 붙여넣어 주세요.';
+    err.textContent = '분석 결과가 없습니다. AI 자동 분석을 먼저 실행해주세요.';
     err.style.display = 'block';
     return;
   }
