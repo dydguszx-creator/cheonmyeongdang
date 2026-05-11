@@ -398,6 +398,14 @@ function doGenerate() {
   document.getElementById('manualCard').style.display = 'none';
   document.getElementById('err2').style.display = 'none';
 
+  // 버튼 초기화
+  var analyzeBtn = document.getElementById('analyzeBtn');
+  if (analyzeBtn) {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = '✨ AI 자동 분석 시작';
+    analyzeBtn.className = 'btn btn-dark';
+  }
+
   // 저장된 API 키 불러오기
   var savedKey = '';
   try { savedKey = localStorage.getItem('cheonmyeongdang_api_key') || ''; } catch(e) {}
