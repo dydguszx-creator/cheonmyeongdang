@@ -1,17 +1,5 @@
 const https = require('https');
 
-function parseBody(req) {
-  return new Promise((resolve, reject) => {
-    let data = '';
-    req.on('data', chunk => data += chunk);
-    req.on('end', () => {
-      try { resolve(JSON.parse(data)); }
-      catch(e) { reject(new Error('invalid JSON')); }
-    });
-    req.on('error', reject);
-  });
-}
-
 module.exports = async function(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -21,7 +9,7 @@ module.exports = async function(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Method not allowed' }); return; }
 
   try {
-    const { prompt, apiKey } = await parseBody(req);
+    const { prompt, apiKey } = req.body;
     if (!prompt || !apiKey) { res.status(400).json({ error: 'missing params' }); return; }
 
     const body = JSON.stringify({
@@ -60,5 +48,13 @@ module.exports = async function(req, res) {
 
   } catch(e) {
     res.status(500).json({ error: e.message });
+  }
+};
+
+module.exports.config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb'
+    }
   }
 };
