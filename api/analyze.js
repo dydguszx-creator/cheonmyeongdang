@@ -1,4 +1,11 @@
-export const config = { maxDuration: 300 };
+export const config = {
+  maxDuration: 300,
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb'
+    }
+  }
+};
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -8,18 +15,8 @@ export default async function handler(req, res) {
   if (req.method !== "POST") { res.status(405).end(); return; }
 
   try {
-    let parsed;
-    if (req.body) {
-      parsed = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
-    } else {
-      let raw = "";
-      await new Promise((resolve, reject) => {
-        req.on("data", chunk => { raw += chunk; });
-        req.on("end", resolve);
-        req.on("error", reject);
-      });
-      parsed = JSON.parse(raw);
-    }
+    const parsed = req.body;
+    if (!parsed) { res.status(400).json({ error: "no body" }); return; }
 
     const apiKey = (parsed.apiKey || "").replace(/[^\x20-\x7E]/g, "").trim();
     if (!apiKey) { res.status(400).json({ error: "missing apiKey" }); return; }
