@@ -1,4 +1,6 @@
-module.exports = async function(req, res) {
+export const config = { maxDuration: 300 };
+
+export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -11,7 +13,7 @@ module.exports = async function(req, res) {
     } else {
       let raw = "";
       await new Promise((resolve, reject) => {
-        req.on("data", chunk => raw += chunk);
+        req.on("data", chunk => { raw += chunk; });
         req.on("end", resolve);
         req.on("error", reject);
       });
@@ -28,8 +30,8 @@ module.exports = async function(req, res) {
         "anthropic-version": "2023-06-01"
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 4000,
+        model: "claude-sonnet-4-6",
+        max_tokens: 16000,
         messages: [{ role: "user", content: prompt }]
       })
     });
@@ -38,4 +40,4 @@ module.exports = async function(req, res) {
   } catch(e) {
     res.status(200).json({ error: e.message });
   }
-};
+}
