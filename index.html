@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<title>천명당 사주 | 좋은 것도 나쁜 것도 있는 그대로 말씀드립니다</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #0E1A26;
+  --gold: #C9A84C;
+  --gold-light: #E8C87A;
+  --cream: #F5EDD8;
+  --bg: #F8F7F4;
+  --card-bg: #fff;
+  --text: #1a1a2e;
+  --sub: #6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* HEADER */
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-badge{width:44px;height:44px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:17px;color:var(--gold);font-weight:700}
+.logo-text{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy)}
+.logo-sub{font-size:12px;color:var(--gold);letter-spacing:1px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 24px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 20% 50%,rgba(201,168,76,0.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(14,26,38,0.04) 0%,transparent 50%);pointer-events:none}
+.hero-badge{display:inline-block;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:6px 16px;font-size:12px;color:var(--gold);letter-spacing:2px;margin-bottom:24px;font-weight:500}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:38px;font-weight:900;line-height:1.3;color:var(--navy);margin-bottom:20px;word-break:keep-all}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:32px;box-shadow:0 2px 20px rgba(0,0,0,0.06);border:1px solid rgba(201,168,76,0.1)}
+.hero-desc p{font-size:14px;color:var(--sub);line-height:2;word-break:keep-all}
+.hero-desc p+p{margin-top:12px}
+.cta-btn{width:100%;padding:18px;background:linear-gradient(135deg,#1a2f42,var(--navy));color:var(--gold);border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 4px 20px rgba(14,26,38,0.25);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
+.cta-btn:active{transform:scale(0.98)}
+
+/* CONTENT CARDS */
+.content-section{padding:40px 20px}
+.content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all}
+.content-section .sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:28px}
+.content-cards{display:flex;flex-direction:column;gap:14px}
+.content-card{border-radius:16px;padding:22px 20px;display:flex;align-items:flex-start;gap:16px;opacity:0;transform:translateY(30px);transition:all 0.6s ease}
+.content-card.visible{opacity:1;transform:translateY(0)}
+.content-card.blue{background:#EEF2FF}
+.content-card.yellow{background:#FFFBEB}
+.content-card.green{background:#ECFDF5}
+.content-card.pink{background:#FFF1F2}
+.content-card.purple{background:#F5F0FF}
+.content-card.gray{background:#F3F4F6}
+.card-icon{width:48px;height:48px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.card-body h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px}
+.card-body ul{list-style:none;padding:0}
+.card-body ul li{font-size:13px;color:var(--sub);line-height:1.8}
+.card-body ul li::before{content:'✦ ';color:var(--gold)}
+
+/* REVIEWS */
+.review-section{padding:60px 20px;background:#fff}
+.review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:6px}
+.review-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:28px}
+.review-grid{display:flex;flex-direction:column;gap:12px}
+.review-card{background:var(--bg);border-radius:14px;padding:16px 18px;border:1px solid rgba(0,0,0,0.06)}
+.review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.review-stars{color:#f59e0b;font-size:13px}
+.review-date{font-size:11px;color:#bbb}
+.review-text{font-size:12px;color:var(--sub);line-height:1.75;word-break:keep-all}
+.review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
+.review-avatar{width:22px;height:22px;border-radius:50%;background:#e0e0e0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
+
+/* CTA BOTTOM */
+.cta-section{background:var(--navy);padding:60px 24px;text-align:center}
+.cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:28px;word-break:keep-all}
+.cta-quote em{color:var(--gold);font-style:normal}
+.cta-bottom-btn{display:inline-block;width:100%;padding:18px;background:linear-gradient(135deg,#3a5bd9,#2d4dc7);color:#fff;border:none;border-radius:14px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 24px rgba(58,91,217,0.4);text-decoration:none;text-align:center}
+.price-badge{margin-top:16px;font-size:13px;color:#7a98ae}
+
+/* FOOTER */
+footer{background:#0a1420;padding:30px 24px;text-align:center}
+footer p{font-size:11px;color:#3d5a6c;line-height:2}
+footer .gold{color:var(--gold)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{opacity:0;transform:translateY(40px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-badge">命</div>
+    <div>
+      <div class="logo-text">천명당</div>
+      <div class="logo-sub">사주명리</div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div style="margin-bottom:20px;margin-top:20px">
+    <div style="font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:6px">천명당 <span style="color:var(--gold)">사주명리</span> 보고서</div>
+    <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.35);border-radius:20px;padding:7px 18px;font-size:13px;color:var(--gold);letter-spacing:1px">사주팔자가 좋지 않아도 있는 그대로 말씀드립니다</div>
+  </div>
+  <h1>과거에 사주를 봤는데<br/><em>두루뭉술한 말만 들으셨나요?</em></h1>
+  <div class="hero-desc">
+    <p>좋은 건 확실히 좋다고, 조심해야 할 건 피하라고 정확하게 짚어드립니다.</p>
+    <p>어느 사주풀이에서도 볼 수 없는 진짜 나의 인생을 바라볼 수 있다고 자부하겠습니다.</p>
+    <p style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(201,168,76,0.15)">대신, 좋지 않은 사주팔자여도<br/>소신 있게 사실대로 이야기 해드립니다.</p>
+  </div>
+  <a href="https://open.kakao.com/o/sFcws2si" class="cta-btn">천명당 사주 보고서 신청하러 가기 →</a>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:20px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--navy);background:#fff;border-radius:10px;padding:11px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.08)">
+      <span style="color:var(--gold);font-size:18px">📄</span> PDF 최대 3시간 이내 발송
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:#fff;border-radius:10px;padding:11px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.08)">
+      <div style="display:flex;align-items:center;gap:7px;font-size:14px;font-weight:700;color:var(--navy)">
+        <span style="color:var(--gold);font-size:18px">✨</span> 9가지 항목 분석 오픈 특가 <span style="color:#e53e3e">15,000원</span>
+      </div>
+      <div style="background:var(--navy);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:1px">
+        오픈특가 종료까지&nbsp;&nbsp;<span id="hero-timer">00:00:00:00</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE ANALYZE -->
+<section class="content-section">
+  <!-- 차별점 박스 -->
+  <div class="fade-up" style="background:var(--navy);border-radius:16px;padding:24px 20px;margin-bottom:28px;border-left:4px solid var(--gold)">
+    <div style="font-family:'Noto Serif KR',serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:12px">🌙 천명당은 다릅니다</div>
+    <div style="font-size:13px;color:#b0c4d8;line-height:2.2">
+      인터넷에 널려있는 읽기 힘든 사주풀이가 아닌<br/>
+      <span style="color:var(--gold);font-weight:600">실전에서 바로 적용 가능한 것들</span> 위주로 말씀드립니다.<br/><br/>
+      사주팔자는 사람마다 좋기도, 나쁘기도 하기 때문에<br/>
+      있는 그대로 적어드렸을 때, <span style="color:var(--gold);font-weight:600">너그럽게 봐주시면 감사하겠습니다.</span>
+    </div>
+  </div>
+  <h2 id="content-title" class="fade-up">9가지 항목,<br/>있는 그대로 분석해드립니다.</h2>
+  <p class="sub fade-up">좋은 것만 말해주는 곳이 아닙니다. 정확하게 알아야 대처할 수 있어요.</p>
+  <div class="content-cards">
+    <div class="content-card blue">
+      <div class="card-icon">🧬</div>
+      <div class="card-body">
+        <h3>타고난 성격 분석</h3>
+        <ul><li>사주에 나타난 성격 or 기질</li><li>강점·약점에 따른 삶의 방향</li></ul>
+      </div>
+    </div>
+    <div class="content-card yellow">
+      <div class="card-icon">📅</div>
+      <div class="card-body">
+        <h3>대운·세운의 분석</h3>
+        <ul><li>2026~2035년 10개년 흐름</li><li>언제 투자·언제 기다려야 하는지</li></ul>
+      </div>
+    </div>
+    <div class="content-card purple">
+      <div class="card-icon">💼</div>
+      <div class="card-body">
+        <h3>직업운</h3>
+        <ul><li>잘 맞는 직업과 피해야 할 직업</li><li>창업/취업에서 성공확률</li></ul>
+      </div>
+    </div>
+    <div class="content-card yellow">
+      <div class="card-icon">💰</div>
+      <div class="card-body">
+        <h3>재물·돈복</h3>
+        <ul><li>타고난 재물 복이 있는지, 없는지</li><li>어떤 방향으로 돈을 벌어야 하는지</li></ul>
+      </div>
+    </div>
+    <div class="content-card green">
+      <div class="card-icon">💕</div>
+      <div class="card-body">
+        <h3>연애운</h3>
+        <ul><li>연애 타이밍 문제(예: 빠른혼인 등)</li><li>사주에 나타난 이상형</li></ul>
+      </div>
+    </div>
+    <div class="content-card pink">
+      <div class="card-icon">🏠</div>
+      <div class="card-body">
+        <h3>가족·관계운</h3>
+        <ul><li>부모와의 관계와 인연있는 형제와의 거리 예측</li><li>자식과의 인연에서의 주의 사항</li></ul>
+      </div>
+    </div>
+    <div class="content-card gray">
+      <div class="card-icon">🔮</div>
+      <div class="card-body">
+        <h3>강점·약점 종합 분석</h3>
+        <ul><li>자기를 성장시키는 방향은</li><li>자기가 활동하기 좋은 계절 vs 기다려야 계절</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="review-section">
+  <h2 class="fade-up">실제 후기들</h2>
+  <p class="review-sub fade-up">천명당을 경험하신 분들의 이야기를 들어보세요.</p>
+  <div class="review-grid" id="reviewGrid"></div>
+  <div style="text-align:center;margin-top:18px">
+    <button onclick="loadMore()" id="moreBtn" style="background:none;border:1.5px solid var(--gold);border-radius:20px;padding:8px 24px;font-size:13px;color:var(--gold);cursor:pointer;font-family:inherit">후기 더보기 →</button>
+  </div>
+</section>
+
+<!-- CTA BOTTOM -->
+<section class="cta-section fade-up">
+  <div style="font-size:12px;letter-spacing:3px;color:var(--gold);margin-bottom:16px">천명당 天命堂</div>
+  <div class="cta-quote">"좋은 건 확실히 좋다고,<br/><em>나쁜 건 사실대로 말씀드립니다."</em></div>
+  <div style="font-size:14px;color:#7a98ae;line-height:2;margin-bottom:24px;word-break:keep-all">
+    인터넷에 널려있는 읽기 힘든 사주풀이가 아닌<br/>
+    실전에서 바로 적용 가능한 것들 위주로 말씀드립니다.
+  </div>
+  <a href="https://open.kakao.com/o/sFcws2si" class="cta-bottom-btn">천명당 사주 보고서 신청하기 →</a>
+  <p class="price-badge">생년월일만 있으면 됩니다 ✦ 15,000원 ✦ 최대 3시간 이내 발송</p>
+</section>
+
+<footer>
+  <p class="gold" style="font-family:'Noto Serif KR',serif;font-size:16px;margin-bottom:8px">사주명리 ✦ 천명당</p>
+  <p>생년월일만 알면 되는 운명</p>
+  <p style="margin-top:12px">문의 및 주문접수: 천명당 사주명리<br/>
+  <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C;text-decoration:none">open.kakao.com/o/sFcws2si</a></p>
+</footer>
+
+<script>
+var reviews = [
+  {star:'★★★★★', date:'2026.04.28', text:'요즘 뭔가 막히고 불안했는데 사주가 기질상 혼란스러운 시기라는 말이 너무 솔직하게 와닿더라고요. PDF가 깔끔해서 좋았습니다.', name:'강*희', av:'강'},
+  {star:'★★★★★', date:'2026.04.25', text:'오랫동안 연애운이 안 풀려서 혹시나 했는데 보고서 보면서 마음이 조금 가벼워졌어요. 사주적 기다려야 하는 시기라는 말이 위로가 됐어요.', name:'이*수', av:'이'},
+  {star:'★★★★★', date:'2026.04.20', text:'결혼운이 좋지 않다는 내용이 살짝 무서웠어요. 하지만 이유가 뭔지를 사주로 설명해주는 게 좋았고, 주의할 점에 따라 잘 풀어나갈게요.', name:'박*은', av:'박'},
+  {star:'★★★★★', date:'2026.04.15', text:'PDF 뚝딱 받고 바로 보고서 읽었어요. 올 한 해 어떻게 살아야겠다는 기준이 생겨서 매년 신청할 것 같아요.', name:'정*지', av:'정'},
+  {star:'★★★★★', date:'2026.04.10', text:'이직 시기를 고민하던 차에 사주적으로 안정적이고 2028년에 시작하라는 흐름을 보고 믿음이 생겼습니다. 감사합니다.', name:'김*현', av:'김'},
+  {star:'★★★★★', date:'2026.04.05', text:'돈복 항목에서 실제 실패했던 게 딱 나와있어서 너무 신기했어요. 앞으로 조심해야 할 유형이 뭔지 명확히 알 수 있었어요.', name:'최*민', av:'최'},
+  {star:'★★★★★', date:'2026.03.28', text:'가족관계가 2026년 상반기에 갈등 흐름에 맞다는 게 신기했어요. 덕분에 대처하는 마음이 달라졌고 상황이 나아졌어요.', name:'한*라', av:'한'},
+  {star:'★★★★★', date:'2026.03.20', text:'비용 대비 내용이 정말 좋았어요. 단순하고 읽기 쉬우면서도 주요 포인트가 잘 짚혀있고 다시 봐도 좋을 것 같아요.', name:'오*영', av:'오'},
+  {star:'★★★★★', date:'2026.03.15', text:'친구한테 선물로 신청했는데 굉장히 좋아하더라고요. 사주에 대한 거부감이 있어도 한번쯤은 읽어볼 만 합니다.', name:'류*지', av:'류'},
+  {star:'★★★★★', date:'2026.03.08', text:'처음엔 반신반의했는데 진짜 딱 맞아서 소름 돋았어요. 오래전부터 고민이던 적성 항목의 내용이 위로가 됐어요.', name:'장*아', av:'장'},
+  {star:'★★★★★', date:'2026.02.25', text:'건강 분석도 받고 생활 방식에 경각심이 생겼어요. 사주의 시기가 언제 활발할지 파악하면서 살기 좋아졌어요.', name:'남*민', av:'남'},
+  {star:'★★★★★', date:'2026.02.18', text:'24시간 안에 정말 깔끔하게 받았어요. 카톡으로 신청했는데 친절하고 전혀 불편하지 않았어요.', name:'윤*하', av:'윤'},
+];
+var shown = 5;
+function renderReviews() {
+  var grid = document.getElementById('reviewGrid');
+  grid.innerHTML = '';
+  reviews.slice(0, shown).forEach(function(r) {
+    grid.innerHTML += '<div class="review-card">'
+      + '<div class="review-top"><div class="review-stars">'+r.star+'</div><div class="review-date">'+r.date+'</div></div>'
+      + '<div class="review-text">"'+r.text+'"</div>'
+      + '<div class="review-author"><div class="review-avatar">'+r.av+'</div>'+r.name+'</div>'
+      + '</div>';
+  });
+  document.getElementById('moreBtn').style.display = shown >= reviews.length ? 'none' : 'inline-block';
+}
+function loadMore() { shown += 4; renderReviews(); }
+renderReviews();
+
+// 오픈특가 타이머 (매일 자정 리셋)
+function startPromoTimer() {
+  function tick() {
+    var now = new Date();
+    var end = new Date(now);
+    end.setHours(23, 59, 59, 999);
+    var diff = end - now;
+    if (diff < 0) diff = 0;
+    var h = Math.floor(diff / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var ms = Math.floor((diff % 1000) / 10);
+    var str = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + ':' + String(ms).padStart(2,'0');
+    var el = document.getElementById('hero-timer');
+    if (el) el.textContent = str;
+  }
+  tick();
+  setInterval(tick, 50);
+}
+startPromoTimer();
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      if (e.target.classList.contains('content-card')) {
+        var cards = document.querySelectorAll('.content-card');
+        cards.forEach(function(c, i) {
+          setTimeout(function() { c.classList.add('visible'); }, i * 100);
+        });
+      }
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up, .content-card').forEach(function(el) {
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
