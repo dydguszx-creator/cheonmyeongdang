@@ -819,8 +819,13 @@ function parseMiniSecs(text) {
     var ei = next ? text.indexOf(next, si) : text.length;
     if (ei === -1) ei = text.length;
     var chunk = text.slice(si, ei).trim();
-    var bi = chunk.indexOf('\u3011');
-    return { title: month, body: bi !== -1 ? chunk.slice(bi + 1).trim() : chunk };
+    // 첫 줄 전체를 title로 (⭐⚠️ 포함)
+    var firstNewline = chunk.indexOf('\n');
+    var titleLine = firstNewline !== -1 ? chunk.slice(0, firstNewline).trim() : chunk;
+    var body = firstNewline !== -1 ? chunk.slice(firstNewline + 1).trim() : '';
+    // --- 구분선 제거
+    body = body.replace(/^---\n?/,'').trim();
+    return { title: titleLine, body: body };
   });
 }
 
