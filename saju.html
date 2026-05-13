@@ -124,58 +124,32 @@ textarea{resize:vertical;line-height:1.7}
     <div><span>리뷰 고객 월별 미니운세 보너스</span><small>1~12월 운세 · 4페이지 PDF</small></div>
   </div>
 
-  <!-- API 키 입력 -->
-  <div class="card" id="apiKeyCard" style="border:2px solid #C9A84C">
-    <div style="font-size:13px;font-weight:700;color:#1C2B3A;margin-bottom:8px">🔑 API 키 입력 (필수)</div>
-    <input type="text" id="apiKeyInput" placeholder="sk-ant-api03-..." style="font-size:12px;border:1px solid #C9A84C"/>
-    <div style="font-size:10px;color:#aaa;margin-top:5px">platform.anthropic.com → API Keys에서 복사한 키를 붙여넣으세요</div>
-    <div id="apiKeyErr" style="color:#e74c3c;font-size:12px;margin-top:6px;display:none">⚠️ API 키를 입력해주세요!</div>
-  </div>
-
-  <!-- 자동 분석 버튼 -->
-  <button class="btn btn-dark" id="analyzeBtn" type="button" onclick="doAnalyze()" style="margin-bottom:14px">✨ AI 자동 분석 시작</button>
-
-  <!-- 로딩 -->
-  <div id="loadingCard" style="display:none" class="card">
-    <div style="text-align:center;padding:20px">
-      <div id="loadingDot" style="font-size:32px;margin-bottom:10px">🌙</div>
-      <div style="font-size:14px;font-weight:700;color:#1C2B3A;margin-bottom:6px">분석 중입니다...</div>
-      <div style="font-size:12px;color:#aaa" id="loadingMsg">사주팔자를 계산하고 있어요</div>
+  <div class="card">
+    <div class="step-row">
+      <div class="snum snum-dark">1</div>
+      <div>
+        <div class="step-title">프롬프트 복사 → Claude 새 채팅에 붙여넣기</div>
+        <div class="step-desc">답변 받은 후 전체 복사 → 아래 2번에 붙여넣기</div>
+      </div>
     </div>
+    <button class="btn btn-dark" id="copyBtn" type="button" onclick="doCopy()">📋 프롬프트 복사</button>
   </div>
 
-  <!-- 결과 텍스트 (API 자동 + 수동 공용) -->
-  <div id="resultBox" style="display:none" class="card">
-    <div style="font-size:13px;font-weight:700;color:#27ae60;margin-bottom:8px" id="resultTitle">✓ 분석 완료!</div>
-    <textarea id="result" rows="6" oninput="onResultInput()" style="font-size:11px;color:#555;background:#f8f8f8"></textarea>
+  <div class="card">
+    <div class="step-row">
+      <div class="snum snum-gray" id="sn2">2</div>
+      <div>
+        <div class="step-title">Claude 답변 전체 붙여넣기</div>
+        <div class="step-desc">답변 전체 복사 → 아래에 붙여넣기</div>
+      </div>
+    </div>
+    <textarea id="result" rows="8" oninput="onResultInput()" placeholder="Claude의 분석 결과를 여기에 붙여넣으세요."></textarea>
     <div class="char-count" id="charCount"></div>
     <div class="result-ok" id="resultOk">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
   </div>
 
-  <!-- 수동 복사 방식 -->
-  <div id="manualCard" style="display:none">
-    <div class="card">
-      <div class="step-row">
-        <div class="snum snum-dark">1</div>
-        <div><div class="step-title">프롬프트 복사 → Claude 새 채팅에 붙여넣기</div>
-          <div class="step-desc">답변 받은 후 전체 복사 → 아래 2번에 붙여넣기</div></div>
-      </div>
-      <button class="btn btn-dark" id="copyBtn" type="button" onclick="doCopy()">📋 프롬프트 복사</button>
-    </div>
-    <div class="card">
-      <div class="step-row">
-        <div class="snum snum-gray" id="sn2">2</div>
-        <div><div class="step-title">Claude 답변 전체 붙여넣기</div>
-          <div class="step-desc">답변 전체 복사 → 아래에 붙여넣기</div></div>
-      </div>
-      <textarea id="resultManual" rows="8" oninput="onManualInput()" placeholder="Claude의 분석 결과를 여기에 붙여넣으세요."></textarea>
-      <div class="char-count" id="charCountManual"></div>
-      <div class="result-ok" id="resultOkManual">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
-    </div>
-  </div>
-
   <div id="err2" class="err"></div>
-  <button class="btn btn-gray" id="pdfBtn" type="button" onclick="buildPDF()" style="margin-top:4px">② 분석 완료 후 활성화됩니다</button>
+  <button class="btn btn-gray" id="pdfBtn" type="button" onclick="buildPDF()">② 결과 붙여넣기 후 활성화됩니다</button>
   <div class="pdf-hint" id="pdfHint">
     📱 iOS: 보고서 열기 → 공유(□↑) → "파일에 저장"<br/>
     🤖 Android: 보고서 열기 → 인쇄 → "PDF로 저장"
@@ -284,16 +258,36 @@ function buildBasicPromptPart1() {
   var common = step0
     + '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
+    + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
+    + '① 일간(日干)을 확인하세요.\n'
+    + '② 신강/신약을 판단하세요.\n'
+    + '③ 용신·희신·기신을 도출하세요.\n'
+    + '④ 이후 모든 섹션은 이 용신·기신 기준으로 해석하세요.\n\n'
     + '[작성 원칙]\n'
     + '- 전문가가 고객 옆에서 직접 설명해주듯, 사람이 쓴 것처럼 자연스럽게 써주세요. AI 보고서 느낌 X\n'
-    + '- 좋은 건 확실히 좋다고, 나쁘거나 조심해야 할 건 가감 없이 팩트로 말해주세요.\n'
+    + '- 좋은 건 확실히 좋다고, 나쁘거나 조심해야 할 건 가감 없이 팩트로 말해주세요. 두루뭉술한 표현 금지.\n'
     + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어서 써주세요.\n'
     + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
     + '- 현재 기준 시점: ' + curDate + '\n'
     + '- 각 섹션 최소 600자 이상, 풍부하게 작성하세요.\n'
     + '- 각 섹션 구조: [한눈에 보기] → 한자표 → 소제목 본문 → [핵심 요약 3줄] → 지금 당장 할 수 있는 것\n'
     + '- 사주의 신강/신약, 용신·희신·기신을 먼저 파악한 후 각 항목을 해석하세요.\n'
-    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n\n';
+    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n'
+    + '- 성별에 따라 관성/재성 해석을 다르게 하세요: 여성은 관성=배우자, 남성은 재성=배우자.\n\n'
+    + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
+    + '- 용신이 水면: 물 자주 마시기·수영·파란색·검정색·해산물·북쪽 방향\n'
+    + '- 용신이 木이면: 산책·등산·녹색·초록색·채소·동쪽 방향\n'
+    + '- 용신이 火면: 햇볕 쬐기·빨간색·주황색·따뜻한 음식·남쪽 방향\n'
+    + '- 용신이 土면: 규칙적 생활·노란색·황토색·뿌리채소·중앙\n'
+    + '- 용신이 金이면: 규칙적 운동·흰색·금색·폐 관리·서쪽 방향\n'
+    + '⚠️ 용신이 아닌 오행의 생활 습관을 권유하지 마세요.\n\n'
+    + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
+    + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
+    + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
+    + '- "적어보세요", "생각해보세요" 같은 추상적 표현 금지.\n\n'
+    + '[세운 분석 간지 기준]\n'
+    + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
+    + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n';
 
   return common
     + '아래 섹션 1개만 완전하게 작성하세요:\n\n'
@@ -304,20 +298,41 @@ function buildBasicPromptPart1() {
 function makeBase(info, curDate) {
   return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
+    + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
+    + '① 일간(日干)을 확인하세요.\n'
+    + '② 신강/신약을 판단하세요.\n'
+    + '③ 용신·희신·기신을 도출하세요.\n'
+    + '④ 이후 모든 섹션은 이 용신·기신 기준으로 해석하세요.\n\n'
     + '[작성 원칙]\n'
     + '- 전문가가 고객 옆에서 직접 설명해주듯 자연스럽게 써주세요. AI 보고서 느낌 X\n'
-    + '- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로 말해주세요.\n'
+    + '- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로 말해주세요. 두루뭉술한 표현 금지.\n'
     + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어 써주세요.\n'
     + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
     + '- 현재 기준 시점: ' + curDate + '\n'
+    + '- 각 섹션 최소 600자 이상, 풍부하게 작성하세요.\n'
     + '- 사주의 신강/신약, 용신·희신·기신을 파악 후 해석하세요.\n'
     + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n'
-    + '- 반드시 아래 구조로 작성하세요:\n'
+    + '- 성별에 따라 관성/재성 해석을 다르게 하세요: 여성은 관성=배우자, 남성은 재성=배우자.\n\n'
+    + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
+    + '- 용신이 水면: 물 자주 마시기·수영·파란색·검정색·해산물·북쪽 방향\n'
+    + '- 용신이 木이면: 산책·등산·녹색·초록색·채소·동쪽 방향\n'
+    + '- 용신이 火면: 햇볕 쬐기·빨간색·주황색·따뜻한 음식·남쪽 방향\n'
+    + '- 용신이 土면: 규칙적 생활·노란색·황토색·뿌리채소·중앙\n'
+    + '- 용신이 金이면: 규칙적 운동·흰색·금색·폐 관리·서쪽 방향\n'
+    + '⚠️ 용신이 아닌 오행의 생활 습관을 권유하지 마세요.\n\n'
+    + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
+    + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
+    + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
+    + '- "적어보세요", "생각해보세요" 같은 추상적 표현 금지.\n\n'
+    + '[세운 분석 간지 기준]\n'
+    + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
+    + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n'
+    + '반드시 아래 구조로 작성하세요:\n'
     + '  1. [한눈에 보기] 핵심 한 문장\n'
     + '  2. 한자 정리 표\n'
     + '  3. ■ 이모지 소제목별 본문\n'
     + '  4. [핵심 요약 3줄]\n'
-    + '  5. 지금 당장 할 수 있는 것: (한 줄)\n\n';
+    + '  5. 지금 당장 할 수 있는 것: (오늘 바로 실행 가능한 행동 1가지)\n\n';
 }
 
 function buildBasicPromptPart2() {
@@ -409,25 +424,117 @@ function buildBasicPromptPart10() {
 }
 
 function buildBasicPrompt() {
-  return buildBasicPromptPart1();
+  var info = buildInfo();
+  var now = new Date();
+  var curDate = now.getFullYear() + '년 ' + (now.getMonth() + 1) + '월 기준';
+  var sy = now.getFullYear(), ey = sy + 9;
+  var isLunar = getVal('cal') === '음력';
+  var lunarYear = getVal('y');
+
+  var step0 = '';
+  if (isLunar) {
+    step0 = '[STEP 0 — 사주팔자 산출 지침]\n\n'
+      + '▶ 입력 형식: 음력 생년월일\n'
+      + '▶ 적용 기준: 대한민국 표준시(KST, UTC+9), 한국 만세력 기준\n\n'
+      + '[1단계] 윤달 자동 파악\n'
+      + '- ' + lunarYear + '년 음력의 윤달 여부를 만세력 기준으로 직접 확인하세요.\n\n'
+      + '[2단계] 양력 변환\n'
+      + '- 한국 만세력 기준으로 음력 → 양력 날짜를 변환하세요.\n\n'
+      + '[3단계] 절기(節氣) 기준 월주 결정\n'
+      + '- 월주는 양력 변환일 기준 절기가 지났는지로 결정하세요.\n\n'
+      + '[4단계] 시주(時柱) 결정\n'
+      + '- 출생 시각은 KST 기준 00시~24시로 처리하세요.\n'
+      + '- 시각이 미상인 경우 시주를 제외하고 3주로 분석하며 상단에 명시하세요.\n\n'
+      + '[5단계] 사주팔자 확정 후 보고서 시작\n'
+      + '- 확정된 8글자를 도표로 먼저 제시하고 분석을 시작하세요.\n\n'
+      + '---\n\n';
+  }
+
+  return step0
+    + '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n'
+    + '아래 고객 정보를 바탕으로 9개 섹션을 순서대로 분석해주세요.\n\n'
+    + '[고객 정보]\n' + info + '\n\n'
+    + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
+    + '① 일간(日干)을 확인하세요.\n'
+    + '② 신강/신약을 판단하세요.\n'
+    + '③ 용신·희신·기신을 도출하세요.\n'
+    + '④ 이후 모든 섹션은 이 용신·기신 기준으로 해석하세요.\n\n'
+    + '[작성 원칙]\n'
+    + '- 전문가가 고객 옆에서 직접 설명해주듯, 사람이 쓴 것처럼 자연스럽게 써주세요. AI 보고서 느낌 X\n'
+    + '- 좋은 건 확실히 좋다고, 나쁘거나 조심해야 할 건 가감 없이 팩트로 말해주세요. 두루뭉술한 표현 금지.\n'
+    + '- 한자는 섹션 시작에 표로 정리하고 본문에서는 한글로 풀어서 써주세요.\n'
+    + '- 소제목(■)마다 어울리는 이모지를 앞에 붙이세요.\n'
+    + '- 현재 기준 시점: ' + curDate + '\n'
+    + '- 각 섹션 최소 600자 이상, 풍부하게 작성하세요.\n'
+    + '- 각 섹션 구조: [한눈에 보기] → 한자표 → 소제목 본문 → [핵심 요약 3줄] → 지금 당장 할 수 있는 것\n'
+    + '- 사주의 신강/신약, 용신·희신·기신을 먼저 파악한 후 각 항목을 해석하세요.\n'
+    + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n'
+    + '- 성별에 따라 관성/재성 해석을 다르게 하세요: 여성은 관성=배우자, 남성은 재성=배우자.\n\n'
+    + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
+    + '- 용신이 水면: 물 자주 마시기·수영·파란색·검정색·해산물·북쪽 방향\n'
+    + '- 용신이 木이면: 산책·등산·녹색·초록색·채소·동쪽 방향\n'
+    + '- 용신이 火면: 햇볕 쬐기·빨간색·주황색·따뜻한 음식·남쪽 방향\n'
+    + '- 용신이 土면: 규칙적 생활·노란색·황토색·뿌리채소·중앙\n'
+    + '- 용신이 金이면: 규칙적 운동·흰색·금색·폐 관리·서쪽 방향\n'
+    + '⚠️ 용신이 아닌 오행의 생활 습관을 권유하지 마세요.\n\n'
+    + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
+    + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
+    + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
+    + '- "적어보세요", "생각해보세요" 같은 추상적 표현 금지.\n\n'
+    + '[세운 분석 간지 기준]\n'
+    + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
+    + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n'
+    + '---\n【1. 사주 구조 분석】\n'
+    + '사주팔자 8글자 도표(년/월/일/시 × 천간/지지) · 오행 분포 표 · 신강/신약 판단 근거 · 용신·희신·기신 도출 · 일간 성격 핵심 요약\n'
+    + '---\n【2. 성격·적성 분석】\n'
+    + '일간과 십성 기반 핵심 성격 · 강점 · 약점·주의 습관 · 타고난 적성 직종 3~5가지 · 인간관계 패턴\n'
+    + '---\n【3. 재물·직업운】\n'
+    + '재성 분석 · 관성 분석 · 직업 유형 · 재물 운용 조언 · 커리어 전환 시기 · 현재 상황 맞춤 조언\n'
+    + '---\n【4. 연애·결혼운】\n'
+    + '배우자궁 분석 · 연애 스타일·이상형 · 결혼 적령기·인연 시기 · 잘 맞는 오행·띠 · 주의할 연애 패턴\n'
+    + '---\n【5. 건강운】\n'
+    + '취약 장기·신체 부위 · 주의 질환 경향 · 스트레스·정신건강 관리법 · 연령대별 주의 시기 · 생활 습관 조언\n'
+    + '---\n【6. 부모·자녀 관계】\n'
+    + '부모궁 분석 · 자녀궁 분석 · 자녀 인연 시기 · 양육 스타일 · 가족 내 역할\n'
+    + '---\n【7. 대운 흐름 분석】\n'
+    + '전체 대운 목록(10년 단위 표) · 현재 대운 상세 분석 · 직전·다음 대운 비교 · 지금 해야 할 행동\n'
+    + '---\n【8. 연도별 세운 분석】\n'
+    + sy + '년부터 ' + ey + '년까지 10개년 분석\n'
+    + '각 연도는 반드시 아래 형식으로:\n\n'
+    + '### 🗓️ YYYY년 干支년\n'
+    + '💰 재물·직업: (내용)\n'
+    + '❤️ 연애·가족: (내용)\n'
+    + '🌿 건강 주의: (내용)\n'
+    + '✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
+    + '📝 총평: 첫째 줄.\n둘째 줄.\n\n'
+    + '각 연도 사이에 반드시 빈 줄 삽입.\n'
+    + '---\n【9. 종합 조언】\n'
+    + '이 사주의 가장 큰 강점 · 인생 반복 패턴과 극복법 · 현재 시기 행동 지침 3가지 · 용신 활용법(색상·방향·음식·생활습관) · 따뜻하고 솔직한 마무리 메시지\n\n'
+    + '---\n"천명당은 당신의 방향을 응원합니다. 🌙"';
 }
 function buildMiniPrompt() {
   var info = buildInfo();
   var y = new Date().getFullYear();
-  return '당신은 30년 경력의 사주명리학 전문가입니다. 아래 고객의 사주를 바탕으로 ' + y + '년 월별 미니 운세를 작성해주세요.\n\n'
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n'
+    + '아래 고객의 사주를 바탕으로 ' + y + '년 월별 미니 운세를 작성해주세요.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
+    + '[핵심 분석 기준]\n'
+    + '① 일간·신강신약·용신을 먼저 파악하세요.\n'
+    + '② ' + y + '년 세운과 일간의 관계를 파악하세요.\n'
+    + '③ 각 월건과 일간·용신의 관계를 분석하여 운세를 서술하세요.\n\n'
     + '[작성 원칙]\n'
-    + '- 일간과 ' + y + '년 세운 관계를 파악하세요.\n'
-    + '- 각 월의 월건과 일간의 관계를 분석하여 운세를 서술하세요.\n'
+    + '- 각 달은 반드시 5~6줄 이상, 풍부하고 구체적으로 작성하세요.\n'
+    + '- 재물/직업, 연애/관계, 건강 세 가지 관점을 반드시 포함하세요.\n'
+    + '- 좋은 달은 확실히 좋다고, 나쁜 달은 가감 없이 팩트로 말하세요. 두루뭉술 금지.\n'
     + '- 한자 첫 등장 시 한글 뜻을 괄호로 병기하세요.\n'
-    + '- 각 달은 3~4줄 분량으로 간결하고 핵심적으로 작성하세요.\n'
-    + '- 재물/직업, 관계/감정, 건강 세 가지 관점을 포함하세요.\n'
+    + '- 용신이 들어오는 달은 ⭐ 표시, 기신이 강한 달은 ⚠️ 표시를 달 제목 옆에 붙이세요.\n'
+    + '- 각 달 마지막 줄은 반드시 "💡 이달의 핵심:" 으로 한 줄 요약하세요.\n'
     + '- 반드시 아래 형식 그대로 작성하세요.\n'
-    + '- 마지막에 [' + y + '년 전체 총평 3줄]을 직접 새롭게 요약하여 작성하세요.\n\n'
+    + '- 마지막에 [' + y + '년 전체 총평]을 5줄 이상 풍부하게 작성하세요.\n\n'
     + '---\n【1월】 甲寅月\n---\n【2월】 乙卯月\n---\n【3월】 丙辰月\n---\n【4월】 丁巳月\n'
     + '---\n【5월】 戊午月\n---\n【6월】 己未月\n---\n【7월】 庚申月\n---\n【8월】 辛酉月\n'
     + '---\n【9월】 壬戌月\n---\n【10월】 癸亥月\n---\n【11월】 甲子月\n---\n【12월】 乙丑月\n'
-    + '---\n[' + y + '년 전체 총평 3줄]';
+    + '---\n[' + y + '년 전체 총평]';
 }
 
 function doGenerate() {
@@ -449,35 +556,14 @@ function doGenerate() {
   document.getElementById('miniBadge').style.display = currentMode === 'mini' ? 'flex' : 'none';
   var resultEl = document.getElementById('result');
   if (resultEl) resultEl.value = '';
-  var resultOk = document.getElementById('resultOk');
-  if (resultOk) resultOk.style.display = 'none';
-  var charCount = document.getElementById('charCount');
-  if (charCount) charCount.textContent = '';
-  var sn2 = document.getElementById('sn2');
-  if (sn2) { sn2.className = 'snum snum-gray'; sn2.textContent = '2'; }
+  document.getElementById('resultOk').style.display = 'none';
+  document.getElementById('charCount').textContent = '';
+  document.getElementById('sn2').className = 'snum snum-gray';
+  document.getElementById('sn2').textContent = '2';
   document.getElementById('pdfBtn').className = 'btn btn-gray';
-  document.getElementById('pdfBtn').textContent = '② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfBtn').textContent = '② 결과 붙여넣기 후 활성화됩니다';
   document.getElementById('pdfHint').style.display = 'none';
-  document.getElementById('loadingCard').style.display = 'none';
-  document.getElementById('resultBox').style.display = 'none';
-  document.getElementById('manualCard').style.display = 'none';
   document.getElementById('err2').style.display = 'none';
-  document.getElementById('apiKeyCard').style.display = 'block';
-
-  // 버튼 초기화
-  var analyzeBtn = document.getElementById('analyzeBtn');
-  if (analyzeBtn) {
-    analyzeBtn.disabled = false;
-    analyzeBtn.textContent = '✨ AI 자동 분석 시작';
-    analyzeBtn.className = 'btn btn-dark';
-  }
-
-  // 저장된 API 키 불러오기
-  var savedKey = '';
-  try { savedKey = localStorage.getItem('cheonmyeongdang_api_key') || ''; } catch(e) {}
-  var apiInput = document.getElementById('apiKeyInput');
-  if (apiInput && savedKey) apiInput.value = savedKey;
-
   showPage('page2');
 }
 
@@ -856,13 +942,10 @@ function renderBody(raw) {
 // ── PDF 생성 ──
 
 function buildPDF() {
-  // API 자동 분석 결과 또는 수동 붙여넣기 결과 읽기
-  var autoResult = document.getElementById('result') ? document.getElementById('result').value.trim() : '';
-  var manualResult = document.getElementById('resultManual') ? document.getElementById('resultManual').value.trim() : '';
-  var result = autoResult.length > manualResult.length ? autoResult : manualResult;
+  var result = document.getElementById('result') ? document.getElementById('result').value.trim() : '';
   var err = document.getElementById('err2');
   if (result.length < 100) {
-    err.textContent = '분석 결과가 없습니다. AI 자동 분석을 먼저 실행해주세요.';
+    err.textContent = '분석 결과를 먼저 붙여넣어 주세요.';
     err.style.display = 'block';
     return;
   }
@@ -917,25 +1000,44 @@ function buildMiniPDF(result) {
   var today = new Date().toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric'});
   var months = parseMiniSecs(result);
   var totalIdx = result.indexOf('[' + y + '년 전체 총평');
-  var totalHtml = totalIdx !== -1 ? result.slice(totalIdx).replace(/\n/g,'<br>') : '';
+  var totalHtml = totalIdx !== -1 ? result.slice(totalIdx).replace(/\[.*?\]/g,'').replace(/\n/g,'<br>') : '';
+
   var mkMonth = function(s) {
-    return '<div class="mi"><div class="mh">' + s.title + '</div><div class="mb">' + s.body.replace(/\n/g,'<br>') + '</div></div>';
+    var isGood = s.title.indexOf('⭐') !== -1;
+    var isWarn = s.title.indexOf('⚠️') !== -1;
+    var cls = isGood ? 'mi good' : (isWarn ? 'mi warn' : 'mi');
+    var badge = isGood ? '<span class="mh-badge good">이달 주목</span>' : (isWarn ? '<span class="mh-badge warn">주의 필요</span>' : '');
+    var body = s.body.replace(/💡 이달의 핵심:(.*?)(\n|$)/g, '<span class="tip">💡 이달의 핵심:$1</span>').replace(/\n/g,'<br>');
+    return '<div class="' + cls + '"><div class="mh">' + s.title + badge + '</div><div class="mb">' + body + '</div></div>';
   };
+
   var html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/>'
     + '<title>' + y + '년 미니운세</title>' + getMiniCSS() + '</head><body>'
-    + '<div class="cover"><div class="cb">BONUS MINI FORTUNE</div><div class="cl"></div>'
+    + '<div class="cover"><div class="cb">✦ CHEONMYEONGDANG · MINI FORTUNE ✦</div>'
+    + '<div class="cl"></div>'
     + '<div class="star">⭐</div>'
     + '<div class="ct">' + (f.name||'고객') + ' 님의<br/>' + y + '년 월별 미니운세</div>'
-    + '<div class="cs">리뷰 작성 감사 보너스 · 1~12월 흐름 요약</div>'
+    + '<div class="cs">리뷰 작성 감사 보너스 · 1~12월 흐름 완전 분석</div>'
     + '<div class="ci">'
     + '<div class="cr"><span class="ck">성 명</span><span class="cv">' + (f.name||'미입력') + '</span></div>'
     + '<div class="cr"><span class="ck">생년월일</span><span class="cv">' + f.cal + ' ' + f.y + '년 ' + f.m + '월 ' + f.d + '일</span></div>'
     + '<div class="cr"><span class="ck">분석 연도</span><span class="cv">' + y + '년</span></div>'
     + '</div><div class="cd">발행일 · ' + today + '</div></div>'
-    + '<div class="half">' + months.slice(0,6).map(mkMonth).join('') + '</div>'
-    + '<div class="half">' + months.slice(6,12).map(mkMonth).join('') + '</div>'
-    + '<div class="total"><div class="tt2">' + y + '년 전체 총평</div><div class="tb">' + totalHtml + '</div>'
-    + '<div class="fin2"><div class="fl"></div><div class="ft">리뷰 작성에 감사드립니다 ⭐</div></div></div>'
+
+    + '<div class="half"><div class="page-label">1월 — 6월</div>'
+    + months.slice(0,6).map(mkMonth).join('') + '</div>'
+
+    + '<div class="half"><div class="page-label">7월 — 12월</div>'
+    + months.slice(6,12).map(mkMonth).join('') + '</div>'
+
+    + '<div class="total">'
+    + '<div class="total-top"><div class="tt2">' + y + '년 전체 총평</div>'
+    + '<div class="tt2-sub">ANNUAL FORTUNE SUMMARY</div></div>'
+    + '<div class="tb">' + totalHtml + '</div>'
+    + '<div class="fin2"><div class="fl"></div>'
+    + '<div class="ft">천명당 天命堂</div>'
+    + '<div class="ft-sub">리뷰 작성에 감사드립니다 · 천명당은 당신의 방향을 응원합니다 🌙</div>'
+    + '</div></div>'
     + '</body></html>';
   openPDF(html, (f.name||'고객') + '_미니운세.html');
 }
@@ -1025,31 +1127,52 @@ function getBasePDFStyle(name) {
 }
 
 function getMiniCSS() {
-  return '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"/>'
+  return '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>'
     + '<style>'
     + '*{margin:0;padding:0;box-sizing:border-box}'
     + 'body{font-family:"Noto Sans KR",sans-serif;color:#1a1a1a;background:#fff}'
-    + '.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#1C2B3A;color:#fff;page-break-after:always;text-align:center;padding:60px 40px}'
-    + '.cb{font-size:10px;letter-spacing:5px;color:#C9A84C;margin-bottom:24px}'
-    + '.cl{width:40px;height:1px;background:#C9A84C;margin:0 auto 24px}'
-    + '.star{font-size:32px;margin-bottom:12px}'
-    + '.ct{font-size:26px;font-weight:700;line-height:1.5;margin-bottom:10px}'
-    + '.cs{font-size:13px;color:#7a98ae;margin-bottom:36px;font-weight:300}'
-    + '.ci{border:1px solid rgba(201,168,76,0.3);border-radius:4px;padding:18px 32px;margin-bottom:36px;text-align:left}'
-    + '.cr{display:flex;gap:12px;margin-bottom:7px}.cr:last-child{margin-bottom:0}'
-    + '.ck{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0}'
-    + '.cv{font-size:12px;color:#ddd}'
-    + '.cd{font-size:10px;color:#3d5a6c;letter-spacing:2px}'
-    + '.half{padding:48px 64px;page-break-after:always}'
-    + '.mi{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid #f0f0f0}.mi:last-child{border-bottom:none}'
-    + '.mh{font-size:15px;font-weight:700;color:#1C2B3A;margin-bottom:8px}'
-    + '.mb{font-size:13px;line-height:2.1;color:#333;font-weight:400;word-break:keep-all}'
-    + '.total{padding:48px 64px;page-break-before:always}'
-    + '.tt2{font-size:19px;color:#1C2B3A;font-weight:700;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #C9A84C}'
-    + '.tb{font-size:14px;line-height:2.2;color:#2a2a2a;font-weight:400;word-break:keep-all}'
-    + '.fin2{text-align:center;margin-top:36px}'
-    + '.fl{width:36px;height:1px;background:#C9A84C;margin:14px auto}'
-    + '.ft{font-size:15px;color:#1C2B3A;font-weight:600}'
+
+    /* 표지 */
+    + '.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#1C2B3A 0%,#0d1820 100%);color:#fff;page-break-after:always;text-align:center;padding:60px 40px;position:relative;overflow:hidden}'
+    + '.cover::before{content:"⭐";position:absolute;font-size:320px;opacity:.03;top:-40px;right:-40px}'
+    + '.cb{font-size:9px;letter-spacing:6px;color:#C9A84C;margin-bottom:20px;font-weight:600}'
+    + '.cl{width:48px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 28px}'
+    + '.star{font-size:40px;margin-bottom:16px}'
+    + '.ct{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;line-height:1.6;margin-bottom:8px;color:#fff}'
+    + '.cs{font-size:12px;color:#7a98ae;margin-bottom:40px;font-weight:300;letter-spacing:1px}'
+    + '.ci{border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:20px 36px;margin-bottom:40px;text-align:left;background:rgba(255,255,255,.04);backdrop-filter:blur(4px)}'
+    + '.cr{display:flex;gap:14px;margin-bottom:8px}.cr:last-child{margin-bottom:0}'
+    + '.ck{font-size:9px;color:#C9A84C;width:56px;flex-shrink:0;letter-spacing:1px;padding-top:2px}'
+    + '.cv{font-size:12px;color:#dde8f0;font-weight:400}'
+    + '.cd{font-size:9px;color:#3d5a6c;letter-spacing:3px}'
+
+    /* 콘텐츠 페이지 */
+    + '.half{padding:52px 60px;page-break-after:always;background:#fff}'
+    + '.page-label{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:600;margin-bottom:32px;display:flex;align-items:center;gap:12px}'
+    + '.page-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}'
+
+    /* 월별 카드 */
+    + '.mi{margin-bottom:28px;padding:20px 24px;border-radius:10px;background:#f9f8f6;border-left:3px solid #C9A84C;page-break-inside:avoid}'
+    + '.mi.good{background:#f0f7f0;border-left-color:#27ae60}'
+    + '.mi.warn{background:#fdf6f0;border-left-color:#e67e22}'
+    + '.mh{font-size:14px;font-weight:700;color:#1C2B3A;margin-bottom:10px;display:flex;align-items:center;gap:8px}'
+    + '.mh-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}'
+    + '.mh-badge.good{background:#e8f5e9;color:#27ae60}'
+    + '.mh-badge.warn{background:#fff3e0;color:#e67e22}'
+    + '.mb{font-size:12px;line-height:2.0;color:#333;font-weight:400;word-break:keep-all}'
+    + '.mb .tip{display:block;margin-top:8px;font-size:11px;font-weight:700;color:#1C2B3A;padding:6px 10px;background:rgba(201,168,76,.1);border-radius:6px}'
+
+    /* 총평 페이지 */
+    + '.total{padding:52px 60px;page-break-before:always;min-height:100vh}'
+    + '.total-top{background:linear-gradient(135deg,#1C2B3A 0%,#0d1820 100%);border-radius:12px;padding:28px 32px;margin-bottom:32px;color:#fff}'
+    + '.tt2{font-family:"Noto Serif KR",serif;font-size:20px;color:#C9A84C;font-weight:900;margin-bottom:6px}'
+    + '.tt2-sub{font-size:11px;color:#7a98ae;letter-spacing:1px}'
+    + '.tb{font-size:13px;line-height:2.2;color:#2a2a2a;font-weight:400;word-break:keep-all;padding:24px;background:#f9f8f6;border-radius:10px;border-left:3px solid #C9A84C}'
+    + '.fin2{text-align:center;margin-top:40px;padding-top:28px;border-top:1px solid #f0f0f0}'
+    + '.fl{width:40px;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 14px}'
+    + '.ft{font-size:13px;color:#1C2B3A;font-weight:600;letter-spacing:1px}'
+    + '.ft-sub{font-size:10px;color:#aaa;margin-top:4px}'
+
     + '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'
     + '</style>';
 }
