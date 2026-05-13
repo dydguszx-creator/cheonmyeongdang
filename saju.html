@@ -515,20 +515,26 @@ function buildBasicPrompt() {
 function buildMiniPrompt() {
   var info = buildInfo();
   var y = new Date().getFullYear();
-  return '당신은 30년 경력의 사주명리학 전문가입니다. 아래 고객의 사주를 바탕으로 ' + y + '년 월별 미니 운세를 작성해주세요.\n\n'
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n'
+    + '아래 고객의 사주를 바탕으로 ' + y + '년 월별 미니 운세를 작성해주세요.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
+    + '[핵심 분석 기준]\n'
+    + '① 일간·신강신약·용신을 먼저 파악하세요.\n'
+    + '② ' + y + '년 세운과 일간의 관계를 파악하세요.\n'
+    + '③ 각 월건과 일간·용신의 관계를 분석하여 운세를 서술하세요.\n\n'
     + '[작성 원칙]\n'
-    + '- 일간과 ' + y + '년 세운 관계를 파악하세요.\n'
-    + '- 각 월의 월건과 일간의 관계를 분석하여 운세를 서술하세요.\n'
+    + '- 각 달은 반드시 5~6줄 이상, 풍부하고 구체적으로 작성하세요.\n'
+    + '- 재물/직업, 연애/관계, 건강 세 가지 관점을 반드시 포함하세요.\n'
+    + '- 좋은 달은 확실히 좋다고, 나쁜 달은 가감 없이 팩트로 말하세요. 두루뭉술 금지.\n'
     + '- 한자 첫 등장 시 한글 뜻을 괄호로 병기하세요.\n'
-    + '- 각 달은 3~4줄 분량으로 간결하고 핵심적으로 작성하세요.\n'
-    + '- 재물/직업, 관계/감정, 건강 세 가지 관점을 포함하세요.\n'
+    + '- 용신이 들어오는 달은 ⭐ 표시, 기신이 강한 달은 ⚠️ 표시를 달 제목 옆에 붙이세요.\n'
+    + '- 각 달 마지막 줄은 반드시 "💡 이달의 핵심:" 으로 한 줄 요약하세요.\n'
     + '- 반드시 아래 형식 그대로 작성하세요.\n'
-    + '- 마지막에 [' + y + '년 전체 총평 3줄]을 직접 새롭게 요약하여 작성하세요.\n\n'
+    + '- 마지막에 [' + y + '년 전체 총평]을 5줄 이상 풍부하게 작성하세요.\n\n'
     + '---\n【1월】 甲寅月\n---\n【2월】 乙卯月\n---\n【3월】 丙辰月\n---\n【4월】 丁巳月\n'
     + '---\n【5월】 戊午月\n---\n【6월】 己未月\n---\n【7월】 庚申月\n---\n【8월】 辛酉月\n'
     + '---\n【9월】 壬戌月\n---\n【10월】 癸亥月\n---\n【11월】 甲子月\n---\n【12월】 乙丑月\n'
-    + '---\n[' + y + '년 전체 총평 3줄]';
+    + '---\n[' + y + '년 전체 총평]';
 }
 
 function doGenerate() {
@@ -813,8 +819,13 @@ function parseMiniSecs(text) {
     var ei = next ? text.indexOf(next, si) : text.length;
     if (ei === -1) ei = text.length;
     var chunk = text.slice(si, ei).trim();
-    var bi = chunk.indexOf('\u3011');
-    return { title: month, body: bi !== -1 ? chunk.slice(bi + 1).trim() : chunk };
+    // 첫 줄 전체를 title로 (⭐⚠️ 포함)
+    var firstNewline = chunk.indexOf('\n');
+    var titleLine = firstNewline !== -1 ? chunk.slice(0, firstNewline).trim() : chunk;
+    var body = firstNewline !== -1 ? chunk.slice(firstNewline + 1).trim() : '';
+    // --- 구분선 제거
+    body = body.replace(/^---\n?/,'').trim();
+    return { title: titleLine, body: body };
   });
 }
 
@@ -994,25 +1005,44 @@ function buildMiniPDF(result) {
   var today = new Date().toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric'});
   var months = parseMiniSecs(result);
   var totalIdx = result.indexOf('[' + y + '년 전체 총평');
-  var totalHtml = totalIdx !== -1 ? result.slice(totalIdx).replace(/\n/g,'<br>') : '';
+  var totalHtml = totalIdx !== -1 ? result.slice(totalIdx).replace(/\[.*?\]/g,'').replace(/\n/g,'<br>') : '';
+
   var mkMonth = function(s) {
-    return '<div class="mi"><div class="mh">' + s.title + '</div><div class="mb">' + s.body.replace(/\n/g,'<br>') + '</div></div>';
+    var isGood = s.title.indexOf('⭐') !== -1;
+    var isWarn = s.title.indexOf('⚠️') !== -1;
+    var cls = isGood ? 'mi good' : (isWarn ? 'mi warn' : 'mi');
+    var badge = isGood ? '<span class="mh-badge good">이달 주목</span>' : (isWarn ? '<span class="mh-badge warn">주의 필요</span>' : '');
+    var body = s.body.replace(/💡 이달의 핵심:(.*?)(\n|$)/g, '<span class="tip">💡 이달의 핵심:$1</span>').replace(/\n/g,'<br>');
+    return '<div class="' + cls + '"><div class="mh">' + s.title + badge + '</div><div class="mb">' + body + '</div></div>';
   };
+
   var html = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/>'
     + '<title>' + y + '년 미니운세</title>' + getMiniCSS() + '</head><body>'
-    + '<div class="cover"><div class="cb">BONUS MINI FORTUNE</div><div class="cl"></div>'
+    + '<div class="cover"><div class="cb">✦ CHEONMYEONGDANG · MINI FORTUNE ✦</div>'
+    + '<div class="cl"></div>'
     + '<div class="star">⭐</div>'
     + '<div class="ct">' + (f.name||'고객') + ' 님의<br/>' + y + '년 월별 미니운세</div>'
-    + '<div class="cs">리뷰 작성 감사 보너스 · 1~12월 흐름 요약</div>'
+    + '<div class="cs">리뷰 작성 감사 보너스 · 1~12월 흐름 완전 분석</div>'
     + '<div class="ci">'
     + '<div class="cr"><span class="ck">성 명</span><span class="cv">' + (f.name||'미입력') + '</span></div>'
     + '<div class="cr"><span class="ck">생년월일</span><span class="cv">' + f.cal + ' ' + f.y + '년 ' + f.m + '월 ' + f.d + '일</span></div>'
     + '<div class="cr"><span class="ck">분석 연도</span><span class="cv">' + y + '년</span></div>'
     + '</div><div class="cd">발행일 · ' + today + '</div></div>'
-    + '<div class="half">' + months.slice(0,6).map(mkMonth).join('') + '</div>'
-    + '<div class="half">' + months.slice(6,12).map(mkMonth).join('') + '</div>'
-    + '<div class="total"><div class="tt2">' + y + '년 전체 총평</div><div class="tb">' + totalHtml + '</div>'
-    + '<div class="fin2"><div class="fl"></div><div class="ft">리뷰 작성에 감사드립니다 ⭐</div></div></div>'
+
+    + '<div class="half"><div class="page-label">1월 — 6월</div>'
+    + months.slice(0,6).map(mkMonth).join('') + '</div>'
+
+    + '<div class="half"><div class="page-label">7월 — 12월</div>'
+    + months.slice(6,12).map(mkMonth).join('') + '</div>'
+
+    + '<div class="total">'
+    + '<div class="total-top"><div class="tt2">' + y + '년 전체 총평</div>'
+    + '<div class="tt2-sub">ANNUAL FORTUNE SUMMARY</div></div>'
+    + '<div class="tb">' + totalHtml + '</div>'
+    + '<div class="fin2"><div class="fl"></div>'
+    + '<div class="ft">천명당 天命堂</div>'
+    + '<div class="ft-sub">리뷰 작성에 감사드립니다 · 천명당은 당신의 방향을 응원합니다 🌙</div>'
+    + '</div></div>'
     + '</body></html>';
   openPDF(html, (f.name||'고객') + '_미니운세.html');
 }
@@ -1102,31 +1132,52 @@ function getBasePDFStyle(name) {
 }
 
 function getMiniCSS() {
-  return '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"/>'
+  return '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>'
     + '<style>'
     + '*{margin:0;padding:0;box-sizing:border-box}'
     + 'body{font-family:"Noto Sans KR",sans-serif;color:#1a1a1a;background:#fff}'
-    + '.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#1C2B3A;color:#fff;page-break-after:always;text-align:center;padding:60px 40px}'
-    + '.cb{font-size:10px;letter-spacing:5px;color:#C9A84C;margin-bottom:24px}'
-    + '.cl{width:40px;height:1px;background:#C9A84C;margin:0 auto 24px}'
-    + '.star{font-size:32px;margin-bottom:12px}'
-    + '.ct{font-size:26px;font-weight:700;line-height:1.5;margin-bottom:10px}'
-    + '.cs{font-size:13px;color:#7a98ae;margin-bottom:36px;font-weight:300}'
-    + '.ci{border:1px solid rgba(201,168,76,0.3);border-radius:4px;padding:18px 32px;margin-bottom:36px;text-align:left}'
-    + '.cr{display:flex;gap:12px;margin-bottom:7px}.cr:last-child{margin-bottom:0}'
-    + '.ck{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0}'
-    + '.cv{font-size:12px;color:#ddd}'
-    + '.cd{font-size:10px;color:#3d5a6c;letter-spacing:2px}'
-    + '.half{padding:48px 64px;page-break-after:always}'
-    + '.mi{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid #f0f0f0}.mi:last-child{border-bottom:none}'
-    + '.mh{font-size:15px;font-weight:700;color:#1C2B3A;margin-bottom:8px}'
-    + '.mb{font-size:13px;line-height:2.1;color:#333;font-weight:400;word-break:keep-all}'
-    + '.total{padding:48px 64px;page-break-before:always}'
-    + '.tt2{font-size:19px;color:#1C2B3A;font-weight:700;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #C9A84C}'
-    + '.tb{font-size:14px;line-height:2.2;color:#2a2a2a;font-weight:400;word-break:keep-all}'
-    + '.fin2{text-align:center;margin-top:36px}'
-    + '.fl{width:36px;height:1px;background:#C9A84C;margin:14px auto}'
-    + '.ft{font-size:15px;color:#1C2B3A;font-weight:600}'
+
+    /* 표지 */
+    + '.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#1C2B3A 0%,#0d1820 100%);color:#fff;page-break-after:always;text-align:center;padding:60px 40px;position:relative;overflow:hidden}'
+    + '.cover::before{content:"⭐";position:absolute;font-size:320px;opacity:.03;top:-40px;right:-40px}'
+    + '.cb{font-size:9px;letter-spacing:6px;color:#C9A84C;margin-bottom:20px;font-weight:600}'
+    + '.cl{width:48px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 28px}'
+    + '.star{font-size:40px;margin-bottom:16px}'
+    + '.ct{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;line-height:1.6;margin-bottom:8px;color:#fff}'
+    + '.cs{font-size:12px;color:#7a98ae;margin-bottom:40px;font-weight:300;letter-spacing:1px}'
+    + '.ci{border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:20px 36px;margin-bottom:40px;text-align:left;background:rgba(255,255,255,.04);backdrop-filter:blur(4px)}'
+    + '.cr{display:flex;gap:14px;margin-bottom:8px}.cr:last-child{margin-bottom:0}'
+    + '.ck{font-size:9px;color:#C9A84C;width:56px;flex-shrink:0;letter-spacing:1px;padding-top:2px}'
+    + '.cv{font-size:12px;color:#dde8f0;font-weight:400}'
+    + '.cd{font-size:9px;color:#3d5a6c;letter-spacing:3px}'
+
+    /* 콘텐츠 페이지 */
+    + '.half{padding:52px 60px;page-break-after:always;background:#fff}'
+    + '.page-label{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:600;margin-bottom:32px;display:flex;align-items:center;gap:12px}'
+    + '.page-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}'
+
+    /* 월별 카드 */
+    + '.mi{margin-bottom:28px;padding:20px 24px;border-radius:10px;background:#f9f8f6;border-left:3px solid #C9A84C;page-break-inside:avoid}'
+    + '.mi.good{background:#f0f7f0;border-left-color:#27ae60}'
+    + '.mi.warn{background:#fdf6f0;border-left-color:#e67e22}'
+    + '.mh{font-size:14px;font-weight:700;color:#1C2B3A;margin-bottom:10px;display:flex;align-items:center;gap:8px}'
+    + '.mh-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}'
+    + '.mh-badge.good{background:#e8f5e9;color:#27ae60}'
+    + '.mh-badge.warn{background:#fff3e0;color:#e67e22}'
+    + '.mb{font-size:12px;line-height:2.0;color:#333;font-weight:400;word-break:keep-all}'
+    + '.mb .tip{display:block;margin-top:8px;font-size:11px;font-weight:700;color:#1C2B3A;padding:6px 10px;background:rgba(201,168,76,.1);border-radius:6px}'
+
+    /* 총평 페이지 */
+    + '.total{padding:52px 60px;page-break-before:always;min-height:100vh}'
+    + '.total-top{background:linear-gradient(135deg,#1C2B3A 0%,#0d1820 100%);border-radius:12px;padding:28px 32px;margin-bottom:32px;color:#fff}'
+    + '.tt2{font-family:"Noto Serif KR",serif;font-size:20px;color:#C9A84C;font-weight:900;margin-bottom:6px}'
+    + '.tt2-sub{font-size:11px;color:#7a98ae;letter-spacing:1px}'
+    + '.tb{font-size:13px;line-height:2.2;color:#2a2a2a;font-weight:400;word-break:keep-all;padding:24px;background:#f9f8f6;border-radius:10px;border-left:3px solid #C9A84C}'
+    + '.fin2{text-align:center;margin-top:40px;padding-top:28px;border-top:1px solid #f0f0f0}'
+    + '.fl{width:40px;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 14px}'
+    + '.ft{font-size:13px;color:#1C2B3A;font-weight:600;letter-spacing:1px}'
+    + '.ft-sub{font-size:10px;color:#aaa;margin-top:4px}'
+
     + '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'
     + '</style>';
 }
