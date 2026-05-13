@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>천명당 포스터</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#111; font-family:'Noto Sans KR',sans-serif; padding:30px 20px; }
+.tip { text-align:center; color:#666; font-size:12px; margin-bottom:30px; line-height:1.7; }
+.tip b { color:#C9A84C; }
+.poster-wrap { max-width:480px; margin:0 auto 40px; }
+.poster { border-radius:20px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.7); -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.pnum { color:#C9A84C; font-size:10px; font-weight:700; letter-spacing:3px; margin-bottom:10px; text-align:center; }
+
+/* 1번 */
+.p1 { background:linear-gradient(145deg,#1C2B3A 0%,#0d1520 100%); padding:44px 32px; }
+.badge { display:inline-block; background:#C9A84C; color:#1C2B3A; font-size:10px; font-weight:700; letter-spacing:3px; padding:5px 14px; border-radius:20px; margin-bottom:20px; }
+.p1-moon { font-size:44px; margin-bottom:14px; display:block; }
+.p1-h { font-family:'Noto Serif KR',serif; font-size:28px; font-weight:900; color:white; line-height:1.35; margin-bottom:8px; }
+.p1-h em { color:#C9A84C; font-style:normal; }
+.p1-desc { font-size:13px; color:#aaa; line-height:1.7; margin-bottom:28px; }
+.price-box { background:rgba(201,168,76,.1); border:1px solid rgba(201,168,76,.25); border-radius:14px; padding:18px 22px; margin-bottom:22px; }
+.original { font-size:12px; color:#777; text-decoration:line-through; margin-bottom:4px; }
+.price { font-size:34px; font-weight:900; color:#C9A84C; }
+.price small { font-size:16px; }
+.tags { display:flex; gap:8px; flex-wrap:wrap; }
+.tag { background:rgba(255,255,255,.07); border-radius:20px; padding:5px 13px; font-size:11px; color:#ccc; }
+.p1-footer { margin-top:24px; padding-top:18px; border-top:1px solid rgba(255,255,255,.1); display:flex; justify-content:space-between; align-items:center; }
+.brand { font-family:'Noto Serif KR',serif; font-size:15px; color:#C9A84C; font-weight:700; }
+.pay-info { background:rgba(201,168,76,.15); border:1px solid rgba(201,168,76,.3); border-radius:10px; padding:8px 14px; font-size:11px; color:#C9A84C; font-weight:700; }
+
+/* 2번 */
+.p2 { background:#f8f5ef; padding:40px 30px; }
+.p2-hd { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; }
+.p2-brand { font-family:'Noto Serif KR',serif; font-size:17px; color:#1C2B3A; font-weight:900; }
+.p2-why { font-size:10px; color:#C9A84C; font-weight:700; letter-spacing:2px; }
+.p2-h { font-family:'Noto Serif KR',serif; font-size:24px; font-weight:900; color:#1C2B3A; line-height:1.4; margin-bottom:26px; }
+.p2-h em { color:#C9A84C; font-style:normal; }
+.items { display:flex; flex-direction:column; gap:12px; margin-bottom:24px; }
+.item { background:white; border-radius:14px; padding:16px 18px; display:flex; gap:14px; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.item-icon { font-size:22px; flex-shrink:0; }
+.item-t { font-size:13px; font-weight:700; color:#1C2B3A; margin-bottom:3px; }
+.item-d { font-size:11px; color:#888; line-height:1.5; }
+.p2-ft { background:#1C2B3A; border-radius:12px; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; }
+.p2-ft-t { font-size:13px; color:#C9A84C; font-weight:700; }
+.p2-ft-s { font-size:10px; color:#aaa; margin-top:2px; }
+
+/* 후기 */
+.p3 { background:linear-gradient(155deg,#2a1840 0%,#160d28 100%); padding:40px 30px; }
+.p3-badge { display:inline-block; background:rgba(201,168,76,.2); border:1px solid rgba(201,168,76,.4); color:#C9A84C; font-size:10px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; margin-bottom:20px; }
+.p3-h { font-family:'Noto Serif KR',serif; font-size:22px; font-weight:900; color:white; line-height:1.4; margin-bottom:24px; }
+.reviews { display:flex; flex-direction:column; gap:12px; margin-bottom:22px; }
+.review { background:rgba(255,255,255,.07); border-radius:12px; padding:15px 17px; border-left:3px solid #C9A84C; }
+.stars { color:#C9A84C; font-size:11px; margin-bottom:6px; }
+.rv-text { font-size:12px; color:#ddd; line-height:1.65; margin-bottom:6px; }
+.rv-name { font-size:10px; color:#888; }
+.p3-count { text-align:center; font-size:12px; color:#aaa; padding-top:14px; border-top:1px solid rgba(255,255,255,.1); }
+.p3-count b { color:#C9A84C; }
+
+/* 이용방법 */
+.p4 { background:white; padding:40px 30px; }
+.p4-top { background:#1C2B3A; border-radius:14px; padding:18px 22px; margin-bottom:24px; }
+.p4-top-t { font-family:'Noto Serif KR',serif; font-size:18px; font-weight:900; color:#C9A84C; margin-bottom:3px; }
+.p4-top-s { font-size:11px; color:#aaa; }
+.steps { display:flex; flex-direction:column; }
+.step { display:flex; gap:14px; padding:15px 0; border-bottom:1px solid #f0f0f0; align-items:flex-start; }
+.step:last-child { border-bottom:none; }
+.snum { width:34px; height:34px; background:#1C2B3A; color:#C9A84C; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:900; flex-shrink:0; }
+.step-t { font-size:13px; font-weight:700; color:#1C2B3A; margin-bottom:2px; }
+.step-d { font-size:11px; color:#888; line-height:1.5; }
+.p4-ft { margin-top:18px; background:#f8f5ef; border-radius:12px; padding:16px 18px; }
+.p4-ft-t { font-size:13px; font-weight:700; color:#1C2B3A; margin-bottom:8px; }
+.p4-ft-s { font-size:11px; color:#555; line-height:2.0; }
+
+/* 리뷰이벤트 */
+.p5 { background:linear-gradient(140deg,#163020 0%,#0b1a0f 100%); padding:40px 30px; }
+.p5-badge { display:inline-block; background:#27ae60; color:white; font-size:10px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; margin-bottom:20px; }
+.p5-h { font-family:'Noto Serif KR',serif; font-size:26px; font-weight:900; color:white; line-height:1.35; margin-bottom:8px; }
+.p5-h em { color:#4cd964; font-style:normal; }
+.p5-desc { font-size:12px; color:#aaa; line-height:1.7; margin-bottom:24px; }
+.p5-boxes { display:flex; flex-direction:column; gap:10px; margin-bottom:24px; }
+.p5-box { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:14px 18px; display:flex; align-items:center; gap:14px; }
+.p5-box-icon { font-size:22px; }
+.p5-box-t { font-size:13px; font-weight:700; color:white; margin-bottom:2px; }
+.p5-box-d { font-size:11px; color:#888; }
+.p5-info { background:rgba(39,174,96,.15); border:1px solid rgba(39,174,96,.4); border-radius:12px; padding:18px 20px; }
+.p5-info-title { font-size:13px; font-weight:700; color:#4cd964; margin-bottom:10px; }
+.p5-info-row { display:flex; align-items:flex-start; gap:8px; margin-bottom:8px; font-size:12px; color:#ccc; line-height:1.7; }
+.p5-info-row:last-child { margin-bottom:0; }
+</style>
+</head>
+<body>
+
+<div class="tip">
+  📱 <b>저장 방법:</b> 각 포스터 꾹 누르기 → 이미지 저장<br>
+  또는 스크린샷 후 사진첩에서 크롭하세요
+</div>
+
+<!-- 1번: 오픈특가 -->
+<div class="poster-wrap">
+  <div class="pnum">— 01 —</div>
+  <div class="poster p1">
+    <span class="badge">✦ 오픈 특가</span>
+    <span class="p1-moon">🌙</span>
+    <div class="p1-h">사주를 봤는데<br><em>두루뭉술한 말만</em><br>들으셨나요?</div>
+    <div class="p1-desc">팩트만 말씀드립니다.<br>좋은 건 좋다고, 나쁜 건 나쁘다고.</div>
+    <div class="price-box">
+      <div class="original">일반 사주 상담 50,000원~</div>
+      <div class="price"><small>오픈특가 </small>15,000원</div>
+    </div>
+    <div class="tags">
+      <span class="tag">📄 PDF 보고서</span>
+      <span class="tag">🕐 최대 12시간 내 발송</span>
+      <span class="tag">9개 섹션</span>
+    </div>
+    <div class="p1-footer">
+      <div class="brand">天命堂 천명당</div>
+      <div class="pay-info">💳 계좌이체</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2번: 차별점 -->
+<div class="poster-wrap">
+  <div class="pnum">— 02 —</div>
+  <div class="poster p2">
+    <div class="p2-hd">
+      <div class="p2-brand">天命堂</div>
+      <div class="p2-why">WHY 천명당</div>
+    </div>
+    <div class="p2-h">인터넷 사주와<br><em>천명당이 다른</em><br>3가지 이유</div>
+    <div class="items">
+      <div class="item">
+        <div class="item-icon">📄</div>
+        <div>
+          <div class="item-t">쉽게 읽히는 PDF 보고서</div>
+          <div class="item-d">어려운 한자 설명 없이 9개 섹션 상세 분석</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon">🎯</div>
+        <div>
+          <div class="item-t">내 상황에 딱 맞는 답변</div>
+          <div class="item-d">이직·창업·수입·건강·연애 등 직접 답변</div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-icon">⚡</div>
+        <div>
+          <div class="item-t">최대 12시간 내 빠른 발송</div>
+          <div class="item-d">오픈채팅 문의 👉🏻 입금 확인 👉🏻 PDF 발송</div>
+        </div>
+      </div>
+    </div>
+    <div class="p2-ft">
+      <div>
+        <div class="p2-ft-t">오픈 특가 15,000원</div>
+        <div class="p2-ft-s">🌙 천명당은 당신의 방향을 응원합니다</div>
+      </div>
+      <div style="font-size:28px">🌙</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3번: 후기 1장 -->
+<div class="poster-wrap">
+  <div class="pnum">— 03 —</div>
+  <div class="poster p3">
+    <div class="p3-badge">⭐ 실제 후기</div>
+    <div class="p3-h">천명당을 경험한<br>분들의 이야기</div>
+    <div class="reviews">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"다른 사주는 다 비슷한 말인데 여기는 제 상황에 딱 맞아서 소름이었어요. 올해 흐름 분석이 너무 정확했어요."</div>
+        <div class="rv-name">30대 직장인 ㅇㅇ님</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"이직 고민 중이었는데 시기를 딱 짚어줘서 결정하는 데 큰 도움이 됐어요. PDF로 받으니까 계속 다시 볼 수 있어서 좋아요."</div>
+        <div class="rv-name">40대 자영업자 ㅇㅇ님</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"솔직하게 좋은 것도 나쁜 것도 다 말해줘서 신뢰가 갔어요. 두루뭉술하지 않고 콕 집어줘서 너무 좋았어요."</div>
+        <div class="rv-name">20대 취준생 ㅇㅇ님</div>
+      </div>
+    </div>
+    <div class="p3-count">누적 분석 <b>200+</b>건 · 오픈특가 <b>15,000원</b></div>
+  </div>
+</div>
+
+<!-- 4번: 후기 2장 -->
+<div class="poster-wrap">
+  <div class="pnum">— 04 —</div>
+  <div class="poster p3">
+    <div class="p3-badge">⭐ 실제 후기</div>
+    <div class="p3-h">천명당을 경험한<br>분들의 이야기</div>
+    <div class="reviews">
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"창업 시기 물어봤는데 구체적으로 몇 년도가 맞고 어떤 방향이 맞는지 딱 알려줘서 결정하는 데 너무 도움이 됐어요."</div>
+        <div class="rv-name">30대 예비창업자 ㅇㅇ님</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"건강 부분이 너무 정확했어요. 제가 실제로 약하다고 느끼는 부분이랑 딱 맞아서 놀랐고 관리법도 구체적으로 나와 있어서 좋았어요."</div>
+        <div class="rv-name">40대 주부 ㅇㅇ님</div>
+      </div>
+      <div class="review">
+        <div class="stars">★★★★★</div>
+        <div class="rv-text">"결혼 시기랑 인연 관련해서 물어봤는데 막연하게 좋다고 하는 게 아니라 언제 어떤 에너지인지 설명해줘서 납득이 됐어요."</div>
+        <div class="rv-name">30대 미혼 ㅇㅇ님</div>
+      </div>
+    </div>
+    <div class="p3-count">누적 분석 <b>200+</b>건 · 오픈특가 <b>15,000원</b></div>
+  </div>
+</div>
+
+<!-- 5번: 이용방법 -->
+<div class="poster-wrap">
+  <div class="pnum">— 05 —</div>
+  <div class="poster p4">
+    <div class="p4-top">
+      <div class="p4-top-t">🌙 천명당 이용방법</div>
+      <div class="p4-top-s">문의부터 PDF 받기까지 딱 4단계</div>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="snum">1</div>
+        <div>
+          <div class="step-t">오픈채팅으로 문의</div>
+          <div class="step-d">채팅 입장 → 상담 안내 받기</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="snum">2</div>
+        <div>
+          <div class="step-t">안내 받은 내용 작성</div>
+          <div class="step-d">이름 · 성별 · 생년월일 · 출생시각 · 궁금한 것</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="snum">3</div>
+        <div>
+          <div class="step-t">15,000원 계좌이체</div>
+          <div class="step-d">안내받은 계좌로 입금</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="snum">4</div>
+        <div>
+          <div class="step-t">PDF 보고서 수령 🎉</div>
+          <div class="step-d">최대 12시간 내 발송</div>
+        </div>
+      </div>
+    </div>
+    <div class="p4-ft">
+      <div class="p4-ft-t">💳 결제 안내</div>
+      <div class="p4-ft-s">
+        오픈채팅으로 문의해 주시면<br>
+        결제 계좌 안내해드립니다 :)<br><br>
+        오픈채팅 문의 👉🏻 입금 확인 👉🏻 최대 12시간 내 PDF발송
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 6번: 리뷰 이벤트 -->
+<div class="poster-wrap">
+  <div class="pnum">— 06 —</div>
+  <div class="poster p5">
+    <div class="p5-badge">🎁 리뷰 이벤트</div>
+    <div class="p5-h">후기 남기면<br><em>미니운세 보너스</em><br>무료 증정!</div>
+    <div class="p5-desc">당근마켓에 후기 남겨주시면<br>월별 미니운세 보고서를 추가로 드려요.</div>
+    <div class="p5-boxes">
+      <div class="p5-box">
+        <div class="p5-box-icon">📄</div>
+        <div>
+          <div class="p5-box-t">기본 사주 보고서</div>
+          <div class="p5-box-d">9개 섹션 · 15,000원</div>
+        </div>
+      </div>
+      <div class="p5-box">
+        <div class="p5-box-icon">🎁</div>
+        <div>
+          <div class="p5-box-t">미니운세 보너스 (후기 증정)</div>
+          <div class="p5-box-d">2026년 1~12월 월별 운세 · 무료</div>
+        </div>
+      </div>
+    </div>
+    <div class="p5-info">
+      <div class="p5-info-title">💳 신청 방법</div>
+      <div class="p5-info-row"><span>1️⃣</span><span>오픈채팅으로 문의해 주시면<br>결제 계좌 안내해드립니다 :)</span></div>
+      <div class="p5-info-row"><span>2️⃣</span><span>오픈채팅 문의 👉🏻 입금 확인 👉🏻<br>최대 12시간 내 PDF발송</span></div>
+      <div class="p5-info-row"><span>3️⃣</span><span>PDF 수령 후 당근 후기 남기면<br>미니운세 발송!</span></div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#444;font-size:11px;margin-top:10px;padding-bottom:40px">
+🌙 천명당은 당신의 방향을 응원합니다
+</div>
+</body>
+</html>
