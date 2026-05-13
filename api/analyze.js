@@ -1,11 +1,4 @@
-export const config = {
-  maxDuration: 300,
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb'
-    }
-  }
-};
+export const config = { maxDuration: 300 };
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -15,11 +8,23 @@ export default async function handler(req, res) {
   if (req.method !== "POST") { res.status(405).end(); return; }
 
   try {
-    const parsed = req.body;
-    if (!parsed) { res.status(400).json({ error: "no body" }); return; }
+    let parsed;
+    if (req.body && Object.keys(req.body).length > 0) {
+      parsed = req.body;
+    } else {
+      let raw = "";
+      await new Promise((resolve, reject) => {
+        req.on("data", chunk => { raw += chunk; });
+        req.on("end", resolve);
+        req.on("error", reject);
+      });
+      parsed = JSON.parse(raw);
+    }
 
     const apiKey = (parsed.apiKey || "").replace(/[^\x20-\x7E]/g, "").trim();
     if (!apiKey) { res.status(400).json({ error: "missing apiKey" }); return; }
+
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
 
     const callAPI = async (prompt) => {
       if (!prompt) return "";
@@ -32,7 +37,7 @@ export default async function handler(req, res) {
         },
         body: JSON.stringify({
           model: "claude-sonnet-4-6",
-          max_tokens: 8000,
+          max_tokens: 3000,
           messages: [{ role: "user", content: prompt }]
         })
       });
@@ -47,7 +52,15 @@ export default async function handler(req, res) {
       parsed.p6, parsed.p7, parsed.p8, parsed.p9, parsed.p10
     ];
 
-    const results = await Promise.all(prompts.map(p => callAPI(p || "")));
+    // 2개씩 병렬로 순차 실행 (rate limit 준수)
+    const results = [];
+    for (let i = 0; i < prompts.length; i += 2) {
+      const batch = prompts.slice(i, i + 2);
+      const batchResults = await Promise.all(batch.map(p => callAPI(p || "")));
+      results.push(...batchResults);
+      if (i + 2 < prompts.length) await sleep(8000); // 8초 대기
+    }
+
     const combined = results.filter(Boolean).join("\n\n");
     res.status(200).json({ combined });
 
