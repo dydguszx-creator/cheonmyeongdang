@@ -150,9 +150,10 @@ textarea{resize:vertical;line-height:1.7}
 
   <div id="err2" class="err"></div>
   <button class="btn btn-gray" id="pdfBtn" type="button" onclick="buildPDF()">② 결과 붙여넣기 후 활성화됩니다</button>
+  <button class="btn btn-gray" id="pdfAllBtn" type="button" onclick="buildLinearPDF()" style="margin-top:8px">📑 전체 저장 (스크롤형)</button>
   <div class="pdf-hint" id="pdfHint">
-    📱 iOS: 보고서 열기 → 공유(□↑) → "파일에 저장"<br/>
-    🤖 Android: 보고서 열기 → 인쇄 → "PDF로 저장"
+    📱 <b>카드형:</b> 보고서 열기 → 스와이프로 읽기 → 공유(□↑) → 파일에 저장<br/>
+    📄 <b>전체 저장:</b> 한 페이지로 전체 출력 → iOS 공유 → PDF로 저장 / Android 인쇄 → PDF저장
   </div>
 </div>
 </div>
@@ -325,21 +326,41 @@ function buildBasicPromptPart1() {
     + '  예: 인성이 없으면 배움을 거부하는 경향이 있다는 것\n'
     + '  예: 오행 하나가 과다하면 그것이 성격의 과함으로 나타난다는 것\n\n'
     + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
-    + '- 용신이 水면 선택지: 수영/족욕/해산물섭취/검은콩/미역/파란색소품/검정색소품/북쪽방향배치\n'
-    + '- 용신이 木이면 선택지: 산책/등산/녹색식물/초록색소품/채소섭취/동쪽방향배치\n'
-    + '- 용신이 火면 선택지: 햇볕쬐기/빨간색소품/주황색소품/따뜻한음식/남쪽방향배치\n'
-    + '- 용신이 土면 선택지: 규칙적식사루틴/노란색소품/뿌리채소섭취/중앙배치\n'
-    + '- 용신이 金이면 선택지: 유산소운동등록/흰색소품/금색소품/폐관리/서쪽방향배치\n'
+    + '- 용신이 水면 카테고리별 선택지 (각 카테고리에서 섹션마다 1개씩, 절대 중복 금지):\n'
+    + '  [운동] 수영등록 / 족욕루틴 / 냉수세안습관\n'
+    + '  [음식] 해산물저녁 / 미역국끓이기 / 검은콩밥 / 굴구매 / 다시마국\n'
+    + '  [소품/색상] 파란색물병 / 검정색수첩 / 남색파우치 / 파란조명 / 네이비카드지갑\n'
+    + '  [환경/방향] 책상북쪽배치 / 침대머리북쪽 / 화면배경파란색\n'
+    + '  [기타] 수족관방문 / 바다사진액자 / 물소리ASMR\n'
+    + '- 용신이 木이면 카테고리별 선택지:\n'
+    + '  [운동] 등산예약 / 저녁산책 / 공원달리기\n'
+    + '  [음식] 나물비빔밥 / 시금치무침 / 브로콜리볶음\n'
+    + '  [소품] 초록화분 / 대나무소품 / 녹색수첩\n'
+    + '  [환경] 책상동쪽배치 / 식물인테리어\n'
+    + '- 용신이 火면 카테고리별 선택지:\n'
+    + '  [운동] 아침햇볕10분 / 남쪽창문앞스트레칭\n'
+    + '  [음식] 고추장찌개 / 따뜻한홍차 / 생강차\n'
+    + '  [소품] 빨간머그컵 / 주황색쿠션 / 캔들\n'
+    + '- 용신이 土면 카테고리별 선택지:\n'
+    + '  [운동] 맨발걷기 / 규칙적취침시간설정\n'
+    + '  [음식] 고구마간식 / 감자국 / 된장찌개\n'
+    + '  [소품] 노란색볼펜 / 황토색쿠션\n'
+    + '- 용신이 金이면 카테고리별 선택지:\n'
+    + '  [운동] 필라테스등록 / 아령구매 / 줄넘기\n'
+    + '  [음식] 도라지무침 / 배즙 / 흰살생선\n'
+    + '  [소품] 흰색머그컵 / 금속소품 / 실버액세서리\n'
     + '⚠️ 용신 아닌 오행 조언 절대 금지.\n'
-    + '⚠️ 위 선택지에서 9섹션 모두 서로 다른 항목 사용. 같은 항목 2번 쓰면 안 됨.\n'
-    + '⚠️ 특히 물마시기/수영/파란색소품처럼 자주 나오는 항목은 전체에서 딱 1번만.\n\n'
+    + '⚠️ 9섹션 모두 위에서 다른 카테고리의 다른 항목 선택. 중복 불가.\n'
+    + '⚠️ 수영, 물마시기, 파란색 이 세 가지는 각각 전체 보고서에서 딱 1번씩만 사용 가능.\n'
+    + '⚠️ 예: 섹션1에 수영 썼으면 나머지 8섹션은 수영 금지. 음식/소품/환경 다른 것으로.\n\n'
     + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
     + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
     + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
     + '- \"적어보세요\", \"생각해보세요\" 같은 추상적 표현 절대 금지.\n'
     + '- 섹션마다 다른 종류 행동 쓰세요: 음식/소품/연락/앱설치/환경/운동/금융 중 택1.\n'
     + '- 같은 행동 두 섹션 반복 금지.\n'
-    + '- 물마시기/수영/파란색소품 같은 용신 조언은 9섹션 통틀어 1번만 쓰세요.\n\n'
+    + '- 수영/물마시기/파란색소품은 각각 전체 9섹션 통틀어 딱 1번씩만 사용 가능.\n'
+    + '- 위 용신 선택지에서 카테고리별로 다른 것을 골라 쓰세요. 같은 카테고리도 중복 금지.\n\n'
     + '[세운 분석 간지 기준]\n'
     + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
     + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n';
@@ -414,21 +435,41 @@ function makeBase(info, curDate) {
     + '- 고객의 특별 궁금한 점은 해당 섹션에서 반드시 직접 답변하세요.\n'
     + '- 성별에 따라 관성/재성 해석을 다르게 하세요: 여성은 관성=배우자, 남성은 재성=배우자.\n\n'
     + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
-    + '- 용신이 水면 선택지: 수영/족욕/해산물섭취/검은콩/미역/파란색소품/검정색소품/북쪽방향배치\n'
-    + '- 용신이 木이면 선택지: 산책/등산/녹색식물/초록색소품/채소섭취/동쪽방향배치\n'
-    + '- 용신이 火면 선택지: 햇볕쬐기/빨간색소품/주황색소품/따뜻한음식/남쪽방향배치\n'
-    + '- 용신이 土면 선택지: 규칙적식사루틴/노란색소품/뿌리채소섭취/중앙배치\n'
-    + '- 용신이 金이면 선택지: 유산소운동등록/흰색소품/금색소품/폐관리/서쪽방향배치\n'
+    + '- 용신이 水면 카테고리별 선택지 (각 카테고리에서 섹션마다 1개씩, 절대 중복 금지):\n'
+    + '  [운동] 수영등록 / 족욕루틴 / 냉수세안습관\n'
+    + '  [음식] 해산물저녁 / 미역국끓이기 / 검은콩밥 / 굴구매 / 다시마국\n'
+    + '  [소품/색상] 파란색물병 / 검정색수첩 / 남색파우치 / 파란조명 / 네이비카드지갑\n'
+    + '  [환경/방향] 책상북쪽배치 / 침대머리북쪽 / 화면배경파란색\n'
+    + '  [기타] 수족관방문 / 바다사진액자 / 물소리ASMR\n'
+    + '- 용신이 木이면 카테고리별 선택지:\n'
+    + '  [운동] 등산예약 / 저녁산책 / 공원달리기\n'
+    + '  [음식] 나물비빔밥 / 시금치무침 / 브로콜리볶음\n'
+    + '  [소품] 초록화분 / 대나무소품 / 녹색수첩\n'
+    + '  [환경] 책상동쪽배치 / 식물인테리어\n'
+    + '- 용신이 火면 카테고리별 선택지:\n'
+    + '  [운동] 아침햇볕10분 / 남쪽창문앞스트레칭\n'
+    + '  [음식] 고추장찌개 / 따뜻한홍차 / 생강차\n'
+    + '  [소품] 빨간머그컵 / 주황색쿠션 / 캔들\n'
+    + '- 용신이 土면 카테고리별 선택지:\n'
+    + '  [운동] 맨발걷기 / 규칙적취침시간설정\n'
+    + '  [음식] 고구마간식 / 감자국 / 된장찌개\n'
+    + '  [소품] 노란색볼펜 / 황토색쿠션\n'
+    + '- 용신이 金이면 카테고리별 선택지:\n'
+    + '  [운동] 필라테스등록 / 아령구매 / 줄넘기\n'
+    + '  [음식] 도라지무침 / 배즙 / 흰살생선\n'
+    + '  [소품] 흰색머그컵 / 금속소품 / 실버액세서리\n'
     + '⚠️ 용신 아닌 오행 조언 절대 금지.\n'
-    + '⚠️ 위 선택지에서 9섹션 모두 서로 다른 항목 사용. 같은 항목 2번 쓰면 안 됨.\n'
-    + '⚠️ 특히 물마시기/수영/파란색소품처럼 자주 나오는 항목은 전체에서 딱 1번만.\n\n'
+    + '⚠️ 9섹션 모두 위에서 다른 카테고리의 다른 항목 선택. 중복 불가.\n'
+    + '⚠️ 수영, 물마시기, 파란색 이 세 가지는 각각 전체 보고서에서 딱 1번씩만 사용 가능.\n'
+    + '⚠️ 예: 섹션1에 수영 썼으면 나머지 8섹션은 수영 금지. 음식/소품/환경 다른 것으로.\n\n'
     + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
     + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
     + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
     + '- \"적어보세요\", \"생각해보세요\" 같은 추상적 표현 절대 금지.\n'
     + '- 섹션마다 다른 종류 행동 쓰세요: 음식/소품/연락/앱설치/환경/운동/금융 중 택1.\n'
     + '- 같은 행동 두 섹션 반복 금지.\n'
-    + '- 물마시기/수영/파란색소품 같은 용신 조언은 9섹션 통틀어 1번만 쓰세요.\n\n'
+    + '- 수영/물마시기/파란색소품은 각각 전체 9섹션 통틀어 딱 1번씩만 사용 가능.\n'
+    + '- 위 용신 선택지에서 카테고리별로 다른 것을 골라 쓰세요. 같은 카테고리도 중복 금지.\n\n'
     + '[세운 분석 간지 기준]\n'
     + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
     + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n'
@@ -626,21 +667,41 @@ function buildBasicPrompt() {
     + '  예: 인성이 없으면 배움을 거부하는 경향이 있다는 것\n'
     + '  예: 오행 하나가 과다하면 그것이 성격의 과함으로 나타난다는 것\n\n'
     + '[용신별 맞춤 조언 기준 — 반드시 적용]\n'
-    + '- 용신이 水면 선택지: 수영/족욕/해산물섭취/검은콩/미역/파란색소품/검정색소품/북쪽방향배치\n'
-    + '- 용신이 木이면 선택지: 산책/등산/녹색식물/초록색소품/채소섭취/동쪽방향배치\n'
-    + '- 용신이 火면 선택지: 햇볕쬐기/빨간색소품/주황색소품/따뜻한음식/남쪽방향배치\n'
-    + '- 용신이 土면 선택지: 규칙적식사루틴/노란색소품/뿌리채소섭취/중앙배치\n'
-    + '- 용신이 金이면 선택지: 유산소운동등록/흰색소품/금색소품/폐관리/서쪽방향배치\n'
+    + '- 용신이 水면 카테고리별 선택지 (각 카테고리에서 섹션마다 1개씩, 절대 중복 금지):\n'
+    + '  [운동] 수영등록 / 족욕루틴 / 냉수세안습관\n'
+    + '  [음식] 해산물저녁 / 미역국끓이기 / 검은콩밥 / 굴구매 / 다시마국\n'
+    + '  [소품/색상] 파란색물병 / 검정색수첩 / 남색파우치 / 파란조명 / 네이비카드지갑\n'
+    + '  [환경/방향] 책상북쪽배치 / 침대머리북쪽 / 화면배경파란색\n'
+    + '  [기타] 수족관방문 / 바다사진액자 / 물소리ASMR\n'
+    + '- 용신이 木이면 카테고리별 선택지:\n'
+    + '  [운동] 등산예약 / 저녁산책 / 공원달리기\n'
+    + '  [음식] 나물비빔밥 / 시금치무침 / 브로콜리볶음\n'
+    + '  [소품] 초록화분 / 대나무소품 / 녹색수첩\n'
+    + '  [환경] 책상동쪽배치 / 식물인테리어\n'
+    + '- 용신이 火면 카테고리별 선택지:\n'
+    + '  [운동] 아침햇볕10분 / 남쪽창문앞스트레칭\n'
+    + '  [음식] 고추장찌개 / 따뜻한홍차 / 생강차\n'
+    + '  [소품] 빨간머그컵 / 주황색쿠션 / 캔들\n'
+    + '- 용신이 土면 카테고리별 선택지:\n'
+    + '  [운동] 맨발걷기 / 규칙적취침시간설정\n'
+    + '  [음식] 고구마간식 / 감자국 / 된장찌개\n'
+    + '  [소품] 노란색볼펜 / 황토색쿠션\n'
+    + '- 용신이 金이면 카테고리별 선택지:\n'
+    + '  [운동] 필라테스등록 / 아령구매 / 줄넘기\n'
+    + '  [음식] 도라지무침 / 배즙 / 흰살생선\n'
+    + '  [소품] 흰색머그컵 / 금속소품 / 실버액세서리\n'
     + '⚠️ 용신 아닌 오행 조언 절대 금지.\n'
-    + '⚠️ 위 선택지에서 9섹션 모두 서로 다른 항목 사용. 같은 항목 2번 쓰면 안 됨.\n'
-    + '⚠️ 특히 물마시기/수영/파란색소품처럼 자주 나오는 항목은 전체에서 딱 1번만.\n\n'
+    + '⚠️ 9섹션 모두 위에서 다른 카테고리의 다른 항목 선택. 중복 불가.\n'
+    + '⚠️ 수영, 물마시기, 파란색 이 세 가지는 각각 전체 보고서에서 딱 1번씩만 사용 가능.\n'
+    + '⚠️ 예: 섹션1에 수영 썼으면 나머지 8섹션은 수영 금지. 음식/소품/환경 다른 것으로.\n\n'
     + '[지금 당장 할 수 있는 것 — 작성 기준]\n'
     + '- 반드시 오늘 당장 실행 가능한 구체적 행동 1가지만 쓰세요.\n'
     + '- 예시: "오늘 저녁 30분 산책하기" / "오늘 파란색 소품 하나 책상에 올려두기"\n'
     + '- \"적어보세요\", \"생각해보세요\" 같은 추상적 표현 절대 금지.\n'
     + '- 섹션마다 다른 종류 행동 쓰세요: 음식/소품/연락/앱설치/환경/운동/금융 중 택1.\n'
     + '- 같은 행동 두 섹션 반복 금지.\n'
-    + '- 물마시기/수영/파란색소품 같은 용신 조언은 9섹션 통틀어 1번만 쓰세요.\n\n'
+    + '- 수영/물마시기/파란색소품은 각각 전체 9섹션 통틀어 딱 1번씩만 사용 가능.\n'
+    + '- 위 용신 선택지에서 카테고리별로 다른 것을 골라 쓰세요. 같은 카테고리도 중복 금지.\n\n'
     + '[세운 분석 간지 기준]\n'
     + '- 2026년=丙午 2027년=丁未 2028년=戊申 2029년=己酉 2030년=庚戌\n'
     + '- 2031년=辛亥 2032년=壬子 2033년=癸丑 2034년=甲寅 2035년=乙卯\n\n'
@@ -831,7 +892,9 @@ async function doAnalyze() {
       var ev = new Event('input'); resultEl.dispatchEvent(ev);
     }
     document.getElementById('pdfBtn').className = 'btn btn-dark';
-    document.getElementById('pdfBtn').textContent = '📄 PDF 저장';
+    document.getElementById('pdfBtn').textContent = '📱 카드형 보고서 열기';
+    document.getElementById('pdfAllBtn').className = 'btn btn-dark';
+    document.getElementById('pdfAllBtn').textContent = '📑 전체 저장 (스크롤형 PDF)';
     document.getElementById('pdfHint').style.display = 'block';
     document.getElementById('analyzeBtn').textContent = '✨ 다시 분석';
     document.getElementById('analyzeBtn').className = 'btn btn-dark';
@@ -915,7 +978,9 @@ function onResultInput() {
   var ok = len > 200;
   document.getElementById('resultOk').style.display = ok ? 'block' : 'none';
   document.getElementById('pdfBtn').className = ok ? 'btn btn-dark' : 'btn btn-gray';
-  document.getElementById('pdfBtn').textContent = ok ? '📄 PDF 저장' : '② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfBtn').textContent = ok ? '📱 카드형 보고서 열기' : '② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfAllBtn').className = ok ? 'btn btn-dark' : 'btn btn-gray';
+  document.getElementById('pdfAllBtn').textContent = ok ? '📑 전체 저장 (스크롤형 PDF)' : '② 분석 완료 후 활성화됩니다';
   document.getElementById('pdfHint').style.display = ok ? 'block' : 'none';
 }
 
@@ -1091,6 +1156,40 @@ function renderBody(raw) {
 }
 
 // ── PDF 생성 ──
+
+function buildLinearPDF() {
+  var result = document.getElementById('result') ? document.getElementById('result').value.trim() : '';
+  var err = document.getElementById('err2');
+  if (result.length < 100) {
+    err.textContent = '분석 결과를 먼저 붙여넣어 주세요.';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  try {
+    var f = formData;
+    var today = new Date().toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric'});
+    var sections = parseSecs(result);
+    var time = f.h ? f.h + '시 ' + (f.min || '00') + '분' : '미상';
+
+    var css = '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/>'      + '<meta name="viewport" content="width=device-width,initial-scale=1"/>'      + '<title>' + (f.name||'고객') + ' 사주 보고서</title>'      + '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>'      + '<style>'      + '*{margin:0;padding:0;box-sizing:border-box}'      + 'body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#fff;color:#1a1a1a;padding:0}'      + '.cover{background:linear-gradient(160deg,#0d1a26,#050c12);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}'      + '.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}'      + '.cv-moon{font-size:48px;margin-bottom:14px}'      + '.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}'      + '.cv-sub{font-size:12px;color:#3a5060;margin-bottom:36px}'      + '.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}'      + '.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}'      + '.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600}'      + '.cv-v{font-size:12px;color:#c0d0da}'      + '.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}'      + '.sec{padding:48px 40px;page-break-before:always;border-bottom:1px solid #f0f0f0}'      + '.sec:last-child{border-bottom:none}'      + '.sec-ey{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:8px}'      + '.sec-title{font-family:"Noto Serif KR",serif;font-size:22px;font-weight:900;color:#0d1a26;margin-bottom:4px}'      + '.sec-div{height:2px;background:linear-gradient(90deg,#C9A84C,transparent);margin:16px 0 20px}'      + '.sb{font-size:14px;line-height:2.0;color:#333;word-break:keep-all}'      + '.sb p{margin-bottom:14px}.sb p:last-child{margin-bottom:0}'      + '.sub-h{font-size:13px;font-weight:700;color:#0d1a26;margin:20px 0 8px;padding:7px 14px 7px 16px;background:#f8f5ef;border-left:3px solid #C9A84C;border-radius:0 6px 6px 0}'      + '.sc{background:linear-gradient(135deg,#0f1c2a,#0a1520);border-left:4px solid #C9A84C;border-radius:0 10px 10px 0;padding:14px 18px;margin:16px 0}'      + '.sc-label{font-size:8px;letter-spacing:3px;color:#C9A84C;margin-bottom:6px;font-weight:700}'      + '.sc p{font-size:14px;font-weight:700;color:#e0c87a;line-height:1.8;margin:0}'      + '.ac{background:linear-gradient(135deg,#071a0f,#040c08);border-left:4px solid #27ae60;border-radius:0 10px 10px 0;padding:14px 18px;margin-top:16px}'      + '.ac-label{font-size:8px;letter-spacing:3px;color:#27ae60;margin-bottom:6px;font-weight:700}'      + '.ac p{font-size:14px;font-weight:700;color:#7adba0;line-height:1.8;margin:0}'      + '.seun-year{margin-bottom:14px;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden}'      + '.seun-year-hd{background:#0f1c2a;padding:9px 16px;display:flex;align-items:center;gap:10px}'      + '.seun-year-num{font-size:9px;font-weight:700;color:#C9A84C;letter-spacing:2px}'      + '.seun-year-title{font-size:14px;font-weight:900;color:#fff}'      + '.seun-year-body{background:#fafafa;padding:10px 16px}'      + '.seun-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;align-items:flex-start}'      + '.seun-row:last-child{border-bottom:none}'      + '.seun-label{font-size:12px;font-weight:700;flex-shrink:0;width:80px;color:#555}'      + '.seun-val{font-size:12px;line-height:1.75;color:#444;flex:1;word-break:keep-all}'      + '.seun-summary{background:#f0f7f0;border-left:3px solid #27ae60;padding:10px 16px;border-top:1px solid #e0e0e0}'      + '.seun-summary-label{font-size:8px;letter-spacing:2px;color:#27ae60;font-weight:700;margin-bottom:4px}'      + '.seun-summary-text{font-size:13px;line-height:1.8;color:#1a5a2a;font-weight:700;word-break:keep-all}'      + 'table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px}'      + 'th{background:#0f1c2a;color:#C9A84C;padding:7px 12px;text-align:left;font-weight:700}'      + 'td{padding:7px 12px;border-bottom:1px solid #f0f0f0;color:#444}'      + '.fin{background:linear-gradient(160deg,#0d1a26,#050c12);padding:60px 40px;text-align:center;page-break-before:always}'      + '.fin-moon{font-size:40px;margin-bottom:16px}'      + '.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}'      + '.fin-t{font-family:"Noto Serif KR",serif;font-size:18px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}'      + '.fin-s{font-size:11px;color:#3a5060;line-height:1.9;margin-bottom:24px}'      + '.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}'      + '@media print{.sec{page-break-before:always}.cover{page-break-after:always}}'      + '</style></head><body>';
+
+    var coverHtml = '<div class="cover">'      + '<div class="cv-ey">✦ CHEONMYEONGDANG · 天命堂</div>'      + '<div class="cv-moon">🌙</div>'      + '<div class="cv-title">' + (f.name||'고객') + ' 님의<br/>사주 명리 분석 보고서</div>'      + '<div class="cv-sub">사주팔자 종합 분석 · 프리미엄 에디션</div>'      + '<div class="cv-info">'      + '<div class="cv-row"><span class="cv-k">성 명</span><span class="cv-v">' + (f.name||'미입력') + '</span></div>'      + '<div class="cv-row"><span class="cv-k">성 별</span><span class="cv-v">' + f.gender + '</span></div>'      + '<div class="cv-row"><span class="cv-k">생년월일</span><span class="cv-v">' + f.cal + ' ' + f.y + '년 ' + f.m + '월 ' + f.d + '일</span></div>'      + '<div class="cv-row"><span class="cv-k">출생시각</span><span class="cv-v">' + time + '</span></div>'      + '</div><div class="cv-date">발행일 · ' + today + '</div>'      + '</div>';
+
+    var secHtml = sections.map(function(s, i) {
+      var num = i + 1;
+      return '<div class="sec">'        + '<div class="sec-ey">✦ SECTION ' + (num < 10 ? '0' : '') + num + '</div>'        + '<div class="sec-title">' + s.title + '</div>'        + '<div class="sec-div"></div>'        + '<div class="sb">' + renderBody(s.body || '') + '</div>'        + '</div>';
+    }).join('');
+
+    var finHtml = '<div class="fin">'      + '<div class="fin-moon">🌙</div>'      + '<div class="fin-line"></div>'      + '<div class="fin-t">' + (f.name||'고객') + ' 님의<br/>사주 분석을 마칩니다</div>'      + '<div class="fin-s">본 보고서가 삶의 방향을 잡는 데 작은 도움이 되기를 바랍니다.</div>'      + '<div class="fin-brand">天命堂 천명당</div>'      + '</div>';
+
+    var html = css + coverHtml + secHtml + finHtml + '</body></html>';
+    openPDF(html, (f.name||'고객') + '_사주보고서_전체.html');
+  } catch(e) {
+    document.getElementById('err2').textContent = 'PDF 생성 오류: ' + e.message;
+    document.getElementById('err2').style.display = 'block';
+  }
+}
 
 function buildPDF() {
   var result = document.getElementById('result') ? document.getElementById('result').value.trim() : '';
