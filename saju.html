@@ -124,6 +124,30 @@ textarea{resize:vertical;line-height:1.7}
     <div><span>리뷰 고객 월별 미니운세 보너스</span><small>1~12월 운세 · 4페이지 PDF</small></div>
   </div>
 
+  <div id="sajuPreview" style="display:none;background:#1C2B3A;border-radius:12px;padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:10px;color:#C9A84C;letter-spacing:2px;font-weight:700;margin-bottom:10px">✦ 자동계산 사주팔자 (앱 검증)</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">년주</div>
+        <div id="sp_year" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">월주</div>
+        <div id="sp_month" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#C9A84C;margin-bottom:4px">일주(일간)</div>
+        <div id="sp_day" style="font-size:18px;font-weight:900;color:#fff"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">시주</div>
+        <div id="sp_hour" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
+    </div>
+    <div id="sp_ohaeng" style="font-size:11px;color:#7a98ae;text-align:center"></div>
+    <div id="sp_daewoon" style="font-size:10px;color:#555;margin-top:4px;text-align:center"></div>
+  </div>
+
   <div class="card">
     <div class="step-row">
       <div class="snum snum-dark">1</div>
@@ -159,6 +183,238 @@ textarea{resize:vertical;line-height:1.7}
 </div>
 
 <script>
+
+// ── 만세력 자동 계산 모듈 ──
+var MANSE = (function() {
+  var CG = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var JJ = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  var PILLAR_NAMES = ['자','축','인','묘','진','사','오','미','신','유','술','해'];
+
+  // Julian Day Number 계산
+  function toJDN(y, m, d) {
+    var a = Math.floor((14 - m) / 12);
+    var yy = y + 4800 - a;
+    var mm = m + 12 * a - 3;
+    return d + Math.floor((153 * mm + 2) / 5) + 365 * yy
+      + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+  }
+
+  // 절기 날짜 계산 (근사값, 1930~2060 내 ±1일 오차)
+  // 0=입춘(2월), 1=경칩(3월), 2=청명(4월), 3=입하(5월), 4=망종(6월)
+  // 5=소서(7월), 6=입추(8월), 7=백로(9월), 8=한로(10월)
+  // 9=입동(11월), 10=대설(12월), 11=소한(다음해1월)
+  var JEOLGI_MONTH = [2,3,4,5,6,7,8,9,10,11,12,1];
+  var JEOLGI_C     = [3.87,5.63,4.81,5.52,5.94,6.92,7.02,7.46,7.69,6.55,6.87,4.90];
+
+  function getJeolgiDay(year, termIdx) {
+    var y = (termIdx === 11) ? year : year; // 소한은 year의 1월
+    return Math.floor(y * 0.2422 + JEOLGI_C[termIdx]) - Math.floor((y - 1) / 4);
+  }
+
+  // 생일이 속한 절기 인덱스(월주 지지 결정용)
+  function getMonthTermIdx(year, month, day) {
+    // 지지 인덱스: 0=子,1=丑,2=寅,3=卯,4=辰,5=巳,6=午,7=未,8=申,9=酉,10=戌,11=亥
+    // 절기→지지: 입춘→寅(2), 경칩→卯(3), 청명→辰(4), 입하→巳(5), 망종→午(6), 소서→未(7)
+    //            입추→申(8), 백로→酉(9), 한로→戌(10), 입동→亥(11), 대설→子(0), 소한→丑(1)
+    var TERM_TO_JJ = [2,3,4,5,6,7,8,9,10,11,0,1];
+
+    if (month === 1) {
+      var sohanDay = getJeolgiDay(year, 11);
+      return day >= sohanDay ? TERM_TO_JJ[11] : TERM_TO_JJ[10];
+    }
+    if (month === 12) {
+      var daeseolDay = getJeolgiDay(year, 10);
+      return day >= daeseolDay ? TERM_TO_JJ[10] : TERM_TO_JJ[9];
+    }
+    // 2월~11월
+    var termIdx = month - 2; // 2월=0(입춘), 3월=1(경칩), ...
+    var jeolgiDay = getJeolgiDay(year, termIdx);
+    if (day >= jeolgiDay) {
+      return TERM_TO_JJ[termIdx];
+    } else {
+      // 이전 절기
+      var prevTermIdx = (termIdx - 1 + 12) % 12;
+      return TERM_TO_JJ[prevTermIdx];
+    }
+  }
+
+  // 같은 목적으로 termIdx도 반환
+  function getMonthTermIdxRaw(year, month, day) {
+    if (month === 1) {
+      var sohanDay = getJeolgiDay(year, 11);
+      return day >= sohanDay ? 11 : 10;
+    }
+    if (month === 12) {
+      var daeseolDay = getJeolgiDay(year, 10);
+      return day >= daeseolDay ? 10 : 9;
+    }
+    var termIdx = month - 2;
+    var jeolgiDay = getJeolgiDay(year, termIdx);
+    return day >= jeolgiDay ? termIdx : (termIdx - 1 + 12) % 12;
+  }
+
+  // 년주 계산 (입춘 기준 연도 전환)
+  function getYearPillar(year, month, day) {
+    var ipchunDay = getJeolgiDay(year, 0); // 입춘: 2월 X일
+    var isBeforeIpchun = (month < 2) || (month === 2 && day < ipchunDay);
+    var adjYear = isBeforeIpchun ? year - 1 : year;
+    var idx = ((adjYear - 4) % 60 + 60) % 60;
+    return {cg: CG[idx % 10], jj: JJ[idx % 12], cgIdx: idx % 10, jjIdx: idx % 12};
+  }
+
+  // 일주 계산
+  function getDayPillar(year, month, day) {
+    var jdn = toJDN(year, month, day);
+    var idx = ((jdn + 49) % 60 + 60) % 60;
+    return {cg: CG[idx % 10], jj: JJ[idx % 12], cgIdx: idx % 10, jjIdx: idx % 12};
+  }
+
+  // 월주 계산 (오호둔년법)
+  function getMonthPillar(year, month, day, yearCGIdx) {
+    var jjIdx = getMonthTermIdx(year, month, day);
+    // 오호둔년법: 년간별 인월(寅月=지지2) 시작 천간
+    // 甲己년 → 丙寅(丙=2), 乙庚년 → 戊寅(戊=4), 丙辛년 → 庚寅(庚=6)
+    // 丁壬년 → 壬寅(壬=8), 戊癸년 → 甲寅(甲=0)
+    var startMap = [2, 4, 6, 8, 0, 2, 4, 6, 8, 0]; // 甲乙丙丁戊己庚辛壬癸
+    var yinMonthCG = startMap[yearCGIdx]; // 인월(寅月) 천간 인덱스
+    // 지지 인덱스에서 寅(2) 기준 오프셋
+    var offset = (jjIdx - 2 + 12) % 12;
+    var cgIdx = (yinMonthCG + offset) % 10;
+    return {cg: CG[cgIdx], jj: JJ[jjIdx], cgIdx: cgIdx, jjIdx: jjIdx};
+  }
+
+  // 시주 계산 (오서둔일법)
+  function getHourPillar(hour, dayCGIdx) {
+    var jjIdx;
+    if (hour === 23 || hour === 0) jjIdx = 0;      // 子時
+    else if (hour < 3)  jjIdx = 1;                  // 丑時
+    else if (hour < 5)  jjIdx = 2;                  // 寅時
+    else if (hour < 7)  jjIdx = 3;                  // 卯時
+    else if (hour < 9)  jjIdx = 4;                  // 辰時
+    else if (hour < 11) jjIdx = 5;                  // 巳時
+    else if (hour < 13) jjIdx = 6;                  // 午時
+    else if (hour < 15) jjIdx = 7;                  // 未時
+    else if (hour < 17) jjIdx = 8;                  // 申時
+    else if (hour < 19) jjIdx = 9;                  // 酉時
+    else if (hour < 21) jjIdx = 10;                 // 戌時
+    else                jjIdx = 11;                  // 亥時
+
+    // 오서둔일법: 甲己日→甲子(0), 乙庚日→丙子(2), 丙辛日→戊子(4), 丁壬日→庚子(6), 戊癸日→壬子(8)
+    var startMap = [0, 2, 4, 6, 8, 0, 2, 4, 6, 8];
+    var cgIdx = (startMap[dayCGIdx] + jjIdx) % 10;
+    return {cg: CG[cgIdx], jj: JJ[jjIdx], cgIdx: cgIdx, jjIdx: jjIdx};
+  }
+
+  // 대운 계산
+  function getDaewoon(year, month, day, gender, yearCGIdx, monthPillar) {
+    // 순행: 양년+남성 또는 음년+여성
+    var isYangYear = (yearCGIdx % 2 === 0); // 甲丙戊庚壬 = 0,2,4,6,8
+    var isMale = (gender === '남성');
+    var isForward = (isYangYear && isMale) || (!isYangYear && !isMale);
+
+    var birthJDN = toJDN(year, month, day);
+    var termIdxNow = getMonthTermIdxRaw(year, month, day);
+    var termIdxNext = (termIdxNow + 1) % 12;
+
+    // 현재 절기 JDN
+    var termMonth = JEOLGI_MONTH[termIdxNow];
+    var termYear = (termIdxNow === 11 && month > 6) ? year : year;
+    var termDay = getJeolgiDay(year, termIdxNow);
+    var termJDN = toJDN(year, termMonth, termDay);
+
+    // 다음 절기 JDN
+    var nextTermMonth = JEOLGI_MONTH[termIdxNext];
+    var nextYear = (termIdxNext === 0) ? year + 1 : year;
+    if (termIdxNow === 11) nextYear = year + 1; // 소한 다음은 입춘(다음해)
+    var nextTermDay = getJeolgiDay(nextYear, termIdxNext);
+    var nextTermJDN = toJDN(nextYear, nextTermMonth, nextTermDay);
+
+    var diffDays = isForward ? (nextTermJDN - birthJDN) : (birthJDN - termJDN);
+    if (diffDays < 0) diffDays = 0;
+    var startAge = Math.round(diffDays / 3);
+    if (startAge < 1) startAge = 1;
+
+    // 대운 간지 목록 (8개)
+    var list = [];
+    var mCG = monthPillar.cgIdx;
+    var mJJ = monthPillar.jjIdx;
+    for (var i = 1; i <= 8; i++) {
+      var step = isForward ? i : -i;
+      var newCG = ((mCG + step) % 10 + 10) % 10;
+      var newJJ = ((mJJ + step) % 12 + 12) % 12;
+      list.push({
+        cg: CG[newCG], jj: JJ[newJJ],
+        startAge: startAge + (i - 1) * 10,
+        endAge: startAge + i * 10 - 1
+      });
+    }
+
+    return {startAge: startAge, list: list, isForward: isForward};
+  }
+
+  // 오행 분포 계산
+  var OHAENG_MAP = {
+    '甲':0,'乙':0, // 木
+    '丙':1,'丁':1, // 火
+    '戊':2,'己':2, // 土
+    '庚':3,'辛':3, // 金
+    '壬':4,'癸':4  // 水
+  };
+  var JJ_OHAENG = {
+    '子':4,'丑':2,'寅':0,'卯':0,'辰':2,'巳':1,
+    '午':1,'未':2,'申':3,'酉':3,'戌':2,'亥':4
+  };
+
+  function getOhaengCount(saju) {
+    var counts = [0,0,0,0,0]; // 木火土金水
+    var pillars = [saju.year, saju.month, saju.day, saju.hour];
+    pillars.forEach(function(p) {
+      counts[OHAENG_MAP[p.cg]]++;
+      counts[JJ_OHAENG[p.jj]]++;
+    });
+    return counts; // [木,火,土,金,水]
+  }
+
+  // 전체 사주 계산
+  function calc(year, month, day, hour, gender) {
+    var yearP = getYearPillar(year, month, day);
+    var monthP = getMonthPillar(year, month, day, yearP.cgIdx);
+    var dayP = getDayPillar(year, month, day);
+    var hourP = getHourPillar(hour, dayP.cgIdx);
+    var daewoon = getDaewoon(year, month, day, gender, yearP.cgIdx, monthP);
+    var ohaeng = getOhaengCount({year:yearP, month:monthP, day:dayP, hour:hourP});
+
+    return {
+      year: yearP, month: monthP, day: dayP, hour: hourP,
+      daewoon: daewoon, ohaeng: ohaeng,
+      ilgan: dayP.cg, iljji: dayP.jj
+    };
+  }
+
+  // 사주 정보 문자열 생성 (프롬프트용)
+  function toPromptText(saju, name) {
+    var onames = ['木','火','土','金','水'];
+    var ocount = saju.ohaeng;
+    var ostr = onames.map(function(n, i){ return n + ':' + ocount[i] + '개'; }).join(' / ');
+
+    var dwStr = saju.daewoon.list.slice(0, 5).map(function(d) {
+      return d.cg + d.jj + '(' + d.startAge + '세~' + d.endAge + '세)';
+    }).join(', ');
+
+    return '\n[앱 자동계산 사주팔자 — Claude는 아래 8글자를 그대로 사용하고 직접 계산하지 마세요]\n'
+      + '년주: ' + saju.year.cg + saju.year.jj
+      + ' / 월주: ' + saju.month.cg + saju.month.jj
+      + ' / 일주: ' + saju.day.cg + saju.day.jj
+      + ' / 시주: ' + saju.hour.cg + saju.hour.jj + '\n'
+      + '일간: ' + saju.ilgan + ' / 오행분포: ' + ostr + '\n'
+      + '대운: ' + (saju.daewoon.isForward ? '순행' : '역행')
+      + ' / 대운시작: ' + saju.daewoon.startAge + '세\n'
+      + '주요대운: ' + dwStr + '\n';
+  }
+
+  return { calc: calc, toPromptText: toPromptText, CG: CG, JJ: JJ };
+})();
+
 var formData = {};
 var promptText = '';
 var currentMode = 'basic';
@@ -216,11 +472,27 @@ function buildInfo() {
   var q = vals.length > 0 ? vals.join(' / ') : '없음';
   var h = getVal('h'), mn = getVal('mn');
   var time = h ? h + '시 ' + (mn || '00') + '분' : '미상';
-  return '이름: ' + (getVal('name') || '미입력')
+
+  var base = '이름: ' + (getVal('name') || '미입력')
     + ' / 성별: ' + getVal('gender')
     + ' / 생년월일: ' + getVal('cal') + ' ' + getVal('y') + '년 ' + getVal('m') + '월 ' + getVal('d') + '일'
     + ' / 출생시각: ' + time
     + ' / 특별 궁금한 점: ' + q;
+
+  // 양력인 경우 만세력 자동 계산
+  if (getVal('cal') === '양력') {
+    try {
+      var y = parseInt(getVal('y')), m = parseInt(getVal('m')), d = parseInt(getVal('d'));
+      var hr = h ? parseInt(h) : 0;
+      var gender = getVal('gender');
+      if (y && m && d) {
+        var saju = MANSE.calc(y, m, d, hr, gender);
+        base += MANSE.toPromptText(saju, getVal('name'));
+      }
+    } catch(e) { /* 계산 실패시 무시 */ }
+  }
+
+  return base;
 }
 
 function buildBasicPromptPart1() {
@@ -260,11 +532,10 @@ function buildBasicPromptPart1() {
     + '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
     + '[만세력 정확성 주의 — 최우선 확인]\n'
-    + '⛔ AI가 직접 만세력을 계산할 때 오류가 잦습니다. 아래 원칙을 반드시 지키세요.\n'
-    + '- 일간은 입력된 양력/음력 날짜를 만세력 원리에 따라 정확히 도출하세요.\n'
-    + '- 대운 시작 나이: 월주 천간과 성별로 순행/역행 결정 후 正確히 계산하세요.\n'
-    + '- 세운 간지는 반드시 제공된 [세운 분석 간지 기준]만 사용하세요. 외울 필요 없이 그대로 쓰세요.\n'
-    + '- 오행 개수 셀 때: 천간 4자 + 지지 4자 지장간까지 포함해 정확히 계산하세요.\n\n'
+    + '⛔ 사주팔자 8글자는 [고객 정보]에 포함된 [앱 자동계산 사주팔자]를 그대로 사용하세요.\n'
+    + '⛔ Claude가 직접 만세력을 재계산하면 오류가 납니다. 절대 직접 계산하지 마세요.\n'
+    + '⛔ 오행 분포, 대운 정보도 제공된 값을 그대로 사용하세요.\n'
+    + '⛔ 음력 입력이거나 앱 자동계산값이 없는 경우에만 직접 계산하되 반드시 만세력 원리 준수.\n\n'
     + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
     + '① 일간(日干) 확인: 甲/乙/丙/丁/戊/己/庚/辛/壬/癸 각각 성질이 다릅니다.\n'
     + '② 신강/신약 정도 판단: 극신약/신약/중화/신강/극신강으로 구분하세요.\n'
@@ -383,11 +654,10 @@ function makeBase(info, curDate) {
   return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
     + '[만세력 정확성 주의 — 최우선 확인]\n'
-    + '⛔ AI가 직접 만세력을 계산할 때 오류가 잦습니다. 아래 원칙을 반드시 지키세요.\n'
-    + '- 일간은 입력된 양력/음력 날짜를 만세력 원리에 따라 정확히 도출하세요.\n'
-    + '- 대운 시작 나이: 월주 천간과 성별로 순행/역행 결정 후 正確히 계산하세요.\n'
-    + '- 세운 간지는 반드시 제공된 [세운 분석 간지 기준]만 사용하세요. 외울 필요 없이 그대로 쓰세요.\n'
-    + '- 오행 개수 셀 때: 천간 4자 + 지지 4자 지장간까지 포함해 정확히 계산하세요.\n\n'
+    + '⛔ 사주팔자 8글자는 [고객 정보]에 포함된 [앱 자동계산 사주팔자]를 그대로 사용하세요.\n'
+    + '⛔ Claude가 직접 만세력을 재계산하면 오류가 납니다. 절대 직접 계산하지 마세요.\n'
+    + '⛔ 오행 분포, 대운 정보도 제공된 값을 그대로 사용하세요.\n'
+    + '⛔ 음력 입력이거나 앱 자동계산값이 없는 경우에만 직접 계산하되 반드시 만세력 원리 준수.\n\n'
     + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
     + '① 일간(日干) 확인: 甲/乙/丙/丁/戊/己/庚/辛/壬/癸 각각 성질이 다릅니다.\n'
     + '② 신강/신약 정도 판단: 극신약/신약/중화/신강/극신강으로 구분하세요.\n'
@@ -615,11 +885,10 @@ function buildBasicPrompt() {
     + '아래 고객 정보를 바탕으로 9개 섹션을 순서대로 분석해주세요.\n\n'
     + '[고객 정보]\n' + info + '\n\n'
     + '[만세력 정확성 주의 — 최우선 확인]\n'
-    + '⛔ AI가 직접 만세력을 계산할 때 오류가 잦습니다. 아래 원칙을 반드시 지키세요.\n'
-    + '- 일간은 입력된 양력/음력 날짜를 만세력 원리에 따라 정확히 도출하세요.\n'
-    + '- 대운 시작 나이: 월주 천간과 성별로 순행/역행 결정 후 正確히 계산하세요.\n'
-    + '- 세운 간지는 반드시 제공된 [세운 분석 간지 기준]만 사용하세요. 외울 필요 없이 그대로 쓰세요.\n'
-    + '- 오행 개수 셀 때: 천간 4자 + 지지 4자 지장간까지 포함해 정확히 계산하세요.\n\n'
+    + '⛔ 사주팔자 8글자는 [고객 정보]에 포함된 [앱 자동계산 사주팔자]를 그대로 사용하세요.\n'
+    + '⛔ Claude가 직접 만세력을 재계산하면 오류가 납니다. 절대 직접 계산하지 마세요.\n'
+    + '⛔ 오행 분포, 대운 정보도 제공된 값을 그대로 사용하세요.\n'
+    + '⛔ 음력 입력이거나 앱 자동계산값이 없는 경우에만 직접 계산하되 반드시 만세력 원리 준수.\n\n'
     + '[핵심 분석 기준 — 반드시 먼저 파악]\n'
     + '① 일간(日干) 확인: 甲/乙/丙/丁/戊/己/庚/辛/壬/癸 각각 성질이 다릅니다.\n'
     + '② 신강/신약 정도 판단: 극신약/신약/중화/신강/극신강으로 구분하세요.\n'
@@ -795,6 +1064,28 @@ function doGenerate() {
   };
   promptText = currentMode === 'mini' ? buildMiniPrompt() : buildBasicPrompt();
   document.getElementById('p2name').textContent = (formData.name || '고객') + ' 님';
+
+  // 만세력 미리보기 업데이트
+  if (formData.cal === '양력') {
+    try {
+      var sy = parseInt(formData.y), sm = parseInt(formData.m), sd = parseInt(formData.d);
+      var sh = formData.h ? parseInt(formData.h) : 0;
+      if (sy && sm && sd) {
+        var saju = MANSE.calc(sy, sm, sd, sh, formData.gender);
+        document.getElementById('sp_year').textContent  = saju.year.cg  + saju.year.jj;
+        document.getElementById('sp_month').textContent = saju.month.cg + saju.month.jj;
+        document.getElementById('sp_day').textContent   = saju.day.cg   + saju.day.jj;
+        document.getElementById('sp_hour').textContent  = saju.hour.cg  + saju.hour.jj;
+        var onames = ['木','火','土','金','水'];
+        var ostr = onames.map(function(n,i){ return n+saju.ohaeng[i]; }).join(' ');
+        document.getElementById('sp_ohaeng').textContent = '오행: ' + ostr + '  |  일간: ' + saju.ilgan;
+        document.getElementById('sp_daewoon').textContent = '대운' + (saju.daewoon.isForward?'순행':'역행') + ' ' + saju.daewoon.startAge + '세 시작';
+        document.getElementById('sajuPreview').style.display = 'block';
+      }
+    } catch(e) { document.getElementById('sajuPreview').style.display = 'none'; }
+  } else {
+    document.getElementById('sajuPreview').style.display = 'none';
+  }
   document.getElementById('p2mode').textContent = currentMode === 'mini' ? '⭐ 미니운세 보너스' : 'SAJU REPORT';
   document.getElementById('miniBadge').style.display = currentMode === 'mini' ? 'flex' : 'none';
   var resultEl = document.getElementById('result');
