@@ -229,17 +229,24 @@ footer .gold{color:var(--gold)}
   <div class="form-group">
     <div class="form-row">
       <div>
+        <label>성별</label>
+        <select id="f-gender">
+          <option>여성</option>
+          <option>남성</option>
+        </select>
+      </div>
+      <div>
         <label>양력 / 음력</label>
         <select id="f-cal">
           <option>양력</option>
           <option>음력</option>
         </select>
       </div>
-      <div>
-        <label>태어난 시각</label>
-        <input id="f-hour" placeholder="시 (모르면 공백)" type="number"/>
-      </div>
     </div>
+  </div>
+  <div class="form-group">
+    <label>태어난 시각</label>
+    <input id="f-hour" placeholder="시 (예: 14 · 모르면 공백)" type="number"/>
   </div>
   <div class="form-group">
     <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
@@ -444,6 +451,7 @@ function submitForm() {
   var year = document.getElementById('f-year').value.trim();
   var month = document.getElementById('f-month').value.trim();
   var day = document.getElementById('f-day').value.trim();
+  var gender = document.getElementById('f-gender').value;
   var cal = document.getElementById('f-cal').value;
   var hour = document.getElementById('f-hour').value.trim();
   var cats = [];
@@ -451,6 +459,7 @@ function submitForm() {
   if (!name || !year || !month || !day) { alert('성함과 생년월일을 입력해주세요.'); return; }
   var msg = '안녕하세요, 천명당 사주 보고서 신청합니다.\n\n'
     + '성함: ' + name + '\n'
+    + '성별: ' + gender + '\n'
     + '생년월일: ' + cal + ' ' + year + '년 ' + month + '월 ' + day + '일\n'
     + '태어난 시각: ' + (hour ? hour + '시' : '모름') + '\n'
     + '궁금한 것: ' + (cats.length > 0 ? cats.join(', ') : '전체 분석') + '\n\n신청합니다!';
