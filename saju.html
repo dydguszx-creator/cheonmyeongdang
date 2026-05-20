@@ -2057,6 +2057,8 @@ function openPDF(html, fname) {
     + '저장 후 뒤로가기로 돌아오세요.</div>'
     + '<a id="pdfLink" href="' + url + '" target="_blank" style="display:block;width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none;text-align:center">📋 보고서 열기</a>'
     + '<button onclick="document.getElementById(\'pdfOverlay\').remove()" style="width:100%;padding:12px;background:#f0f0f0;color:#666;border:none;border-radius:10px;font-size:14px;cursor:pointer">✕ 취소</button>'
+    <button id="autoBtn" type="button" onclick="doAutoAnalyze()" style="display:block;width:100%;padding:14px;background:linear-gradient(135deg,#C9A84C,#E8C87A);color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;">⚡ 자동 분석 (API)</button>
+<div id="autoStatus" style="display:none;text-align:center;padding:16px;font-size:14px;color:#C9A84C;background:#1C2B3A;border-radius:10px;margin-top:10px;line-height:1.8;"><div id="autoStatusText">⏳ 분석 중...</div></div>
     + '</div>';
   document.body.appendChild(overlay);
 }
