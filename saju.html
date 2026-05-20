@@ -2120,6 +2120,141 @@ function getMiniCSS() {
 
 // 초기화
 window.onload = function() { initCats(); };
-</script>
+<script>
+async function doAutoAnalyze() {
+  const name  = getVal('name');
+  const year  = getVal('y');
+  const month = getVal('m');
+  const day   = getVal('d');
+
+  if (!name || !year || !month || !day) {
+    alert('이름과 생년월일을 입력해주세요.');
+    return;
+  }
+
+  // 카테고리 수집
+  const cats = [];
+  document.querySelectorAll('.cat-btn.on').forEach(b => cats.push(b.getAttribute('data-val')));
+  const direct = getVal('q');
+  if (direct) cats.push(direct);
+
+  // 만세력 계산
+  let sajuPayload = null;
+  if (getVal('cal') === '양력') {
+    try {
+      const y = parseInt(year), m = parseInt(month), d = parseInt(day);
+      const hr = getVal('h') ? parseInt(getVal('h')) : 0;
+      const saju = MANSE.calc(y, m, d, hr, getVal('gender'));
+      const onames = ['木','火','土','金','水'];
+      const ostr = onames.map((n, i) => n + ':' + saju.ohaeng[i] + '개').join(' / ');
+      const dwStr = saju.daewoon.list.slice(0, 5).map(d =>
+        `${d.cg}${d.jj}(${d.startAge}세~${d.endAge}세)`).join(', ');
+      sajuPayload = {
+        year:  saju.year.cg  + saju.year.jj,
+        month: saju.month.cg + saju.month.jj,
+        day:   saju.day.cg   + saju.day.jj,
+        hour:  saju.hour.cg  + saju.hour.jj,
+        ilgan: saju.ilgan,
+        ohaeng: ostr,
+        daewoon: (saju.daewoon.isForward ? '순행' : '역행') +
+                 ' / 시작: ' + saju.daewoon.startAge + '세 / ' + dwStr,
+      };
+    } catch(e) {}
+  }
+
+  // UI 초기화
+  const btn        = document.getElementById('autoBtn');
+  const statusDiv  = document.getElementById('autoStatus');
+  const statusText = document.getElementById('autoStatusText');
+  const resultArea = document.getElementById('result');
+
+  btn.disabled = true;
+  btn.textContent = '분석 중...';
+  statusDiv.style.display  = 'block';
+  statusDiv.style.background = '#1C2B3A';
+  statusDiv.style.color    = '#C9A84C';
+  statusText.textContent   = '⏳ 분석 시작...';
+  if (resultArea) resultArea.value = '';
+
+  // page2로 먼저 이동 (실시간으로 결과 보이게)
+  showPage('page2');
+
+  let fullText = '';
+  let charCount = 0;
+
+  try {
+    // ── 스트리밍 fetch ──────────────────────────────
+    const res = await fetch('/api/saju', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name, gender: getVal('gender'), cal: getVal('cal'),
+        year, month, day,
+        hour: getVal('h'), minute: getVal('mn'),
+        categories: cats,
+        saju: sajuPayload,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || '서버 오류');
+    }
+
+    // SSE 스트림 읽기
+    const reader  = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value, { stream: true });
+      const lines  = chunk.split('\n');
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+
+        try {
+          const json = JSON.parse(data);
+
+          if (json.text) {
+            // 실시간으로 textarea에 글자 추가
+            fullText += json.text;
+            charCount += json.text.length;
+            if (resultArea) {
+              resultArea.value = fullText;
+              // 스크롤 자동 맨 아래
+              resultArea.scrollTop = resultArea.scrollHeight;
+            }
+            // 상태 메시지 업데이트
+            statusText.textContent = `✍️ 작성 중... (${charCount.toLocaleString()}자)`;
+          }
+
+          if (json.done) {
+            // 완료!
+            statusText.textContent = `✅ 완료! ${charCount.toLocaleString()}자 생성됨`;
+            statusDiv.style.background = '#0d2b1a';
+            statusDiv.style.color      = '#4ade80';
+            onResultInput(); // PDF 버튼 활성화
+          }
+        } catch {
+          // 파싱 실패 무시
+        }
+      }
+    }
+
+  } catch (err) {
+    statusText.textContent   = '❌ 오류: ' + err.message;
+    statusDiv.style.background = '#2b0d0d';
+    statusDiv.style.color    = '#f87171';
+    console.error(err);
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = '⚡ 자동 분석 (API)';
+  }
+}
+</script></script>
 </body>
 </html>
