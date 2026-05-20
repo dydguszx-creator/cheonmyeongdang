@@ -3,5 +3,9 @@
     "api/analyze.js": {
       "maxDuration": 300
     }
-  }
+  },
+  "routes": [
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/saju", "dest": "/saju.html" }
+  ]
 }
