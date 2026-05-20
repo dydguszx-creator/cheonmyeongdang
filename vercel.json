@@ -2,6 +2,9 @@
   "functions": {
     "api/analyze.js": {
       "maxDuration": 300
+    },
+    "api/saju.js": {
+      "maxDuration": 300
     }
   },
   "routes": [
