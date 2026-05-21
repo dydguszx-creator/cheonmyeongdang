@@ -11,6 +11,7 @@ export default async function handler(req) {
   if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'POST만 허용됩니다.' }), { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   const { name, gender, cal, year, month, day, hour, minute, categories, saju } = await req.json();
+
   if (!name || !year || !month || !day) return new Response(JSON.stringify({ error: '필수값 누락' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
 
   const timeStr = hour ? `${hour}시 ${minute || '00'}분` : '미상';
