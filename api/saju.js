@@ -1,18 +1,13 @@
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'POST만 허용됩니다.' });
 
-export default async function handler(req) {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-
-  if (req.method === 'OPTIONS') return new Response(null, { status: 200, headers: corsHeaders });
-  if (req.method !== 'POST') return new Response(JSON.stringify({ error: 'POST만 허용됩니다.' }), { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-
-  const { name, gender, cal, year, month, day, hour, minute, categories, saju } = await req.json();
-
-  if (!name || !year || !month || !day) return new Response(JSON.stringify({ error: '필수값 누락' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  const { name, gender, cal, year, month, day, hour, minute, categories, saju } = req.body;
+  if (!name || !year || !month || !day) return res.status(400).json({ error: '필수값 누락' });
 
   const timeStr = hour ? `${hour}시 ${minute || '00'}분` : '미상';
   const catStr = categories?.length ? categories.join(' / ') : '전체 분석';
@@ -41,65 +36,58 @@ export default async function handler(req) {
 【8. 건강·취약 부위】취약 장기·조심할 시기·맞춤 조언.
 【9. 개운법·맞춤 조언】용신 기반 색상·방향·음식·오늘 실천 조언 5가지 이상.`;
 
-  const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 16000,
-      stream: true,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
 
-  if (!claudeRes.ok) {
-    const err = await claudeRes.text();
-    return new Response(JSON.stringify({ error: 'Claude API 오류', detail: err }), { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  try {
+    const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 16000,
+        stream: true,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (!claudeRes.ok) {
+      const err = await claudeRes.text();
+      res.write(`data: ${JSON.stringify({ error: err })}\n\n`);
+      return res.end();
+    }
+
+    const reader = claudeRes.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      for (const line of chunk.split('\n')) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6).trim();
+        try {
+          const json = JSON.parse(data);
+          if (json.type === 'content_block_delta' && json.delta?.type === 'text_delta') {
+            res.write(`data: ${JSON.stringify({ text: json.delta.text })}\n\n`);
+          }
+          if (json.type === 'message_stop') {
+            res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+          }
+        } catch {}
+      }
+    }
+  } catch (e) {
+    res.write(`data: ${JSON.stringify({ error: e.message })}\n\n`);
   }
 
-  const encoder = new TextEncoder();
-  const decoder = new TextDecoder();
-
-  const stream = new ReadableStream({
-    async start(controller) {
-      const reader = claudeRes.body.getReader();
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = decoder.decode(value, { stream: true });
-          for (const line of chunk.split('\n')) {
-            if (!line.startsWith('data: ')) continue;
-            const data = line.slice(6).trim();
-            if (data === '[DONE]') continue;
-            try {
-              const json = JSON.parse(data);
-              if (json.type === 'content_block_delta' && json.delta?.type === 'text_delta') {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: json.delta.text })}\n\n`));
-              }
-              if (json.type === 'message_stop') {
-                controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true })}\n\n`));
-              }
-            } catch {}
-          }
-        }
-      } finally {
-        reader.releaseLock();
-        controller.close();
-      }
-    },
-  });
-
-  return new Response(stream, {
-    headers: {
-      ...corsHeaders,
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'X-Accel-Buffering': 'no',
-    },
-  });
+  res.end();
 }
