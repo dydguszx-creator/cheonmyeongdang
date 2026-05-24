@@ -454,6 +454,8 @@ async function doAutoAnalyze() {
 
   // 기본 보고서: 섹션 1~5 / 6~9 병렬 호출
   var info=buildInfo(); var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
+  var curMonth = now.getMonth()+1;
+  var curDate = sy+'년 '+curMonth+'월 현재';
   var baseHdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
     +'[고객 정보]\n'+info+'\n\n'
     +'[만세력 정확성 주의]\n'
@@ -467,22 +469,23 @@ async function doAutoAnalyze() {
     +'⚠️ 어떤 사주에도 공통적으로 쓸 수 있는 말은 쓰지 마세요.\n'
     +'⚠️ 이 사람의 사주 구조에서만 나올 수 있는 말을 써야 합니다.\n'
     +'⚠️ 예: 土 과다→변화 극도로 싫어하고 혼자서 습관 바꾸기 거의 불가능, 水 없음→공감 능력 약하고 눈치 느린 편\n\n'
-    +'[작성 원칙]\n'
-    +'- 전문가가 고객 옆에서 말해주듯 존댓말로. AI 보고서 느낌 X. ~예요 구어체.\n'
-    +'- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로. 두루뭉술 금지.\n'
-    +'- 나쁜 시기에는 반드시 개운법·대처법 포함. 문제→원인→대처법 순서.\n'
-    +'- 섹션 1에서만 한자 허용. 섹션 2 이후 한자 절대 금지. 쉬운 말로 풀어쓰기.\n'
-    +'- 소제목(■)마다 어울리는 이모지를 앞에 붙이기.\n'
-    +'- 소제목 아래 내용은 소제목별로 충분히 풍부하게.\n'
-    +'- 절대 요약·생략 금지. 마지막 섹션까지 반드시 완성.\n\n'
+    +'[작성 원칙 — 핵심 3가지]\\n'
+    +'① 이 사람에게만 해당하는 말만: 다른 사주에도 쓸 수 있는 일반론 절대 금지.\\n'
+    +'② 간결하고 중복 없이: 한번 한 말 반복 금지. 분량 채우기 금지. 짧아도 되니 핵심만.\\n'
+    +'③ 구어체로 자연스럽게: 전문가가 옆에서 말해주듯. ~예요 ~해요 구어체. AI 보고서 느낌 X.\\n'
+    +'- 나쁜 시기에는 반드시 대처법 포함. 섹션 1에서만 한자 허용.\\n'
+    +'- 소제목(■)마다 이모지 붙이기. 마지막 섹션까지 완성.\\n\\n'
     +'[용어 변환 — 반드시 쉬운 말로]\n'
     +'용신→이 사주에서 가장 힘이 되는 기운, 기신→힘을 빼는 기운, 신강→에너지 넘치는 구조\n'
     +'신약→에너지 부족한 구조, 대운→10년 단위 운의 흐름, 세운→그해의 운의 흐름\n\n'
     +'[세운 간지 기준]\n'
-    +'2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑 2034=甲寅 2035=乙卯'
+    +'2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑 2034=甲寅 2035=乙卯';
 
-  var secGuide = '\n\n[출력 형식 규칙 — 절대 준수]\n'
-    +'⛔ 마크다운 # ## ### 금지. **굵게** 사용 가능.\n'
+
+  var secGuide =
+    +'- 핵심 포인트, 중요 연도, 이 사람만의 핵심 내용은 반드시 **굵게** 표시하세요. 마크업: ==텍스트==(금색/핵심) !!텍스트!!(빨간/주의) ++텍스트++(초록/기회) ~~텍스트~~(파란/전환점). 섹션마다 2~3개 이상.\\n'
+
+    +'\\n\\n[출력 형식 규칙 — 절대 준수]\\n'
     +'✅ 소제목은 반드시 ■ 이모지 텍스트 형식. 예: ■ 🧠 핵심 성격\n'
     +'✅ 세운 연도는 ### 🗓️ YYYY년 干支년 형식.\n'
     +'✅ 사주팔자 도표는 반드시 마크다운 표(| 구분) 형식.\n'
@@ -490,7 +493,7 @@ async function doAutoAnalyze() {
     +'✅ 각 섹션 마지막에 반드시:\n'
     +'   [한눈에 보기] 핵심 한 문장\n'
     +'   [핵심 요약 3줄] - 요약1\n- 요약2\n- 요약3\n'
-    +'   지금 당장 할 수 있는 것: 오늘 바로 실행 가능한 행동 1가지 (20자 이내)\n';
+    +'   지금 당장 할 수 있는 것: '+curDate+' 기준 오늘 바로 실행 가능한 행동 1가지 (20자 이내, 미래 계획 금지)\n';
 
   var p1=baseHdr+secGuide+'\n\n아래 섹션 1~5만 작성하세요:\n'
     +'---\n【1. 사주 구조 분석】\n'
@@ -504,33 +507,43 @@ async function doAutoAnalyze() {
     +'---\n【5. 창업·사업 가능성】\n'
     +'창업 사주 여부 · 어울리는 업종 · 시작 타이밍 · 주의사항';
 
-  var p2=baseHdr+secGuide+'\n\n아래 섹션 6~9만 작성하세요:\n'
+  var p2=baseHdr+secGuide+'\n\n아래 섹션 6~8만 작성하세요:\n'
     +'---\n【6. 연애·결혼운】\n'
     +'배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n'
     +'---\n【7. 부모·자녀·가족 관계】\n'
     +'가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n'
     +'---\n【8. 건강·취약 부위】\n'
-    +'취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n'
-    +'---\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'
+    +'취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관';
+
+  var p3=baseHdr+secGuide+'\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】만 작성하세요.\n\n'
+    +'[현재 시점: '+curDate+']\n'
+    +'- 과거 연도(이미 지난 해): 실제로 어떤 흐름이었는지 사주로 설명\n'
+    +'- 현재 연도('+sy+'년): 지금 이 시점부터 연말까지 무엇을 해야 하는지\n'
+    +'- 미래 연도: "이 해에는 OOO이 중요하니 OOO을 위주로 도전하여 OOO을 목표로 잡으세요" 형식\n\n'
+    +'[로또·복권 조언 포함]\n'
+    +'- 재물운이 좋은 연도에는 반드시 로또·복권 구매 방향, 구매 장소, 보관 방법 구체적으로 포함\n'
+    +'- 예: "이 해는 불 기운이 강해 남쪽 방향 복권방에서 구매하시고, 빨간색 지갑에 보관하세요"\n\n'
     +sy+'년부터 '+ey+'년까지 10개년, 각 연도를 반드시 아래 형식으로:\n\n'
     +'### 🗓️ YYYY년 干支년\n'
     +'💰 재물·직업: (상세 내용)\n'
     +'❤️ 연애·가족: (상세 내용)\n'
     +'🌿 건강 주의: (상세 내용)\n'
+    +'🎰 복권·재물운: (로또 구매 방향·장소·보관법 포함, 재물운 좋은 해만)\n'
     +'✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
     +'📝 총평: 이 해 전반 분위기 한 문장.\n'
-    +'행동 조언: 구체적 행동 한 문장.\n\n'
-    +'각 연도 사이 빈 줄 삽입. 10개년 전부 작성.'
+    +'행동 조언: 현재 시점('+curDate+') 기준 구체적 행동. 이미 지난 해는 회고로, 현재는 지금 당장, 미래는 언제 무엇을 준비할지.\n\n'
+    +'각 연도 사이 빈 줄 삽입. 10개년 전부 완성.';
 
-  var part1='', part2='', done1=false, done2=false;
+  var part1='', part2='', part3='', done1=false, done2=false, done3=false;
 
   function updateDisplay() {
-    var combined = part1 + (part2 ? '\n\n' + part2 : '');
+    var combined = part1 + (part2 ? '\n\n' + part2 : '') + (part3 ? '\n\n' + part3 : '');
     if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
     var s1 = done1 ? '✅ 섹션1~5 완료('+part1.length.toLocaleString()+'자)' : '✍️ 섹션1~5 작성중...('+part1.length.toLocaleString()+'자)';
-    var s2 = done2 ? '✅ 섹션6~9 완료('+part2.length.toLocaleString()+'자)' : (part2.length>0 ? '✍️ 섹션6~9 작성중...('+part2.length.toLocaleString()+'자)' : '⏳ 섹션6~9 대기중');
-    statusEl.innerHTML = s1 + '<br>' + s2;
-    if(done1&&done2){
+    var s2 = done2 ? '✅ 섹션6~8 완료('+part2.length.toLocaleString()+'자)' : (part2.length>0 ? '✍️ 섹션6~8 작성중...('+part2.length.toLocaleString()+'자)' : '⏳ 섹션6~8 대기중');
+    var s3 = done3 ? '✅ 세운분석 완료('+part3.length.toLocaleString()+'자)' : (part3.length>0 ? '✍️ 세운 작성중...('+part3.length.toLocaleString()+'자)' : '⏳ 세운분석 대기중');
+    statusEl.innerHTML = s1 + '<br>' + s2 + '<br>' + s3;
+    if(done1&&done2&&done3){
       statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
       statusEl.innerHTML='✅ 분석 완료! 총 '+combined.length.toLocaleString()+'자 생성됨';
       onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
@@ -558,7 +571,8 @@ async function doAutoAnalyze() {
   try {
     await Promise.all([
       streamFetch(p1, function(t){part1+=t;updateDisplay();}, function(){done1=true;updateDisplay();}),
-      streamFetch(p2, function(t){part2+=t;updateDisplay();}, function(){done2=true;updateDisplay();})
+      streamFetch(p2, function(t){part2+=t;updateDisplay();}, function(){done2=true;updateDisplay();}),
+      streamFetch(p3, function(t){part3+=t;updateDisplay();}, function(){done3=true;updateDisplay();})
     ]);
   } catch(err2) {
     statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
@@ -734,16 +748,11 @@ function buildHtmlTable(rows) {
 }
 
 function highlightKeywords(text) {
-  // 중요 키워드 자동 강조
-  var patterns = [
-    {re: /(용신|희신|기신|신강|신약|일간)/g, cls: 'kw-gold'},
-    {re: /(주의|조심|위험|기신|힘든|어려|충돌|압박|조심)/g, cls: 'kw-red'},
-    {re: /(좋은|기회|상승|최적|유리|강점|탁월|뛰어|성장)/g, cls: 'kw-green'},
-    {re: /(\d{4}년)/g, cls: 'kw-blue'},
-  ];
-  patterns.forEach(function(p) {
-    text = text.replace(p.re, '<span class="'+p.cls+'">$1</span>');
-  });
+  // Claude가 직접 마크업한 패턴 변환
+  text = text.replace(/==([^=]+)==/g, '<span class="mk-gold">$1</span>');
+  text = text.replace(/!!([^!]+)!!/g, '<span class="mk-red">$1</span>');
+  text = text.replace(/\+\+([^+]+)\+\+/g, '<span class="mk-green">$1</span>');
+  text = text.replace(/~~([^~]+)~~/g, '<span class="mk-blue">$1</span>');
   return text;
 }
 
@@ -951,10 +960,7 @@ function getBasePDFStyle(name) {
     +'.sb p:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}'
     +'.sb strong{color:#1C2B3A;font-weight:700}'
     /* 키워드 강조 */
-    +'.kw-gold{color:#8a6200;font-weight:700;background:rgba(201,168,76,.12);padding:0 3px;border-radius:3px}'
-    +'.kw-red{color:#c0392b;font-weight:600}'
-    +'.kw-green{color:#1a7040;font-weight:600}'
-    +'.kw-blue{color:#1a4a8a;font-weight:700;background:rgba(26,74,138,.08);padding:0 3px;border-radius:3px}'
+    +'.kw-gold{color:#8a6200;font-weight:700;background:rgba(201,168,76,.12);padding:0 3px;border-radius:3px}'    +'.kw-red{color:#c0392b;font-weight:600}'    +'.kw-green{color:#1a7040;font-weight:600}'    +'.kw-blue{color:#1a4a8a;font-weight:700;background:rgba(26,74,138,.08);padding:0 3px;border-radius:3px}'    +'.mk-gold{color:#8a5e00;font-weight:700;background:rgba(201,168,76,.18);padding:1px 5px;border-radius:4px;border-bottom:2px solid #C9A84C}'    +'.mk-red{color:#c0392b;font-weight:700;background:rgba(192,57,43,.08);padding:1px 5px;border-radius:4px;border-bottom:2px solid #e74c3c}'    +'.mk-green{color:#1a7040;font-weight:700;background:rgba(39,174,96,.10);padding:1px 5px;border-radius:4px;border-bottom:2px solid #27ae60}'    +'.mk-blue{color:#1a4a8a;font-weight:700;background:rgba(52,152,219,.10);padding:1px 5px;border-radius:4px;border-bottom:2px solid #3498db}'
     /* 소제목 박스 - 연한 남색 배경 */
     +'.sub-h{font-size:13px;font-weight:900;color:#0d1a26;margin:18px 0 10px;padding:10px 14px;background:rgba(14,26,38,.07);border:1.5px solid rgba(14,26,38,.15);border-left:4px solid #1C2B3A;border-radius:0 8px 8px 0;display:block;word-break:keep-all}'
     /* 한눈에 보기 */
@@ -1040,6 +1046,10 @@ function getLinearCSS(name) {
     +'.kw-red{color:#c0392b;font-weight:600}'
     +'.kw-green{color:#1a7040;font-weight:600}'
     +'.kw-blue{color:#1a4a8a;font-weight:700;background:rgba(26,74,138,.08);padding:0 3px;border-radius:3px}'
+    +'.mk-gold{color:#8a5e00;font-weight:700;background:rgba(201,168,76,.18);padding:1px 5px;border-radius:4px;border-bottom:2px solid #C9A84C}'
+    +'.mk-red{color:#c0392b;font-weight:700;background:rgba(192,57,43,.08);padding:1px 5px;border-radius:4px;border-bottom:2px solid #e74c3c}'
+    +'.mk-green{color:#1a7040;font-weight:700;background:rgba(39,174,96,.10);padding:1px 5px;border-radius:4px;border-bottom:2px solid #27ae60}'
+    +'.mk-blue{color:#1a4a8a;font-weight:700;background:rgba(52,152,219,.10);padding:1px 5px;border-radius:4px;border-bottom:2px solid #3498db}'
     /* 소제목 - 연한 남색 박스 */
     +'.sub-h{font-size:13px;font-weight:900;color:#0d1a26;margin:22px 0 12px;padding:11px 16px;background:rgba(14,26,38,.06);border:1.5px solid rgba(14,26,38,.14);border-left:4px solid #1C2B3A;border-radius:0 8px 8px 0;display:block;word-break:keep-all}'
     /* 한눈에 보기 */
@@ -1093,4 +1103,13 @@ function getMiniCSS() {
 window.onload = function() { initCats(); };
 </script>
 </body>
-</html>
+</html>[작성 원칙 — 핵심 3원칙]\\n'
+    +'① 간단명료하지만 자세하게: 핵심만 깊게. 늘여쓰기 금지.\\n'
+    +'② 겹치는 내용 절대 금지: 앞 섹션에서 한 말, 같은 말 다른 표현 모두 금지.\\n'
+    +'③ 이 사람에게만 해당하는 내용만: 누구에게나 쓸 수 있는 말 금지.\\n'
+    +'- 전문가가 옆에서 직접 말해주듯 존댓말 구어체. AI 느낌 X.\\n'
+    +'- 좋은 건 확실히, 나쁜 건 가감 없이. 두루뭉술 금지.\\n'
+    +'- 나쁜 시기엔 반드시 구체적 대처법.\\n'
+    +'- 섹션 1에서만 한자 허용. 이후 한자 금지. 쉬운 말로.\\n'
+    +'- 소제목(■)마다 이모지. 마지막 섹션까지 완성.\\n\\n'
+    +'
