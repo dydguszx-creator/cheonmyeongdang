@@ -506,7 +506,7 @@ async function doAutoAnalyze() {
     +'---\n【5. 창업·사업 가능성】\n'
     +'창업 사주 여부 · 어울리는 업종 · 시작 타이밍 · 주의사항. 모든 섹션을 완전히 작성 후 마감하세요.';
 
-  var p2=baseHdr+secGuide+'\n\n아래 섹션 6~8만 작성하세요:\n'
+  var p2=baseHdr+secGuide+'\\n\\n'
     +'---\n【6. 연애·결혼운】\n'
     +'배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n'
     +'---\n【7. 부모·자녀·가족 관계】\n'
@@ -514,35 +514,49 @@ async function doAutoAnalyze() {
     +'---\n【8. 건강·취약 부위】\n'
     +'취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관. 8번 섹션까지만 작성하고 세운분석(9번)은 쓰지 마세요.';
 
-  var p3=baseHdr+secGuide+'\n\n섹션1~8은 별도로 이미 작성됨. 아래 【9. 연도별 세운 분석 ('+sy+'~'+ey+')】만 작성하세요.\n\n'
-    +'[현재 시점: '+curDate+']\n'
-    +'- 과거 연도(이미 지난 해): 실제로 어떤 흐름이었는지 사주로 설명\n'
-    +'- 현재 연도('+sy+'년): 지금 이 시점부터 연말까지 무엇을 해야 하는지\n'
-    +'- 미래 연도: "이 해에는 OOO이 중요하니 OOO을 위주로 도전하여 OOO을 목표로 잡으세요" 형식\n\n'
-    +'[로또·복권 조언 포함]\n'
-    +'- 재물운이 좋은 연도에는 반드시 로또·복권 구매 방향, 구매 장소, 보관 방법 구체적으로 포함\n'
-    +'- 예: "이 해는 불 기운이 강해 남쪽 방향 복권방에서 구매하시고, 빨간색 지갑에 보관하세요"\n\n'
-    +sy+'년부터 '+ey+'년까지 10개년, 각 연도를 반드시 아래 형식으로:\n\n'
-    +'### 🗓️ YYYY년 干支년\n'
-    +'💰 재물·직업: (상세 내용)\n'
-    +'❤️ 연애·가족: (상세 내용)\n'
-    +'🌿 건강 주의: (상세 내용)\n'
-    +'🎰 복권·재물운: (로또 구매 방향·장소·보관법 포함, 재물운 좋은 해만)\n'
-    +'✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
-    +'📝 총평: 이 해 전반 분위기 한 문장.\n'
-    +'행동 조언: 현재 시점('+curDate+') 기준 구체적 행동. 이미 지난 해는 회고로, 현재는 지금 당장, 미래는 언제 무엇을 준비할지.\n\n'
-    +'각 연도 사이 빈 줄 삽입. 10개년 전부 완성.';
+  var p3=baseHdr+"\n\n【9. 연도별 세운 분석】중 "+sy+"년~"+(sy+4)+"년 5개년만 작성하세요.\n\n"
+    +"[현재 시점: "+curDate+"]\n"
+    +"- 과거연도: 사주로 그 시기 흐름 설명\n"
+    +"- 현재연도: 지금 이 시점부터 연말까지 해야 할 것\n"
+    +"- 미래연도: 이 해에는 OOO이 중요하니 OOO을 목표로 잡으세요 형식\n\n"
+    +"재물운 좋은 해에는 복권/로또 구매 방향·장소·보관법 포함.\n\n"
+    +"각 연도 형식:\n"
+    +"### 🗓️ YYYY년 干支년\n"
+    +"💰 재물·직업: (내용)\n"
+    +"❤️ 연애·가족: (내용)\n"
+    +"🌿 건강 주의: (내용)\n"
+    +"🎰 복권·재물운: (재물운 좋은 해만)\n"
+    +"✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n"
+    +"📝 총평: 한 문장.\n"
+    +"행동 조언: 한 문장.\n\n"
+    +"5개년 전부 완성 후 마감.";
 
-  var part1='', part2='', part3='', done1=false, done2=false, done3=false;
+  var p4=baseHdr+"\n\n【9. 연도별 세운 분석】중 "+(sy+5)+"년~"+(sy+9)+"년 5개년만 작성하세요.\n\n"
+    +"[현재 시점: "+curDate+"]\n"
+    +"미래이므로 각 해에 무엇을 준비하고 어떤 목표를 잡을지 구체적으로.\n\n"
+    +"재물운 좋은 해에는 복권/로또 구매 방향·장소·보관법 포함.\n\n"
+    +"각 연도 형식:\n"
+    +"### 🗓️ YYYY년 干支년\n"
+    +"💰 재물·직업: (내용)\n"
+    +"❤️ 연애·가족: (내용)\n"
+    +"🌿 건강 주의: (내용)\n"
+    +"🎰 복권·재물운: (재물운 좋은 해만)\n"
+    +"✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n"
+    +"📝 총평: 한 문장.\n"
+    +"행동 조언: 한 문장.\n\n"
+    +"5개년 전부 완성 후 마감."
+
+  var part1='', part2='', part3='', part4='', done1=false, done2=false, done3=false, done4=false;
 
   function updateDisplay() {
-    var combined = part1 + (part2 ? '\n\n' + part2 : '') + (part3 ? '\n\n' + part3 : '');
+    var combined = part1 + (part2 ? '\n\n' + part2 : '') + (part3 ? '\n\n' + part3 : '') + (part4 ? '\n\n' + part4 : '');
     if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
-    var s1 = done1 ? '✅ 섹션1~5 완료('+part1.length.toLocaleString()+'자)' : '✍️ 섹션1~5 작성중...('+part1.length.toLocaleString()+'자)';
-    var s2 = done2 ? '✅ 섹션6~8 완료('+part2.length.toLocaleString()+'자)' : (part2.length>0 ? '✍️ 섹션6~8 작성중...('+part2.length.toLocaleString()+'자)' : '⏳ 섹션6~8 대기중');
-    var s3 = done3 ? '✅ 세운분석 완료('+part3.length.toLocaleString()+'자)' : (part3.length>0 ? '✍️ 세운 작성중...('+part3.length.toLocaleString()+'자)' : '⏳ 세운분석 대기중');
-    statusEl.innerHTML = s1 + '<br>' + s2 + '<br>' + s3;
-    if(done1&&done2&&done3){
+    var s1 = done1 ? '✅ 섹션1~5 ('+part1.length.toLocaleString()+'자)' : '✍️ 섹션1~5...';
+    var s2 = done2 ? '✅ 섹션6~8 ('+part2.length.toLocaleString()+'자)' : (part2.length>0?'✍️ 섹션6~8...':'⏳');
+    var s3 = done3 ? '✅ 세운전반 ('+part3.length.toLocaleString()+'자)' : (part3.length>0?'✍️ 세운전반...':'⏳');
+    var s4 = done4 ? '✅ 세운후반 ('+part4.length.toLocaleString()+'자)' : (part4.length>0?'✍️ 세운후반...':'⏳');
+    statusEl.innerHTML = s1 + ' | ' + s2 + '<br>' + s3 + ' | ' + s4;
+    if(done1&&done2&&done3&&done4){
       statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
       statusEl.innerHTML='✅ 분석 완료! 총 '+combined.length.toLocaleString()+'자 생성됨';
       onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
@@ -571,7 +585,8 @@ async function doAutoAnalyze() {
     await Promise.all([
       streamFetch(p1, function(t){part1+=t;updateDisplay();}, function(){done1=true;updateDisplay();}),
       streamFetch(p2, function(t){part2+=t;updateDisplay();}, function(){done2=true;updateDisplay();}),
-      streamFetch(p3, function(t){part3+=t;updateDisplay();}, function(){done3=true;updateDisplay();})
+      streamFetch(p3, function(t){part3+=t;updateDisplay();}, function(){done3=true;updateDisplay();}),
+      streamFetch(p4, function(t){part4+=t;updateDisplay();}, function(){done4=true;updateDisplay();})
     ]);
   } catch(err2) {
     statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
