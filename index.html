@@ -557,6 +557,20 @@ function submitForm() {
 
   var merchantUid = 'cheonmyeongdang_' + Date.now();
 
+  // m_redirect_url 미리 생성 (formDataGlobal 값이 확실히 있을 때)
+  var _d = formDataGlobal;
+  var _cats = _d.categories && _d.categories.length > 0 ? encodeURIComponent(_d.categories.join(',')) : '';
+  var _timeStr = _d.hour ? _d.hour + '시 ' + (_d.min||'00') + '분' : '모름';
+  var mRedirectUrl = 'https://cheonmyeongdang-seven.vercel.app/?payment=complete' +
+    '&nm=' + encodeURIComponent(_d.name||'') +
+    '&gd=' + encodeURIComponent(_d.gender||'') +
+    '&cl=' + encodeURIComponent(_d.cal||'') +
+    '&yr=' + encodeURIComponent(_d.year||'') +
+    '&mo=' + encodeURIComponent(_d.month||'') +
+    '&dy=' + encodeURIComponent(_d.day||'') +
+    '&tm=' + encodeURIComponent(_timeStr) +
+    '&ct=' + _cats;
+
   IMP.request_pay({
     pg: 'kakaopay.TC0ONETIME',
     pay_method: 'kakaopay',
@@ -564,21 +578,7 @@ function submitForm() {
     name: '천명당 사주 분석 보고서',
     amount: 14000,
     buyer_name: name,
-    m_redirect_url: (function(){
-      var base = 'https://cheonmyeongdang-seven.vercel.app/?payment=complete';
-      var d = formDataGlobal;
-      var cats = d.categories && d.categories.length > 0 ? encodeURIComponent(d.categories.join(',')) : '';
-      var timeStr = d.hour ? d.hour + '시 ' + (d.min||'00') + '분' : '모름';
-      return base +
-        '&nm=' + encodeURIComponent(d.name||'') +
-        '&gd=' + encodeURIComponent(d.gender||'') +
-        '&cl=' + encodeURIComponent(d.cal||'') +
-        '&yr=' + encodeURIComponent(d.year||'') +
-        '&mo=' + encodeURIComponent(d.month||'') +
-        '&dy=' + encodeURIComponent(d.day||'') +
-        '&tm=' + encodeURIComponent(timeStr) +
-        '&ct=' + cats;
-    })(),
+    m_redirect_url: mRedirectUrl,
   }, function(rsp) {
     if (rsp.success) {
       // 결제 성공 → 완료 화면 표시 후 카카오 오픈채팅으로 이동
