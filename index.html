@@ -485,14 +485,13 @@ function submitForm() {
 
   // 포트원 결제창 열기
   var IMP = window.IMP;
-  IMP.init('store-bbe7347a-9141-48ad-b344-ef979433626e');
+  IMP.init('imp13401624');
 
   var merchantUid = 'cheonmyeongdang_' + Date.now();
 
   IMP.request_pay({
     pg: 'kakaopay.TC0ONETIME',
     pay_method: 'card',
-    channel_key: 'channel-key-d47dbd37-0a19-467c-ba22-7dcc1cafbd09',
     merchant_uid: merchantUid,
     name: '천명당 사주 분석 보고서',
     amount: 14000,
@@ -534,7 +533,7 @@ function openPayment() {
   if (!d.name) { alert('정보를 먼저 입력해주세요.'); return; }
 
   var IMP = window.IMP;
-  IMP.init('store-bbe7347a-9141-48ad-b344-ef979433626e');
+  IMP.init('imp13401624');
 
   var paymentId = 'cheonmyeong_' + Date.now();
   window._paymentId = paymentId;
