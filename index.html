@@ -462,6 +462,8 @@ footer .gold{color:var(--gold)}
     var merchantUid = params.get('merchant_uid');
     var impSuccess = params.get('imp_success');
     if (impSuccess === 'true' || impUid) {
+      // URL 파라미터 즉시 제거
+      window.history.replaceState({}, document.title, window.location.pathname);
       // 결제 성공 - 완료 화면 표시
       window.addEventListener('DOMContentLoaded', function() {
         var formSection = document.getElementById('form-section');
@@ -512,8 +514,6 @@ footer .gold{color:var(--gold)}
             '</div>';
           setTimeout(function() {
             emailStep.scrollIntoView({behavior:'smooth', block:'center'});
-            // URL 파라미터 제거 (새로고침해도 안 뜨게)
-            window.history.replaceState({}, document.title, window.location.pathname);
           }, 300);
         }
       });
