@@ -5,17 +5,39 @@
     },
     "api/saju.js": {
       "maxDuration": 300
+    },
+    "api/payment.js": {
+      "maxDuration": 300
+    },
+    "api/email.js": {
+      "maxDuration": 300
+    },
+    "api/test-email.js": {
+      "maxDuration": 300
     }
   },
   "routes": [
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/saju", "dest": "/saju.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/saju",
+      "dest": "/saju.html"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     }
   ]
