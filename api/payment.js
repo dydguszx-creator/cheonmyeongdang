@@ -1,5 +1,4 @@
-// 천명당 결제 검증 + 이메일 자동 발송 API
-// 흐름: 포트원 결제 완료 → 결제 검증 → Claude 분석 → 이메일 발송
+// 천명당 결제 검증 + 이메일 자동 발송 API (포트원 V1)
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -15,36 +14,49 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ── 1. 포트원 V2 API 액세스 토큰 발급 ──
-    const tokenRes = await fetch('https://api.portone.io/login/api-secret', {
+    // ── 1. 포트원 V1 액세스 토큰 발급 ──
+    const tokenRes = await fetch('https://api.iamport.kr/users/getToken', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apiSecret: process.env.PORTONE_API_SECRET }),
+      body: JSON.stringify({
+        imp_key: process.env.PORTONE_API_KEY,
+        imp_secret: process.env.PORTONE_API_SECRET,
+      }),
     });
 
     if (!tokenRes.ok) {
       return res.status(502).json({ error: '포트원 인증 실패' });
     }
-    const { accessToken } = await tokenRes.json();
+    const tokenData = await tokenRes.json();
+    const accessToken = tokenData.response?.access_token;
+
+    if (!accessToken) {
+      return res.status(502).json({ error: '토큰 발급 실패' });
+    }
 
     // ── 2. 결제 정보 조회 및 검증 ──
-    const paymentRes = await fetch(`https://api.portone.io/payments/${paymentId}`, {
-      headers: { 'Authorization': `Bearer ${accessToken}` },
+    const paymentRes = await fetch(`https://api.iamport.kr/payments/${paymentId}`, {
+      headers: { 'Authorization': accessToken },
     });
 
     if (!paymentRes.ok) {
       return res.status(502).json({ error: '결제 조회 실패' });
     }
 
-    const payment = await paymentRes.json();
+    const paymentData = await paymentRes.json();
+    const payment = paymentData.response;
+
+    if (!payment) {
+      return res.status(400).json({ error: '결제 정보를 찾을 수 없습니다.' });
+    }
 
     // 결제 상태 확인
-    if (payment.status !== 'PAID') {
+    if (payment.status !== 'paid') {
       return res.status(400).json({ error: '결제가 완료되지 않았습니다.', status: payment.status });
     }
 
     // 금액 검증 (14,000원)
-    if (payment.amount.total !== 14000) {
+    if (payment.amount !== 14000) {
       return res.status(400).json({ error: '결제 금액이 올바르지 않습니다.' });
     }
 
