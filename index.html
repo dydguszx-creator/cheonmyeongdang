@@ -240,7 +240,64 @@ footer .gold{color:var(--gold)}
     </div>
   </div>
 
-  <button class="submit-btn" onclick="submitForm()">카카오 채팅으로 신청하기 →</button>
+  <!-- 신청 버튼 -->
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
+
+  <!-- STEP 1: 결제 안내 -->
+  <div id="paymentStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
+    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
+      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 1 · 결제 안내</div>
+      <div style="font-size:17px;font-weight:900;color:#fff">아래 계좌로 이체해주세요</div>
+    </div>
+    <div style="padding:20px">
+      <div style="background:#f8f7f4;border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
+        <div style="font-size:12px;color:#888;margin-bottom:6px">입금 계좌</div>
+        <div style="font-size:22px;font-weight:900;color:#1C2B3A;letter-spacing:1px">카카오뱅크 3333-37-3493547</div>
+        <div style="font-size:13px;color:#666;margin-top:4px">예금주: 천명당</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:14px">
+        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금액</div>
+          <div style="font-size:20px;font-weight:900;color:#856404">14,000원</div>
+        </div>
+        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금자명</div>
+          <div style="font-size:15px;font-weight:900;color:#856404" id="payerName">-</div>
+        </div>
+      </div>
+      <div style="background:#fff0f0;border:1px solid #ffcccc;border-radius:10px;padding:12px;margin-bottom:16px;text-align:center">
+        <div style="font-size:13px;color:#cc0000;font-weight:700">⏰ 신청 후 <span id="countdown">20:00</span> 안에 결제해주세요</div>
+        <div style="font-size:11px;color:#999;margin-top:4px">시간 초과 시 재신청 필요합니다</div>
+      </div>
+      <button onclick="showEmailStep()" style="width:100%;padding:15px;background:#C9A84C;color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
+        ✅ 결제 완료했어요
+      </button>
+      <div style="font-size:11px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6">
+        입금 확인 후 이메일로 보고서가 자동 발송돼요<br/>
+        문의: <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C">카카오 오픈채팅</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: 이메일 입력 -->
+  <div id="emailStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #1C2B3A;border-radius:16px;overflow:hidden">
+    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
+      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 2 · 이메일 입력</div>
+      <div style="font-size:17px;font-weight:900;color:#fff">보고서 받을 이메일을 입력해주세요</div>
+    </div>
+    <div style="padding:20px">
+      <div style="background:#f0f4ff;border:1px solid #c7d7ff;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#3a5acc;line-height:1.7;text-align:center">
+        📧 입력 완료 즉시 자동 분석이 시작돼요<br/>약 2분 후 이메일로 보고서가 도착합니다
+      </div>
+      <input id="f-email" placeholder="예: example@gmail.com" type="email" style="width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a2e;background:#fff;outline:none;margin-bottom:12px"/>
+      <button id="analyzeBtn" onclick="requestAnalysis()" style="width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
+        입력 완료 →
+      </button>
+      <div id="sendingStatus" style="display:none;text-align:center;padding:14px;font-size:13px;color:#C9A84C;margin-top:10px;background:#1C2B3A;border-radius:10px">
+        ⏳ 분석 중... 잠시만 기다려주세요
+      </div>
+    </div>
+  </div>
   <div class="copy-notice" id="copyNotice">
     ✅ 신청 내용이 클립보드에 복사됐어요!<br/>
     카카오 채팅창이 열리면 <strong>붙여넣기(길게 누르기)</strong> 후 전송해주세요.
@@ -403,6 +460,10 @@ document.querySelectorAll('.cat-btn').forEach(function(btn) {
   btn.addEventListener('click', function() { this.classList.toggle('on'); });
 });
 
+// 전역 변수
+var formDataGlobal = {};
+var countdownTimer = null;
+
 function submitForm() {
   var name = document.getElementById('f-name').value.trim();
   var year = document.getElementById('f-year').value.trim();
@@ -415,17 +476,82 @@ function submitForm() {
   var cats = [];
   document.querySelectorAll('.cat-btn.on').forEach(function(b) { cats.push(b.getAttribute('data-val')); });
   if (!name || !year || !month || !day) { alert('성함과 생년월일을 입력해주세요.'); return; }
-  var timeStr = hour ? (hour + '시 ' + (min ? min + '분' : '00분')) : '모름';
-  var msg = '안녕하세요, 천명당 사주 보고서 신청합니다.' + '\n\n'
-    + '성함: ' + name + '\n'
-    + '성별: ' + gender + '\n'
-    + '생년월일: ' + cal + ' ' + year + '년 ' + month + '월 ' + day + '일\n'
-    + '태어난 시각: ' + timeStr + '\n'
-    + '궁금한 것: ' + (cats.length > 0 ? cats.join(', ') : '전체 분석') + '\n\n신청합니다!';
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(msg).then(showCopyNotice).catch(function() { fallbackCopy(msg); });
-  } else { fallbackCopy(msg); }
-  setTimeout(function() { window.open('https://open.kakao.com/o/sFcws2si', '_blank'); }, 300);
+
+  // 폼 데이터 저장
+  formDataGlobal = { name:name, gender:gender, cal:cal, year:year, month:month, day:day, hour:hour, min:min, categories:cats };
+
+  // 입금자명 표시
+  document.getElementById('payerName').textContent = name;
+
+  // 결제 안내 표시
+  document.getElementById('paymentStep').style.display = 'block';
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('paymentStep').scrollIntoView({behavior:'smooth', block:'start'});
+
+  // 20분 카운트다운 시작
+  startCountdown(20 * 60);
+}
+
+function startCountdown(seconds) {
+  if (countdownTimer) clearInterval(countdownTimer);
+  var remaining = seconds;
+  var el = document.getElementById('countdown');
+  countdownTimer = setInterval(function() {
+    remaining--;
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+    el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    if (remaining <= 0) {
+      clearInterval(countdownTimer);
+      el.textContent = '시간 초과';
+      el.style.color = '#cc0000';
+    }
+  }, 1000);
+}
+
+function showEmailStep() {
+  document.getElementById('paymentStep').style.display = 'none';
+  document.getElementById('emailStep').style.display = 'block';
+  document.getElementById('emailStep').scrollIntoView({behavior:'smooth', block:'start'});
+  if (countdownTimer) clearInterval(countdownTimer);
+}
+
+async function requestAnalysis() {
+  var email = document.getElementById('f-email').value.trim();
+  if (!email) { alert('이메일 주소를 입력해주세요.'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
+
+  var btn = document.getElementById('analyzeBtn');
+  var status = document.getElementById('sendingStatus');
+  btn.disabled = true;
+  btn.textContent = '분석 시작 중...';
+  status.style.display = 'block';
+
+  try {
+    var payload = Object.assign({}, formDataGlobal, { email: email });
+    var res = await fetch('/api/email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || '오류 발생');
+
+    // 완료 화면
+    document.getElementById('emailStep').innerHTML =
+      '<div style="padding:32px;text-align:center">' +
+      '<div style="font-size:48px;margin-bottom:16px">✅</div>' +
+      '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">보고서 발송 완료!</div>' +
+      '<div style="font-size:13px;color:#555;line-height:1.8;margin-bottom:16px">' + email + '로<br/>사주 분석 보고서를 발송했어요.<br/>받은 편지함을 확인해주세요.</div>' +
+      '<div style="font-size:12px;color:#aaa">(스팸함도 함께 확인해주세요)</div>' +
+      '</div>';
+  } catch(err) {
+    status.style.color = '#f87171';
+    status.style.background = '#2b0d0d';
+    status.textContent = '❌ 오류: ' + err.message;
+    btn.disabled = false;
+    btn.textContent = '입력 완료 →';
+  }
 }
 function fallbackCopy(text) {
   var ta = document.createElement('textarea');
