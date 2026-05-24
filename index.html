@@ -491,7 +491,7 @@ function submitForm() {
 
   IMP.request_pay({
     pg: 'kakaopay.TC0ONETIME',
-    pay_method: 'card',
+    pay_method: 'kakaopay',
     merchant_uid: merchantUid,
     name: '천명당 사주 분석 보고서',
     amount: 14000,
@@ -540,7 +540,7 @@ function openPayment() {
 
   IMP.request_pay({
     pg: 'kakaopay.TC0ONETIME',
-    pay_method: 'card',
+    pay_method: 'kakaopay',
     merchant_uid: paymentId,
     name: '천명당 사주 분석 보고서',
     amount: 14000,
