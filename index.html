@@ -512,6 +512,8 @@ footer .gold{color:var(--gold)}
             '</div>';
           setTimeout(function() {
             emailStep.scrollIntoView({behavior:'smooth', block:'center'});
+            // URL 파라미터 제거 (새로고침해도 안 뜨게)
+            window.history.replaceState({}, document.title, window.location.pathname);
           }, 300);
         }
       });
