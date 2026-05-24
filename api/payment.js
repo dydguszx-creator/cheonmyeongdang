@@ -29,49 +29,8 @@ export default async function handler(req, res) {
   if (!year || !month || !day) return res.status(400).json({ error: '생년월일 누락' });
 
   try {
-    // ── 1. 포트원 V1 토큰 발급 ──
-    const tokenRes = await fetch('https://api.iamport.kr/users/getToken', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        imp_key: process.env.PORTONE_API_KEY,
-        imp_secret: process.env.PORTONE_API_SECRET,
-      }),
-    });
-
-    if (!tokenRes.ok) {
-      const err = await tokenRes.text();
-      console.log('[천명당] 포트원 토큰 오류:', err);
-      return res.status(502).json({ error: '포트원 인증 실패', detail: err });
-    }
-
-    const tokenData = await tokenRes.json();
-    const accessToken = tokenData.response?.access_token;
-
-    if (!accessToken) {
-      return res.status(502).json({ error: '토큰이 비어있습니다.' });
-    }
-
-    // ── 2. 결제 검증 ──
-    const paymentRes = await fetch(`https://api.iamport.kr/payments/${paymentId}`, {
-      headers: { 'Authorization': accessToken },
-    });
-
-    if (!paymentRes.ok) {
-      return res.status(502).json({ error: '결제 조회 실패' });
-    }
-
-    const paymentData = await paymentRes.json();
-    const payment = paymentData.response;
-
-    // 테스트 중 - 검증 임시 스킵 (실서비스 시 주석 해제)
-    // if (!payment || payment.status !== 'paid') {
-    //   return res.status(400).json({ error: '결제 미완료', status: payment?.status });
-    // }
-    // if (payment.amount !== 14000) {
-    //   return res.status(400).json({ error: '결제 금액 불일치' });
-    // }
-    console.log('[천명당] 결제 상태:', payment?.status, '금액:', payment?.amount);
+    // ── 1. 결제 검증 (테스트 중 스킵 - 나이스페이 심사 완료 후 활성화) ──
+    console.log('[천명당] 결제 ID:', paymentId, '→ 분석 시작');
 
     // ── 3. Claude 분석 ──
     const timeStr = hour ? `${hour}시 ${min || '00'}분` : '미상';
