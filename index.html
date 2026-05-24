@@ -475,13 +475,19 @@ footer .gold{color:var(--gold)}
         if (submitBtn) submitBtn.style.display = 'none';
         if (emailStep) {
           emailStep.style.display = 'block';
+          var urlParams = new URLSearchParams(window.location.search);
+          var impUid = urlParams.get('imp_uid') || '';
           emailStep.innerHTML =
-            '<div style="padding:32px;text-align:center">' +
-            '<div style="font-size:48px;margin-bottom:16px">✅</div>' +
+            '<div style="padding:28px 20px;text-align:center">' +
+            '<div style="font-size:44px;margin-bottom:12px">✅</div>' +
             '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">결제 완료!</div>' +
-            '<div style="font-size:13px;color:#555;line-height:1.9;margin-bottom:20px">' +
-            '아래 버튼을 눌러 카카오 채팅방에 입장해주세요.<br/>' +
-            '보고서 제작이 시작됩니다 😊</div>' +
+            '<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left">' +
+            '<div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:8px">📋 안내</div>' +
+            '<div style="font-size:12px;color:#166534;line-height:1.8">' +
+            '① 아래 버튼으로 카카오 채팅방 입장<br/>' +
+            '② 채팅창에 이름과 생년월일 알려주세요<br/>' +
+            '③ 잠시 후 PDF 보고서를 받아보실 수 있어요!</div>' +
+            '</div>' +
             '<a href="https://open.kakao.com/o/sFcws2si" target="_blank" ' +
             'style="display:block;padding:15px;background:#F9E000;color:#3A1D1D;border-radius:12px;' +
             'font-size:16px;font-weight:900;text-decoration:none;text-align:center">' +
@@ -545,17 +551,34 @@ function submitForm() {
       document.getElementById('paymentStep').style.display = 'none';
       document.getElementById('submitBtn').style.display = 'none';
       document.getElementById('emailStep').style.display = 'block';
+      var d = formDataGlobal;
+      var cats = d.categories && d.categories.length > 0 ? d.categories.join(', ') : '전체 분석';
+      var timeStr = d.hour ? d.hour + '시 ' + (d.min || '00') + '분' : '모름';
+      var autoMsg = '안녕하세요! 천명당 사주 분석 보고서 신청합니다 :)' +
+        '\n\n성함: ' + (d.name||'') +
+        '\n성별: ' + (d.gender||'') +
+        '\n생년월일: ' + (d.cal||'') + ' ' + (d.year||'') + '년 ' + (d.month||'') + '월 ' + (d.day||'') + '일' +
+        '\n태어난 시각: ' + timeStr +
+        '\n궁금한 것: ' + cats +
+        '\n\n결제 완료했습니다. 잘 부탁드립니다!';
+      if (navigator.clipboard) navigator.clipboard.writeText(autoMsg).catch(function(){});
       document.getElementById('emailStep').innerHTML =
-        '<div style="padding:32px;text-align:center">' +
-        '<div style="font-size:48px;margin-bottom:16px">✅</div>' +
+        '<div style="padding:28px 20px;text-align:center">' +
+        '<div style="font-size:44px;margin-bottom:12px">✅</div>' +
         '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">결제 완료!</div>' +
-        '<div style="font-size:13px;color:#555;line-height:1.9;margin-bottom:20px">' +
-        '아래 버튼을 눌러 카카오 채팅방에 입장해주세요.<br/>' +
-        '보고서 제작이 시작됩니다 😊</div>' +
+        '<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left">' +
+        '<div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:8px">📋 신청 내용이 자동 복사됐어요!</div>' +
+        '<div style="font-size:12px;color:#166534;line-height:1.8">' +
+        '① 아래 버튼으로 카카오 채팅방 입장<br/>' +
+        '② 채팅창에 <b>붙여넣기(길게 누르기)</b> 후 전송<br/>' +
+        '③ 잠시 후 PDF 보고서를 받아보실 수 있어요!</div>' +
+        '</div>' +
         '<a href="https://open.kakao.com/o/sFcws2si" target="_blank" ' +
         'style="display:block;padding:15px;background:#F9E000;color:#3A1D1D;border-radius:12px;' +
-        'font-size:16px;font-weight:900;text-decoration:none;text-align:center">' +
+        'font-size:16px;font-weight:900;text-decoration:none;text-align:center;margin-bottom:10px">' +
         '💬 카카오 채팅방 입장하기</a>' +
+        '<div style="font-size:11px;color:#aaa">복사가 안 됐다면 아래 내용을 직접 복사해주세요</div>' +
+        '<textarea readonly style="width:100%;height:120px;margin-top:8px;padding:10px;font-size:11px;border:1px solid #e5e7eb;border-radius:8px;resize:none;background:#f9f9f9;box-sizing:border-box">' + autoMsg.replace(/\n/g,'\n') + '</textarea>' +
         '</div>';
       document.getElementById('emailStep').scrollIntoView({behavior:'smooth', block:'start'});
     } else {
