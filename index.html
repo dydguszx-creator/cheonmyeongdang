@@ -8,6 +8,7 @@
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
 <title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -125,6 +126,7 @@ footer .gold{color:var(--gold)}
 </style>
 </head>
 <body>
+<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
 
 <header>
   <div class="logo">
@@ -269,9 +271,10 @@ footer .gold{color:var(--gold)}
         <div style="font-size:13px;color:#cc0000;font-weight:700">⏰ 신청 후 <span id="countdown">20:00</span> 안에 결제해주세요</div>
         <div style="font-size:11px;color:#999;margin-top:4px">시간 초과 시 재신청 필요합니다</div>
       </div>
-      <button onclick="showEmailStep()" style="width:100%;padding:15px;background:#C9A84C;color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
-        ✅ 결제 완료했어요
+      <button onclick="openPayment()" style="width:100%;padding:15px;background:#C9A84C;color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
+        💳 카드 / 카카오페이로 결제하기
       </button>
+      <div style="font-size:11px;color:#aaa;text-align:center;margin-top:8px">계좌이체도 가능 · 결제 완료 즉시 자동 분석 시작</div>
       <div style="font-size:11px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6">
         입금 확인 후 이메일로 보고서가 자동 발송돼요<br/>
         문의: <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C">카카오 오픈채팅</a>
@@ -480,16 +483,32 @@ function submitForm() {
   // 폼 데이터 저장
   formDataGlobal = { name:name, gender:gender, cal:cal, year:year, month:month, day:day, hour:hour, min:min, categories:cats };
 
-  // 입금자명 표시
-  document.getElementById('payerName').textContent = name;
+  // 포트원 결제창 열기
+  var IMP = window.IMP;
+  IMP.init('store-bbe7347a-9141-48ad-b344-ef979433626e');
 
-  // 결제 안내 표시
-  document.getElementById('paymentStep').style.display = 'block';
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('paymentStep').scrollIntoView({behavior:'smooth', block:'start'});
+  var merchantUid = 'cheonmyeongdang_' + Date.now();
 
-  // 20분 카운트다운 시작
-  startCountdown(20 * 60);
+  IMP.request_pay({
+    pg: 'nice_v2',
+    pay_method: 'card',
+    merchant_uid: merchantUid,
+    name: '천명당 사주 분석 보고서',
+    amount: 14000,
+    buyer_name: name,
+    m_redirect_url: window.location.href,
+  }, function(rsp) {
+    if (rsp.success) {
+      // 결제 성공 → 이메일 입력 화면으로
+      formDataGlobal.paymentId = rsp.imp_uid;
+      document.getElementById('paymentStep').style.display = 'none';
+      document.getElementById('submitBtn').style.display = 'none';
+      document.getElementById('emailStep').style.display = 'block';
+      document.getElementById('emailStep').scrollIntoView({behavior:'smooth', block:'start'});
+    } else {
+      alert('결제 실패: ' + rsp.error_msg);
+    }
+  });
 }
 
 function startCountdown(seconds) {
@@ -507,6 +526,34 @@ function startCountdown(seconds) {
       el.style.color = '#cc0000';
     }
   }, 1000);
+}
+
+function openPayment() {
+  var d = formDataGlobal;
+  if (!d.name) { alert('정보를 먼저 입력해주세요.'); return; }
+
+  var IMP = window.IMP;
+  IMP.init('store-bbe7347a-9141-48ad-b344-ef979433626e');
+
+  var paymentId = 'cheonmyeong_' + Date.now();
+  window._paymentId = paymentId;
+
+  IMP.request_pay({
+    pg: 'nice_v2',
+    pay_method: 'card',
+    merchant_uid: paymentId,
+    name: '천명당 사주 분석 보고서',
+    amount: 14000,
+    buyer_name: d.name,
+    buyer_tel: '010-0000-0000',
+  }, function(rsp) {
+    if (rsp.success) {
+      window._paymentId = rsp.merchant_uid;
+      showEmailStep();
+    } else {
+      alert('결제 실패: ' + rsp.error_msg);
+    }
+  });
 }
 
 function showEmailStep() {
@@ -528,8 +575,8 @@ async function requestAnalysis() {
   status.style.display = 'block';
 
   try {
-    var payload = Object.assign({}, formDataGlobal, { email: email });
-    var res = await fetch('/api/email', {
+    var payload = Object.assign({}, formDataGlobal, { email: email, paymentId: window._paymentId || '' });
+    var res = await fetch('/api/payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
