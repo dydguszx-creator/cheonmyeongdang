@@ -490,7 +490,7 @@ function submitForm() {
   var merchantUid = 'cheonmyeongdang_' + Date.now();
 
   IMP.request_pay({
-    pg: 'kakaopay',
+    pg: 'kakaopay.TC0ONETIME',
     pay_method: 'card',
     channel_key: 'channel-key-d47dbd37-0a19-467c-ba22-7dcc1cafbd09',
     merchant_uid: merchantUid,
@@ -540,7 +540,7 @@ function openPayment() {
   window._paymentId = paymentId;
 
   IMP.request_pay({
-    pg: 'kakaopay',
+    pg: 'kakaopay.TC0ONETIME',
     pay_method: 'card',
     merchant_uid: paymentId,
     name: '천명당 사주 분석 보고서',
