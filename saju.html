@@ -97,7 +97,7 @@ textarea{resize:vertical;line-height:1.7}
       </div>
       <div class="row">
         <div><input id="h" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/></div>
-        <div style="flex:0.5;display:flex;align-items:center;justify-content:center;font-size:13px;color:#888">분 없음</div>
+        <div><input id="mn" placeholder="분 (예: 30)" type="number" min="0" max="59"/></div>
       </div>
     </div>
     <div id="qField" class="field">
@@ -428,49 +428,77 @@ async function doAutoAnalyze() {
   if (resultArea) resultArea.value='';
 
   var fullText='', charCount=0;
-  try {
-    var res=await fetch('/api/saju',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ prompt: currentMode==='mini' ? buildMiniPrompt() : buildBasicPrompt() })
-    });
-    if (!res.ok) { var errData=await res.json(); throw new Error(errData.error||'서버 오류'); }
 
-    var reader=res.body.getReader();
-    var decoder=new TextDecoder();
-    while (true) {
-      var streamResult=await reader.read();
-      if (streamResult.done) break;
-      var chunk=decoder.decode(streamResult.value,{stream:true});
-      var lines=chunk.split('\n');
-      for (var i=0;i<lines.length;i++) {
-        var line=lines[i];
-        if (!line.startsWith('data: ')) continue;
-        var data=line.slice(6).trim();
-        try {
-          var json=JSON.parse(data);
-          if (json.text) {
-            fullText+=json.text; charCount+=json.text.length;
-            if (resultArea) { resultArea.value=fullText; resultArea.scrollTop=resultArea.scrollHeight; }
-            statusEl.textContent='✍️ 작성 중... ('+charCount.toLocaleString()+'자)';
-          }
-          if (json.done) {
-            statusEl.style.color='#4ade80';
-            statusEl.style.background='#0d2b1a';
-            statusEl.textContent='✅ 완료! '+charCount.toLocaleString()+'자 생성됨';
-            onResultInput();
-          }
-          if (json.error) {
-            throw new Error(json.error);
-          }
-        } catch(e2) {}
+  // 미니운세는 단일 호출
+  if (currentMode==='mini') {
+    try {
+      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()})});
+      if (!res.ok) { var errData=await res.json(); throw new Error(errData.error||'서버 오류'); }
+      var reader=res.body.getReader(); var decoder=new TextDecoder();
+      while(true){
+        var sr=await reader.read(); if(sr.done) break;
+        var chunk=decoder.decode(sr.value,{stream:true});
+        for(var ln of chunk.split('\n')){
+          if(!ln.startsWith('data: ')) continue;
+          try{ var j=JSON.parse(ln.slice(6).trim());
+            if(j.text){fullText+=j.text;charCount+=j.text.length;if(resultArea){resultArea.value=fullText;resultArea.scrollTop=resultArea.scrollHeight;}statusEl.textContent='✍️ 작성 중... ('+charCount.toLocaleString()+'자)';}
+            if(j.done){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+charCount.toLocaleString()+'자 생성됨';onResultInput();}
+            if(j.error) throw new Error(j.error);
+          }catch(e2){}
+        }
+      }
+    } catch(err2){ statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';statusEl.textContent='❌ 오류: '+err2.message; }
+    finally { btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)'; }
+    return;
+  }
+
+  // 기본 보고서: 섹션 1~5 / 6~9 병렬 호출
+  var info=buildInfo(); var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
+  var baseHdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 말해주듯 존댓말로 자연스럽게.\n- 두루뭉술·일반론 절대 금지. 본인 사주에서만 나오는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 한자 금지.\n- 절대 요약·생략 금지. 마지막까지 반드시 완성.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축';
+
+  var p1=baseHdr+'\n\n아래 섹션 1~5만 작성하세요:\n【1. 사주 구조 분석】사주팔자 도표·오행 분포·신강신약·용신희신기신\n【2. 타고난 성격·기질】본인만의 기질을 구체적 생활 장면으로. 강점·약점·대인관계.\n【3. 대운 흐름 분석】전체 대운 목록 표·현재 대운 상세·지금 해야 할 행동.\n【4. 재물·직업운】재물 구조·직장형/사업형·이직 타이밍.\n【5. 창업·사업 가능성】창업 여부·어울리는 업종·시작 타이밍.';
+
+  var p2=baseHdr+'\n\n아래 섹션 6~9만 작성하세요:\n【6. 연애·결혼운】배우자 자리·이상형·인연 시기·반복 패턴.\n【7. 부모·자녀·가족 관계】가족 역할·자녀 인연·주의 패턴.\n【8. 건강·취약 부위】취약 장기·조심할 시기·맞춤 조언.\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】각 연도를 반드시 아래 형식으로 10개년 전부:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (상세)\n❤️ 연애·가족: (상세)\n🌿 건강 주의: (상세)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기.\n행동 조언: 구체적 행동.';
+
+  var part1='', part2='', done1=false, done2=false;
+
+  function updateDisplay() {
+    var combined = part1 + (part2 ? '\n\n' + part2 : '');
+    if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
+    statusEl.textContent='✍️ 작성 중... ('+combined.length.toLocaleString()+'자)';
+    if(done1&&done2){
+      statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
+      statusEl.textContent='✅ 완료! '+combined.length.toLocaleString()+'자 생성됨';
+      onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
+    }
+  }
+
+  async function streamFetch(prompt, onChunk, onDone) {
+    var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})});
+    if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
+    var reader=res.body.getReader(); var decoder=new TextDecoder();
+    while(true){
+      var sr=await reader.read(); if(sr.done) break;
+      var chunk=decoder.decode(sr.value,{stream:true});
+      for(var ln of chunk.split('\n')){
+        if(!ln.startsWith('data: ')) continue;
+        try{var j=JSON.parse(ln.slice(6).trim());
+          if(j.text) onChunk(j.text);
+          if(j.done) onDone();
+          if(j.error) throw new Error(j.error);
+        }catch(e2){}
       }
     }
+  }
+
+  try {
+    await Promise.all([
+      streamFetch(p1, function(t){part1+=t;updateDisplay();}, function(){done1=true;updateDisplay();}),
+      streamFetch(p2, function(t){part2+=t;updateDisplay();}, function(){done2=true;updateDisplay();})
+    ]);
   } catch(err2) {
-    statusEl.style.color='#f87171';
-    statusEl.style.background='#2b0d0d';
+    statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
     statusEl.textContent='❌ 오류: '+err2.message;
-  } finally {
     btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
   }
 }
@@ -558,7 +586,7 @@ function onResultInput() {
 function buildBasicPrompt() {
   var info=buildInfo(); var now=new Date();
   var sy=now.getFullYear(), ey=sy+9;
-  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객 정보를 바탕으로 9개 섹션을 순서대로 빠짐없이 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 직접 말해주듯 존댓말로 자연스럽게. AI 보고서 느낌 절대 금지.\n- 두루뭉술·일반론 절대 금지. 이 사람 사주에서만 나올 수 있는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 본문에 한자 절대 금지. 쉬운 말로 풀어서.\n- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로.\n- 각 섹션 최소 1,500자 이상. 전체 최소 20,000자 이상. 절대 요약·생략 금지.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축 2034=갑인 2035=을묘\n\n[섹션별 작성 지침]\n\n【1. 사주 구조 분석】\n- 사주팔자 8글자 도표 (년/월/일/시 × 천간/지지) 마크다운 표로\n- 오행 분포 표 (木火土金水 각 개수와 강약)\n- 신강/신약 판단 근거\n- 용신·희신·기신 도출\n- 일간 성격 핵심 요약 3줄\n\n【2. 타고난 성격·기질】\n- 이 사람만의 기질을 구체적 생활 장면으로\n- 강점·약점·대인관계 패턴·스트레스 반응\n- 직장·연애·일상에서 어떻게 나타나는지\n\n【3. 대운 흐름 분석】\n- 전체 대운 목록 표 (나이/기간/간지/핵심테마)\n- 현재 대운 상세 분석\n- 직전·다음 대운 비교\n- 지금 해야 할 행동 조언\n\n【4. 재물·직업운】\n- 재성 분석·직업 유형\n- 직장형/사업형 판단\n- 이직·전직 최적 타이밍\n- 수입 안정 시기\n\n【5. 창업·사업 가능성】\n- 창업 사주 여부\n- 어울리는 업종 방향 3가지 이상\n- 시작 타이밍·동업 적합성\n\n【6. 연애·결혼운】\n- 배우자 자리 에너지 분석\n- 이상형 유형·인연 오는 시기\n- 반복되는 연애 패턴과 극복법\n\n【7. 부모·자녀·가족 관계】\n- 가족 내 역할 에너지\n- 자녀 인연 시기\n- 반복되는 패턴과 주의점\n\n【8. 건강·취약 부위】\n- 취약 장기·신체 부위\n- 조심해야 할 시기\n- 맞춤 음식·운동·생활습관 조언\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'+sy+'년부터 '+ey+'년까지 10개년을 각 연도별로 반드시 아래 형식으로 작성:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (이 사주에 맞는 상세한 재물·직업 흐름)\n❤️ 연애·가족: (이 사주에 맞는 상세한 연애·가족 흐름)\n🌿 건강 주의: (이 사주에 맞는 건강 주의사항)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n각 연도 사이 반드시 빈 줄 삽입. 10개년 모두 빠짐없이 작성.';
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객 정보를 바탕으로 9개 섹션을 순서대로 빠짐없이 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 직접 말해주듯 존댓말로 자연스럽게. AI 보고서 느낌 절대 금지.\n- 두루뭉술·일반론 절대 금지. 이 사람 사주에서만 나올 수 있는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 본문에 한자 절대 금지. 쉬운 말로 풀어서.\n- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로.\n- 각 섹션 핵심 내용 충분히 상세하게. 절대 요약·생략 금지. 마지막 섹션까지 반드시 완성.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축 2034=갑인 2035=을묘\n\n[섹션별 작성 지침]\n\n【1. 사주 구조 분석】\n- 사주팔자 8글자 도표 (년/월/일/시 × 천간/지지) 마크다운 표로\n- 오행 분포 표 (木火土金水 각 개수와 강약)\n- 신강/신약 판단 근거\n- 용신·희신·기신 도출\n- 일간 성격 핵심 요약 3줄\n\n【2. 타고난 성격·기질】\n- 이 사람만의 기질을 구체적 생활 장면으로\n- 강점·약점·대인관계 패턴·스트레스 반응\n- 직장·연애·일상에서 어떻게 나타나는지\n\n【3. 대운 흐름 분석】\n- 전체 대운 목록 표 (나이/기간/간지/핵심테마)\n- 현재 대운 상세 분석\n- 직전·다음 대운 비교\n- 지금 해야 할 행동 조언\n\n【4. 재물·직업운】\n- 재성 분석·직업 유형\n- 직장형/사업형 판단\n- 이직·전직 최적 타이밍\n- 수입 안정 시기\n\n【5. 창업·사업 가능성】\n- 창업 사주 여부\n- 어울리는 업종 방향 3가지 이상\n- 시작 타이밍·동업 적합성\n\n【6. 연애·결혼운】\n- 배우자 자리 에너지 분석\n- 이상형 유형·인연 오는 시기\n- 반복되는 연애 패턴과 극복법\n\n【7. 부모·자녀·가족 관계】\n- 가족 내 역할 에너지\n- 자녀 인연 시기\n- 반복되는 패턴과 주의점\n\n【8. 건강·취약 부위】\n- 취약 장기·신체 부위\n- 조심해야 할 시기\n- 맞춤 음식·운동·생활습관 조언\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'+sy+'년부터 '+ey+'년까지 10개년을 각 연도별로 반드시 아래 형식으로 작성:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (이 사주에 맞는 상세한 재물·직업 흐름)\n❤️ 연애·가족: (이 사주에 맞는 상세한 연애·가족 흐름)\n🌿 건강 주의: (이 사주에 맞는 건강 주의사항)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n각 연도 사이 반드시 빈 줄 삽입. 10개년 모두 빠짐없이 작성.';
 }
 
 function buildMiniPrompt() {
