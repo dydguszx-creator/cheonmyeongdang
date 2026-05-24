@@ -23,15 +23,11 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-
-/* HEADER */
 header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
 .logo{display:flex;align-items:center;gap:8px}
 .logo-badge{width:40px;height:40px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:15px;color:var(--gold);font-weight:700}
 .logo-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy)}
 .logo-sub{font-size:11px;color:var(--gold);letter-spacing:1px}
-
-/* HERO */
 .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 22px 40px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(170deg,#f0ede6 0%,#f8f7f4 60%)}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 40%,rgba(201,168,76,0.10) 0%,transparent 60%);pointer-events:none}
 .hero-eyebrow{display:inline-block;background:var(--navy);border-radius:20px;padding:7px 18px;font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:20px;font-weight:600}
@@ -40,18 +36,12 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 24px rgba(14,26,38,0.10);border:1px solid rgba(201,168,76,0.15)}
 .hero-desc p{font-size:15px;color:#2a2a3a;line-height:1.9;word-break:keep-all;font-weight:400}
 .hero-desc p+p{margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
-
-/* STATS */
 .stats-row{display:flex;gap:10px;margin-bottom:22px;justify-content:center}
 .stat-item{flex:1;background:var(--navy);border-radius:14px;padding:14px 8px;text-align:center}
 .stat-num{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
 .stat-label{font-size:11px;color:#7a98ae;margin-top:4px;word-break:keep-all}
-
-/* CTA */
 .cta-btn{width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 6px 24px rgba(201,168,76,0.35);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
 .cta-btn:active{transform:scale(0.98)}
-
-/* PRICE SECTION */
 .price-section{background:linear-gradient(135deg,var(--navy),#1a2f42);padding:30px 22px}
 .price-original{font-size:13px;color:#5a7a8a;text-decoration:line-through;margin-bottom:4px}
 .price-main{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
@@ -61,8 +51,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .stock-bar{background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between}
 .stock-text{font-size:12px;color:#7a98ae}
 .stock-count{font-size:14px;font-weight:700;color:var(--gold)}
-
-/* FORM SECTION */
 .form-section{background:#fff;padding:32px 22px}
 .form-section h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
 .form-section .form-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
@@ -79,8 +67,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .submit-btn:active{transform:scale(0.98)}
 .form-notice{font-size:11.5px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6}
 .copy-notice{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12.5px;color:#15803d;line-height:1.7;text-align:center}
-
-/* WHY DIFFERENT */
 .diff-section{padding:48px 22px;background:var(--bg)}
 .diff-section h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:10px;word-break:keep-all;line-height:1.4}
 .diff-section .diff-sub{font-size:15px;color:#3a3a4a;text-align:center;margin-bottom:20px;line-height:1.8;word-break:keep-all;font-weight:400}
@@ -95,8 +81,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .diff-card h3{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
 .diff-card p{font-size:13.5px;color:#4a4a5a;line-height:1.9;word-break:keep-all;margin-bottom:6px}
 .diff-card p:last-child{margin-bottom:0}
-
-/* CONTENT CARDS */
 .content-section{padding:44px 22px;background:#fff}
 .content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all;line-height:1.4}
 .content-section .sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:26px;line-height:1.7}
@@ -115,8 +99,6 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .card-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px}
 .card-body p{font-size:13px;color:#4a4a5a;line-height:1.85;word-break:keep-all;margin-bottom:5px}
 .card-body p:last-child{margin-bottom:0}
-
-/* REVIEWS */
 .review-section{padding:44px 22px;background:var(--bg)}
 .review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:6px}
 .review-sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:24px;line-height:1.7}
@@ -129,21 +111,15 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display
 .review-text{font-size:13px;color:#333;line-height:1.9;word-break:keep-all}
 .review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
 .review-avatar{width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
-
-/* CTA BOTTOM */
 .cta-section{background:var(--navy);padding:52px 24px;text-align:center}
 .cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:#fff;line-height:1.6;margin-bottom:28px;word-break:keep-all}
 .cta-quote em{color:var(--gold);font-style:normal}
 .cta-bottom-btn{display:block;width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 6px 24px rgba(201,168,76,0.35);text-decoration:none;text-align:center}
 .cta-urgent{margin-top:16px;font-size:13.5px;color:#7a98ae;line-height:1.8}
 .cta-urgent strong{color:var(--gold-light)}
-
-/* FOOTER */
 footer{background:#0a1420;padding:28px 24px;text-align:center}
 footer p{font-size:11px;color:#3d5a6c;line-height:2}
 footer .gold{color:var(--gold)}
-
-/* ANIMATIONS */
 .fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
 .fade-up.visible{opacity:1;transform:translateY(0)}
 </style>
@@ -160,7 +136,6 @@ footer .gold{color:var(--gold)}
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div style="margin-bottom:18px;margin-top:8px">
     <div class="hero-eyebrow">✦ 1년간 문의 2,476건 · 만족도 98%</div>
@@ -170,7 +145,6 @@ footer .gold{color:var(--gold)}
     <p>생년월일만 알려주시면<br/>전문가가 <strong>직접 분석</strong>해드립니다.</p>
     <p>성격 · 재물 · 연애 · 건강 · 대운<br/>9가지 항목 PDF 보고서로 정리해드립니다.</p>
   </div>
-
   <div class="stats-row fade-up">
     <div class="stat-item">
       <div class="stat-num">2,476<span style="font-size:13px">건</span></div>
@@ -185,13 +159,11 @@ footer .gold{color:var(--gold)}
       <div class="stat-label">최대 발송</div>
     </div>
   </div>
-
   <a href="#form-section" class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">
     지금 바로 신청하기 →
   </a>
 </section>
 
-<!-- PRICE SECTION -->
 <div class="price-section">
   <div style="text-align:center">
     <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
@@ -209,7 +181,6 @@ footer .gold{color:var(--gold)}
   </div>
 </div>
 
-<!-- FORM SECTION -->
 <div class="form-section" id="form-section">
   <h2>정보 입력하기</h2>
   <p class="form-sub">입력하신 내용이 자동으로 정리되어<br/>카카오 채팅으로 전달됩니다.</p>
@@ -244,9 +215,16 @@ footer .gold{color:var(--gold)}
       </div>
     </div>
   </div>
+  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
   <div class="form-group">
-    <label>태어난 시각</label>
-    <input id="f-hour" placeholder="시 (예: 14 · 모르면 공백)" type="number"/>
+    <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
+    <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
+      ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <input id="f-hour" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/>
+      <input id="f-min" placeholder="분 (예: 30)" type="number" min="0" max="59"/>
+    </div>
   </div>
   <div class="form-group">
     <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
@@ -270,74 +248,55 @@ footer .gold{color:var(--gold)}
   <p class="form-notice">입력하신 정보는 사주 분석에만 사용됩니다</p>
 </div>
 
-<!-- WHY DIFFERENT -->
 <section class="diff-section">
   <h2 class="fade-up">과거에 사주를 봤는데<br/>두루뭉술한 말만 들으셨나요?</h2>
   <p class="diff-sub fade-up">"언젠가 좋아질 거예요" "조심하세요"<br/>이런 말로는 아무것도 달라지지 않아요.</p>
-
   <div class="doubt-box fade-up">
     <div class="doubt-q">❓ 왜 지금 내가 이런 상황일까요?</div>
     <div class="doubt-a">단순히 운이 없어서가 아니에요. 사주 구조가 특정 시기에 특정 압박을 만들어내도록 되어 있어요. 천명당은 그 원인을 납득할 수 있도록 구조적으로 직접 설명해드립니다. 이유를 알면 자책이 줄고, 어떻게 이겨나가야 하는지도 보여요.</div>
   </div>
-
   <div style="text-align:center;margin-bottom:18px">
     <span class="diff-label">✦ 천명당은 이렇게 다릅니다</span>
   </div>
-
   <div class="diff-cards">
     <div class="diff-card fade-up">
-      <div class="diff-card-top">
-        <div class="diff-icon">🗓️</div>
-        <h3>2~3년 후 미래까지 구체적으로</h3>
-      </div>
+      <div class="diff-card-top"><div class="diff-icon">🗓️</div><h3>2~3년 후 미래까지 구체적으로</h3></div>
       <p>올해만 보지 않아요. 2027년, 2028년, 2029년 — 언제 기회가 오는지, 언제 조심해야 하는지 연도별로 명확히 알려드려요.</p>
       <p>이직·창업·결혼 등 중요한 결정, 언제 하면 좋을지 구체적인 타이밍까지 드립니다.</p>
     </div>
     <div class="diff-card fade-up">
-      <div class="diff-card-top">
-        <div class="diff-icon">🌿</div>
-        <h3>나쁜 시기엔 개운법·대처법까지</h3>
-      </div>
+      <div class="diff-card-top"><div class="diff-icon">🌿</div><h3>나쁜 시기엔 개운법·대처법까지</h3></div>
       <p>힘든 시기가 있다는 걸 말해주는 것에서 끝내지 않아요. 어떻게 이겨낼 수 있는지, 어떤 방향으로 에너지를 써야 하는지 실질적인 방법을 드려요.</p>
       <p>색상, 방향, 음식, 생활 습관까지 — 오늘부터 바로 실천할 수 있는 개운법이에요.</p>
     </div>
     <div class="diff-card fade-up">
-      <div class="diff-card-top">
-        <div class="diff-icon">🎯</div>
-        <h3>성격·기질을 정확하게 꼬집어서</h3>
-      </div>
+      <div class="diff-card-top"><div class="diff-icon">🎯</div><h3>성격·기질을 정확하게 꼬집어서</h3></div>
       <p>읽다가 "어떻게 알았지?" 싶을 정도로 구체적인 장면으로 설명해드려요. 막연한 성격 묘사가 아니라 실제 생활에서 어떻게 나타나는지를 정확하게요.</p>
       <p>철학관에서 보는 것보다 더 정확하다는 후기가 많아요.</p>
     </div>
     <div class="diff-card fade-up">
-      <div class="diff-card-top">
-        <div class="diff-icon">📊</div>
-        <h3>지금 힘든 이유를 납득시켜드려요</h3>
-      </div>
+      <div class="diff-card-top"><div class="diff-icon">📊</div><h3>지금 힘든 이유를 납득시켜드려요</h3></div>
       <p>"왜 지금 이런 상황일 수밖에 없는지" 사주 구조로 직접 설명해드려요. 이유를 알면 자책이 줄고, 어떻게 이겨나가야 하는지도 보여요.</p>
       <p>위로를 받고, 방향을 얻어가세요.</p>
     </div>
     <div class="diff-card fade-up">
-      <div class="diff-card-top">
-        <div class="diff-icon">📋</div>
-        <h3>어려운 용어 없이, 쉽게 설명</h3>
-      </div>
+      <div class="diff-card-top"><div class="diff-icon">📋</div><h3>어려운 용어 없이, 쉽게 설명</h3></div>
       <p>한자나 어려운 사주 용어 없이, 누구나 읽어도 이해되는 말로 직접 풀어드립니다.</p>
       <p>전문가가 옆에서 설명해주는 것처럼, 쉽고 명확하게 정리해드려요.</p>
     </div>
   </div>
 </section>
 
-<!-- 9가지 분석 항목 -->
 <section class="content-section">
   <h2 class="fade-up">9가지 항목을<br/>빠짐없이 분석해드립니다</h2>
-  <p class="sub fade-up">두루뭉술하지 않게, 이 사람에게만 해당하는 말로.</p>
+  <p class="sub fade-up">두루뭉술하지 않게, 본인에게만 해당하는 말로.</p>
   <div class="content-cards">
     <div class="content-card blue">
       <div class="card-icon">🧬</div>
       <div class="card-body">
         <h3>타고난 성격·기질 분석</h3>
-        <p>이 사람만의 기질을 직접 분석해드려요. 겉으로 보이는 모습과 속마음이 왜 다른지, 어떤 상황에서 강하고 약한지를 구체적 장면으로 설명해드려요.</p>
+        <!-- ✅ 수정: "이 사람만의 기질" → "본인만의 기질" -->
+        <p>본인만의 기질을 직접 분석해드려요. 겉으로 보이는 모습과 속마음이 왜 다른지, 어떤 상황에서 강하고 약한지를 구체적 장면으로 설명해드려요.</p>
         <p>강점을 살리고 약점을 보완하는 방향도 함께 알려드립니다.</p>
       </div>
     </div>
@@ -353,7 +312,7 @@ footer .gold{color:var(--gold)}
       <div class="card-icon">💼</div>
       <div class="card-body">
         <h3>재물·직업운</h3>
-        <p>어떤 방식으로 돈을 버는 게 이 사주에 맞는지, 타고난 재물 구조가 어떤지 직접 분석해드려요. 안정적 직장이 맞는지, 사업이 맞는지도 판단해드려요.</p>
+        <p>어떤 방식으로 돈을 버는 게 본인 사주에 맞는지, 타고난 재물 구조가 어떤지 직접 분석해드려요. 안정적 직장이 맞는지, 사업이 맞는지도 판단해드려요.</p>
         <p>이직·전직의 최적 타이밍과 어울리는 직종 방향도 함께 알려드립니다.</p>
       </div>
     </div>
@@ -386,7 +345,7 @@ footer .gold{color:var(--gold)}
       <div class="card-body">
         <h3>건강·취약 부위 분석</h3>
         <p>사주 구조에서 취약한 장기와 신체 부위를 직접 파악해요. 스트레스가 몸 어디로 나타나는지, 어떤 시기에 특히 조심해야 하는지 알려드려요.</p>
-        <p>이 사주에 맞는 음식, 운동 방식, 생활 습관까지 맞춤 조언을 드립니다.</p>
+        <p>본인 사주에 맞는 음식, 운동 방식, 생활 습관까지 맞춤 조언을 드립니다.</p>
       </div>
     </div>
     <div class="content-card gray">
@@ -401,14 +360,13 @@ footer .gold{color:var(--gold)}
       <div class="card-icon">✨</div>
       <div class="card-body">
         <h3>개운법·생활 맞춤 조언</h3>
-        <p>이 사주에서 가장 힘이 되는 색상, 방향, 음식, 장소를 알려드려요. 오늘부터 바로 실천할 수 있는 구체적인 개운법이에요.</p>
+        <p>본인 사주에서 가장 힘이 되는 색상, 방향, 음식, 장소를 알려드려요. 오늘부터 바로 실천할 수 있는 구체적인 개운법이에요.</p>
         <p>복권 구매 방향, 계약 타이밍, 이사 방향, 차량 색상까지 — 삶 전반에 걸친 맞춤 조언을 드립니다.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- REVIEWS -->
 <section class="review-section">
   <h2 class="fade-up">실제 경험자들의<br/>쏟아지는 후기</h2>
   <p class="review-sub fade-up">1년간 문의 2,476건 · 만족도 98%<br/>직접 경험하신 분들의 솔직한 이야기를 들어보세요.</p>
@@ -418,7 +376,6 @@ footer .gold{color:var(--gold)}
   </div>
 </section>
 
-<!-- CTA BOTTOM -->
 <section class="cta-section fade-up">
   <div class="cta-quote">"왜 지금 이런 상황인지,<br/>어떻게 이겨나가야 하는지<br/><em>이제 알 수 있어요."</em></div>
   <a href="#form-section" class="cta-bottom-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">지금 바로 신청하기 →</a>
@@ -454,14 +411,16 @@ function submitForm() {
   var gender = document.getElementById('f-gender').value;
   var cal = document.getElementById('f-cal').value;
   var hour = document.getElementById('f-hour').value.trim();
+  var min = document.getElementById('f-min') ? document.getElementById('f-min').value.trim() : '';
   var cats = [];
   document.querySelectorAll('.cat-btn.on').forEach(function(b) { cats.push(b.getAttribute('data-val')); });
   if (!name || !year || !month || !day) { alert('성함과 생년월일을 입력해주세요.'); return; }
-  var msg = '안녕하세요, 천명당 사주 보고서 신청합니다.\n\n'
+  var timeStr = hour ? (hour + '시 ' + (min ? min + '분' : '00분')) : '모름';
+  var msg = '안녕하세요, 천명당 사주 보고서 신청합니다.' + '\n\n'
     + '성함: ' + name + '\n'
     + '성별: ' + gender + '\n'
     + '생년월일: ' + cal + ' ' + year + '년 ' + month + '월 ' + day + '일\n'
-    + '태어난 시각: ' + (hour ? hour + '시' : '모름') + '\n'
+    + '태어난 시각: ' + timeStr + '\n'
     + '궁금한 것: ' + (cats.length > 0 ? cats.join(', ') : '전체 분석') + '\n\n신청합니다!';
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(msg).then(showCopyNotice).catch(function() { fallbackCopy(msg); });
@@ -482,14 +441,14 @@ function showCopyNotice() {
 }
 
 var reviews = [
-  {star:'★★★★★',date:'2026.05.10',source:'당근마켓 후기',text:'이곳은 처음 겪어볼 정도로 진심이 느껴지는 곳이었어요. 2만원도 안 되는 금액에 각각 분리해서 설명해주시고, 좋을 때는 좋은 대로, 나쁠 때는 개운법으로 대처 방법까지 남겨주셔서 진심으로 놀라면서 읽었습니다.\n왜 내가 지금 이런 상황일 수밖에 없는지, 어떻게 이겨나가야 하는지까지 알려주셔서 너무 감사합니다. 이 정도면 재능기부 하시는 거 아닐까 싶어요. 위로가 됐을 정도예요. 주변 지인들에게 소개도 할게요.',name:'당*임니당',av:'당'},
-  {star:'★★★★★',date:'2026.05.07',source:'당근마켓 후기',text:'철학관에서 보는 것보다 더 나에 대해 잘 꼬집어서 얘기해주시는 것 같아 마음에 와닿았어요. 저의 성격을 정확하게 파악하신 것 같아 놀라웠습니다.\n남편 성격과 둘의 궁합도 잘 맞는 것 같아요. 앞으로의 방향도 잘 잡아주시고 부족한 점과 보완해야 할 것을 집어주시니 잘 참고해서 잘 살아보겠습니다. 너무 만족스러워요.',name:'코*랑하니',av:'코'},
+  {star:'★★★★★',date:'2026.05.10',source:'당근마켓 후기',text:'이곳은 처음 겪어볼 정도로 진심이 느껴지는 곳이었어요. 2만원도 안 되는 금액에 각각 분리해서 설명해주시고, 좋을 때는 좋은 대로 나쁠 때는 개운법으로 대처 방법까지 남겨주셔서 놀라면서 읽었습니다. 왜 내가 지금 이런 상황일 수밖에 없는지까지 알려주셔서 너무 감사합니다. 이 정도면 재능기부 아닌가 싶어요.',name:'당*임니당',av:'당'},
+  {star:'★★★★★',date:'2026.05.07',source:'당근마켓 후기',text:'철학관에서 보는 것보다 더 나에 대해 잘 꼬집어서 얘기해주시는 것 같아 마음에 와닿았어요. 저의 성격을 정확하게 파악하신 것 같아 놀라웠습니다. 앞으로의 방향도 잘 잡아주시고 부족한 점과 보완해야 할 것을 집어주시니 너무 만족스러워요.',name:'코*랑하니',av:'코'},
   {star:'★★★★★',date:'2026.05.03',source:'당근마켓 후기',text:'말로 대화하듯이 풀어주셔서 이해하게 되었습니다. 궁금한 부분도 중점적으로 설명해주셔서 정말 도움이 됐어요. 사주풀이가 어렵다고 생각했는데 이렇게 자연스럽게 와닿은 건 처음이에요. 주변 지인들에게도 추천하고 싶습니다.',name:'후*하하',av:'후'},
-  {star:'★★★★★',date:'2026.04.28',source:'당근마켓 후기',text:'사주풀이 하면 이해하기가 어려운 부분이 많은데 꼼꼼한 설명과 디테일한 풀이에 매우 만족합니다. 나는 어떤 기질의 사람이고 답답함을 어떻게 하면 좋을지 좋은 답을 얻은 것 같아 좋습니다.\n한 단계 나아가 2~3년 후의 미래까지 봐주시는 게 대박인 것 같아요. 종종 이용할 것 같습니다.',name:'사*72',av:'사'},
-  {star:'★★★★★',date:'2026.04.22',source:'네이버 후기',text:'요즘 뭔가 막히고 불안했는데 기질상 혼란스러운 시기라는 말이 너무 솔직하게 와닿더라고요. 왜 이 시기가 이럴 수밖에 없는지 구조적으로 납득이 됐어요.\n개운법까지 알려주셔서 오늘부터 바로 실천해보고 있어요. PDF가 깔끔하고 읽기 편해서 좋았습니다.',name:'강*희',av:'강'},
-  {star:'★★★★★',date:'2026.04.15',source:'카카오 후기',text:'오랫동안 연애운이 안 풀려서 혹시나 했는데 보고서 보면서 마음이 조금 가벼워졌어요. 기다려야 하는 시기라는 말이 위로가 됐어요. 그냥 운이 없는 게 아니라 이유가 있다는 걸 알게 되니까요.\n2027년에 인연이 올 수 있다는 말도 설레고, 그때까지 나를 준비시켜야겠다는 생각이 들었어요.',name:'이*수',av:'이'},
-  {star:'★★★★★',date:'2026.04.10',source:'카카오 후기',text:'이직 시기를 고민하던 차에 2028년에 시작하라는 흐름을 보고 믿음이 생겼습니다. 막연하게 "좋아질 거예요"가 아니라 왜, 언제, 어떻게를 구체적으로 알려주셔서 감사해요.\n면접 때 어떤 방향 회사를 가면 좋은지까지 알려주신 게 신기하고 도움이 됐습니다.',name:'김*현',av:'김'},
-  {star:'★★★★★',date:'2026.03.28',source:'네이버 후기',text:'돈복 항목에서 실제 실패했던 게 딱 나와있어서 너무 신기했어요. 앞으로 조심해야 할 유형이 뭔지 명확히 알 수 있었어요. 가족 관계 항목도 딱 맞아서 소름 돋았습니다.\n12시간 안에 빠르게 받았고, 내용도 길고 꼼꼼해서 비용 대비 정말 만족스러워요.',name:'최*민',av:'최'},
+  {star:'★★★★★',date:'2026.04.28',source:'당근마켓 후기',text:'사주풀이 하면 이해하기가 어려운 부분이 많은데 꼼꼼한 설명과 디테일한 풀이에 매우 만족합니다. 나는 어떤 기질의 사람이고 답답함을 어떻게 하면 좋을지 좋은 답을 얻은 것 같아 좋습니다. 2~3년 후의 미래까지 봐주시는 게 대박인 것 같아요.',name:'사*72',av:'사'},
+  {star:'★★★★★',date:'2026.04.22',source:'네이버 후기',text:'요즘 뭔가 막히고 불안했는데 기질상 혼란스러운 시기라는 말이 너무 솔직하게 와닿더라고요. 왜 이 시기가 이럴 수밖에 없는지 구조적으로 납득이 됐어요. 개운법까지 알려주셔서 오늘부터 바로 실천해보고 있어요.',name:'강*희',av:'강'},
+  {star:'★★★★★',date:'2026.04.15',source:'카카오 후기',text:'오랫동안 연애운이 안 풀려서 혹시나 했는데 보고서 보면서 마음이 조금 가벼워졌어요. 기다려야 하는 시기라는 말이 위로가 됐어요. 그냥 운이 없는 게 아니라 이유가 있다는 걸 알게 되니까요. 2027년에 인연이 올 수 있다는 말도 설레었어요.',name:'이*수',av:'이'},
+  {star:'★★★★★',date:'2026.04.10',source:'카카오 후기',text:'이직 시기를 고민하던 차에 2028년에 시작하라는 흐름을 보고 믿음이 생겼습니다. 막연하게 좋아질 거예요가 아니라 왜, 언제, 어떻게를 구체적으로 알려주셔서 감사해요. 면접 때 어떤 방향 회사를 가면 좋은지까지 알려주신 게 신기하고 도움이 됐습니다.',name:'김*현',av:'김'},
+  {star:'★★★★★',date:'2026.03.28',source:'네이버 후기',text:'돈복 항목에서 실제 실패했던 게 딱 나와있어서 너무 신기했어요. 앞으로 조심해야 할 유형이 뭔지 명확히 알 수 있었어요. 12시간 안에 빠르게 받았고, 내용도 길고 꼼꼼해서 비용 대비 정말 만족스러워요.',name:'최*민',av:'최'},
 ];
 
 var shown = 4;
@@ -497,12 +456,11 @@ function renderReviews() {
   var grid = document.getElementById('reviewGrid');
   grid.innerHTML = '';
   reviews.slice(0, shown).forEach(function(r) {
-    var t = r.text.replace(/\n/g, '<br/>');
     grid.innerHTML += '<div class="review-card">'
-      + '<div class="review-top"><div class="review-stars">'+r.star+'</div><div class="review-date">'+r.date+'</div></div>'
-      + '<div class="review-source">📍 '+r.source+'</div>'
-      + '<div class="review-text">"'+t+'"</div>'
-      + '<div class="review-author"><div class="review-avatar">'+r.av+'</div>'+r.name+'</div>'
+      + '<div class="review-top"><div class="review-stars">' + r.star + '</div><div class="review-date">' + r.date + '</div></div>'
+      + '<div class="review-source">📍 ' + r.source + '</div>'
+      + '<div class="review-text">"' + r.text + '"</div>'
+      + '<div class="review-author"><div class="review-avatar">' + r.av + '</div>' + r.name + '</div>'
       + '</div>';
   });
   document.getElementById('moreBtn').style.display = shown >= reviews.length ? 'none' : 'inline-block';
