@@ -454,21 +454,85 @@ async function doAutoAnalyze() {
 
   // 기본 보고서: 섹션 1~5 / 6~9 병렬 호출
   var info=buildInfo(); var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
-  var baseHdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 말해주듯 존댓말로 자연스럽게.\n- 두루뭉술·일반론 절대 금지. 본인 사주에서만 나오는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 한자 금지.\n- 절대 요약·생략 금지. 마지막까지 반드시 완성.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축';
+  var baseHdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
+    +'[고객 정보]\n'+info+'\n\n'
+    +'[만세력 정확성 주의]\n'
+    +'⛔ 사주팔자 8글자는 [앱 자동계산 사주팔자]를 그대로 사용. 직접 계산 절대 금지.\n'
+    +'⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n'
+    +'[핵심 분석 기준]\n'
+    +'① 일간(日干) 확인 ② 신강/신약 판단(극신약/신약/중화/신강/극신강) ③ 용신·희신·기신 도출\n'
+    +'④ 오행 과다/부재 파악 ⑤ 십성 조합 파악 ⑥ 지지 충·합·형 확인\n'
+    +'⑦ 이후 모든 섹션은 이 구조 기준으로 이 사람에게만 해당하는 분석을\n\n'
+    +'[변별력 있는 분석 기준 — 절대 원칙]\n'
+    +'⚠️ 어떤 사주에도 공통적으로 쓸 수 있는 말은 쓰지 마세요.\n'
+    +'⚠️ 이 사람의 사주 구조에서만 나올 수 있는 말을 써야 합니다.\n'
+    +'⚠️ 예: 土 과다→변화 극도로 싫어하고 혼자서 습관 바꾸기 거의 불가능, 水 없음→공감 능력 약하고 눈치 느린 편\n\n'
+    +'[작성 원칙]\n'
+    +'- 전문가가 고객 옆에서 말해주듯 존댓말로. AI 보고서 느낌 X. ~예요 구어체.\n'
+    +'- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로. 두루뭉술 금지.\n'
+    +'- 나쁜 시기에는 반드시 개운법·대처법 포함. 문제→원인→대처법 순서.\n'
+    +'- 섹션 1에서만 한자 허용. 섹션 2 이후 한자 절대 금지. 쉬운 말로 풀어쓰기.\n'
+    +'- 소제목(■)마다 어울리는 이모지를 앞에 붙이기.\n'
+    +'- 소제목 아래 내용은 소제목별로 충분히 풍부하게.\n'
+    +'- 절대 요약·생략 금지. 마지막 섹션까지 반드시 완성.\n\n'
+    +'[용어 변환 — 반드시 쉬운 말로]\n'
+    +'용신→이 사주에서 가장 힘이 되는 기운, 기신→힘을 빼는 기운, 신강→에너지 넘치는 구조\n'
+    +'신약→에너지 부족한 구조, 대운→10년 단위 운의 흐름, 세운→그해의 운의 흐름\n\n'
+    +'[세운 간지 기준]\n'
+    +'2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑 2034=甲寅 2035=乙卯'
 
-  var p1=baseHdr+'\n\n아래 섹션 1~5만 작성하세요:\n【1. 사주 구조 분석】사주팔자 도표·오행 분포·신강신약·용신희신기신\n【2. 타고난 성격·기질】본인만의 기질을 구체적 생활 장면으로. 강점·약점·대인관계.\n【3. 대운 흐름 분석】전체 대운 목록 표·현재 대운 상세·지금 해야 할 행동.\n【4. 재물·직업운】재물 구조·직장형/사업형·이직 타이밍.\n【5. 창업·사업 가능성】창업 여부·어울리는 업종·시작 타이밍.';
+  var secGuide = '\n\n[출력 형식 규칙 — 절대 준수]\n'
+    +'⛔ 마크다운 # ## ### 금지. **굵게** 사용 가능.\n'
+    +'✅ 소제목은 반드시 ■ 이모지 텍스트 형식. 예: ■ 🧠 핵심 성격\n'
+    +'✅ 세운 연도는 ### 🗓️ YYYY년 干支년 형식.\n'
+    +'✅ 사주팔자 도표는 반드시 마크다운 표(| 구분) 형식.\n'
+    +'✅ 대운 목록: 나이/기간/테마 반드시 " / "로 구분.\n'
+    +'✅ 각 섹션 마지막에 반드시:\n'
+    +'   [한눈에 보기] 핵심 한 문장\n'
+    +'   [핵심 요약 3줄] - 요약1\n- 요약2\n- 요약3\n'
+    +'   지금 당장 할 수 있는 것: 오늘 바로 실행 가능한 행동 1가지 (20자 이내)\n';
 
-  var p2=baseHdr+'\n\n아래 섹션 6~9만 작성하세요:\n【6. 연애·결혼운】배우자 자리·이상형·인연 시기·반복 패턴.\n【7. 부모·자녀·가족 관계】가족 역할·자녀 인연·주의 패턴.\n【8. 건강·취약 부위】취약 장기·조심할 시기·맞춤 조언.\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】각 연도를 반드시 아래 형식으로 10개년 전부:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (상세)\n❤️ 연애·가족: (상세)\n🌿 건강 주의: (상세)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기.\n행동 조언: 구체적 행동.';
+  var p1=baseHdr+secGuide+'\n\n아래 섹션 1~5만 작성하세요:\n'
+    +'---\n【1. 사주 구조 분석】\n'
+    +'사주팔자 8글자 도표(년/월/일/시 × 천간/지지) · 오행 분포 표 · 신강/신약 판단 근거 · 용신·희신·기신 도출 · 일간 성격 핵심\n'
+    +'---\n【2. 타고난 성격·기질】\n'
+    +'일간과 십성 기반 핵심 성격 · 구체적 생활 장면으로 묘사 · 강점·약점·주의 습관 · 인간관계 패턴\n'
+    +'---\n【3. 대운 흐름 분석】\n'
+    +'전체 대운 목록 표(나이/기간/간지/핵심테마) · 현재 대운 상세 · 직전·다음 대운 비교 · 지금 해야 할 행동\n'
+    +'---\n【4. 재물·직업운】\n'
+    +'재물 구조 · 직장형/사업형 판단 · 이직 타이밍 · 현재 상황 맞춤 조언\n'
+    +'---\n【5. 창업·사업 가능성】\n'
+    +'창업 사주 여부 · 어울리는 업종 · 시작 타이밍 · 주의사항';
+
+  var p2=baseHdr+secGuide+'\n\n아래 섹션 6~9만 작성하세요:\n'
+    +'---\n【6. 연애·결혼운】\n'
+    +'배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n'
+    +'---\n【7. 부모·자녀·가족 관계】\n'
+    +'가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n'
+    +'---\n【8. 건강·취약 부위】\n'
+    +'취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n'
+    +'---\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'
+    +sy+'년부터 '+ey+'년까지 10개년, 각 연도를 반드시 아래 형식으로:\n\n'
+    +'### 🗓️ YYYY년 干支년\n'
+    +'💰 재물·직업: (상세 내용)\n'
+    +'❤️ 연애·가족: (상세 내용)\n'
+    +'🌿 건강 주의: (상세 내용)\n'
+    +'✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n'
+    +'📝 총평: 이 해 전반 분위기 한 문장.\n'
+    +'행동 조언: 구체적 행동 한 문장.\n\n'
+    +'각 연도 사이 빈 줄 삽입. 10개년 전부 작성.'
 
   var part1='', part2='', done1=false, done2=false;
 
   function updateDisplay() {
     var combined = part1 + (part2 ? '\n\n' + part2 : '');
     if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
-    statusEl.textContent='✍️ 작성 중... ('+combined.length.toLocaleString()+'자)';
+    var s1 = done1 ? '✅ 섹션1~5 완료('+part1.length.toLocaleString()+'자)' : '✍️ 섹션1~5 작성중...('+part1.length.toLocaleString()+'자)';
+    var s2 = done2 ? '✅ 섹션6~9 완료('+part2.length.toLocaleString()+'자)' : (part2.length>0 ? '✍️ 섹션6~9 작성중...('+part2.length.toLocaleString()+'자)' : '⏳ 섹션6~9 대기중');
+    statusEl.innerHTML = s1 + '<br>' + s2;
     if(done1&&done2){
       statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
-      statusEl.textContent='✅ 완료! '+combined.length.toLocaleString()+'자 생성됨';
+      statusEl.innerHTML='✅ 분석 완료! 총 '+combined.length.toLocaleString()+'자 생성됨';
       onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
     }
   }
@@ -669,50 +733,95 @@ function buildHtmlTable(rows) {
   return html+'</table>';
 }
 
+function highlightKeywords(text) {
+  // 중요 키워드 자동 강조
+  var patterns = [
+    {re: /(용신|희신|기신|신강|신약|일간)/g, cls: 'kw-gold'},
+    {re: /(주의|조심|위험|기신|힘든|어려|충돌|압박|조심)/g, cls: 'kw-red'},
+    {re: /(좋은|기회|상승|최적|유리|강점|탁월|뛰어|성장)/g, cls: 'kw-green'},
+    {re: /(\d{4}년)/g, cls: 'kw-blue'},
+  ];
+  patterns.forEach(function(p) {
+    text = text.replace(p.re, '<span class="'+p.cls+'">$1</span>');
+  });
+  return text;
+}
+
 function renderBody(raw) {
   raw=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
-  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/^---+$/gm,'');
-  raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2').replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
-  var cm=raw.match(/\[한눈에 보기\]([^\n]*)/); var cardText=cm?cm[1].trim():'';
-  var am=raw.match(/지금 당장 할 수 있는 것[^\n]+/); var actionText=am?am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim():'';
+  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  raw=raw.replace(/^---+$/gm,'');
+
+  // 붙어있는 숫자 패턴 수정
+  raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2');
+  raw=raw.replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
+
+  // 한눈에 보기 / 실천 카드 추출
+  var cm=raw.match(/\[한눈에 보기\]([^\n]*)/);
+  var cardText=cm?cm[1].trim():'';
+  var am=raw.match(/지금 당장 할 수 있는 것[^\n]+/);
+  var actionText=am?am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim():'';
   var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?/g,'');
+
+  // 마크다운 테이블 → HTML
   bt=mdTableToHtml(bt);
+
+  // 핵심 요약 박스
   bt=bt.replace(/\[핵심 요약 3줄\]([\s\S]*?)(?=\n\n|지금 당장|$)/g,function(match,lines){
-    var items=lines.trim().split('\n').filter(function(l){ return l.trim(); });
-    var inner=items.map(function(l){ return '<p>'+l.replace(/^[-·•\s]+/,'').trim()+'</p>'; }).join('');
+    var items=lines.trim().split('\n').filter(function(l){return l.trim();});
+    var inner=items.map(function(l){return '<p>'+l.replace(/^[-·•\s]+/,'').trim()+'</p>';}).join('');
     return '<div class="summary-box"><div class="summary-box-label">✦ 핵심 요약</div>'+inner+'</div>';
   });
-  bt=bt.replace(/(■[^\n]+)/g,'<div class="sub-h">$1</div>');
+
+  // 소제목 → 남색 박스
+  bt=bt.replace(/(■[^\n]+)/g,function(m){
+    return '<div class="sub-h">'+m+'</div>';
+  });
+
+  // 세운 연도별 블록 변환
   bt=bt.replace(/### 🗓️ (\d{4}년[^\n]*)\n([\s\S]*?)(?=### 🗓️ |\[핵심 요약|$)/g,function(match,yearTitle,content){
-    var rows='',summary='';
+    var rows='',summary='',actionRow='';
     var labels=[
-      {key:'💰 재물·직업:',color:'#8a6500',label:'💰 재물·직업'},
-      {key:'❤️ 연애·가족:',color:'#b03060',label:'❤️ 연애·가족'},
-      {key:'🌿 건강 주의:',color:'#1a7040',label:'🌿 건강 주의'},
-      {key:'✨ 핵심 키워드:',color:'#5c2dd3',label:'✨ 키워드',bold:true},
-      {key:'📝 총평:',isSummary:true}
+      {key:'💰 재물·직업:',color:'#C9A84C',label:'💰 재물·직업'},
+      {key:'❤️ 연애·가족:',color:'#e87070',label:'❤️ 연애·가족'},
+      {key:'🌿 건강 주의:',color:'#5cbf7a',label:'🌿 건강'},
+      {key:'✨ 핵심 키워드:',color:'#a78bfa',label:'✨ 키워드',bold:true},
+      {key:'📝 총평:',isSummary:true},
+      {key:'행동 조언:',isAction:true}
     ];
     var positions=[];
-    for (var li=0;li<labels.length;li++) { var idx=content.indexOf(labels[li].key); if (idx!==-1) positions.push({idx:idx,info:labels[li]}); }
-    positions.sort(function(a,b){ return a.idx-b.idx; });
-    for (var pi=0;pi<positions.length;pi++) {
+    for(var li=0;li<labels.length;li++){var idx=content.indexOf(labels[li].key);if(idx!==-1)positions.push({idx:idx,info:labels[li]});}
+    positions.sort(function(a,b){return a.idx-b.idx;});
+    for(var pi=0;pi<positions.length;pi++){
       var pos=positions[pi];
       var startIdx=pos.idx+pos.info.key.length;
       var endIdx=pi+1<positions.length?positions[pi+1].idx:content.length;
       var value=content.slice(startIdx,endIdx).trim().replace(/\n/g,' ').replace(/\s{2,}/g,' ');
-      if (pos.info.isSummary) summary=value;
-      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+pos.info.color+'">'+pos.info.label+'</span><span class="seun-val"'+(pos.info.bold?' style="font-weight:600"':'')+'>'+value+'</span></div>';
+      if(pos.info.isSummary) summary=value;
+      else if(pos.info.isAction) actionRow=value;
+      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+pos.info.color+'">'+pos.info.label+'</span><span class="seun-val"'+(pos.info.bold?' style="font-weight:600;color:#c4b5fd"':'')+'>'+value+'</span></div>';
     }
-    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">📅 '+yearTitle.replace(/년.*/,'년')+'</span><span class="seun-year-title">'+yearTitle.replace(/\d{4}년\s*/,'')+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">SUMMARY</div><div class="seun-summary-text">'+summary+'</div></div>':'')+'</div>';
+    var yearNum=yearTitle.replace(/년.*/,'년');
+    var yearSub=yearTitle.replace(/\d{4}년\s*/,'');
+    return '<div class="seun-year">'
+      +'<div class="seun-year-hd"><span class="seun-year-num">'+yearNum+'</span><span class="seun-year-title">'+yearSub+'</span></div>'
+      +'<div class="seun-year-body">'+rows+'</div>'
+      +(summary?'<div class="seun-summary"><div class="seun-summary-label">📝 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')
+      +(actionRow?'<div class="seun-action">✅ '+actionRow+'</div>':'')
+      +'</div>';
   });
-  var parts=bt.split(/\n{2,}/); var html='';
-  for (var i=0;i<parts.length;i++) {
-    var p=parts[i].trim(); if (!p) continue;
-    if (p.indexOf('<div')===0||p.indexOf('<table')===0) html+=p;
-    else html+='<p>'+p.replace(/\n/g,'<br>')+'</p>';
+
+  // 단락 나누기 + 키워드 강조
+  var parts=bt.split(/\n{2,}/);
+  var html='';
+  for(var i=0;i<parts.length;i++){
+    var p=parts[i].trim(); if(!p) continue;
+    if(p.indexOf('<div')===0||p.indexOf('<table')===0) html+=p;
+    else html+='<p>'+highlightKeywords(p.replace(/\n/g,'<br>'))+'</p>';
   }
-  var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+cardText+'</p></div>':'';
-  var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>&#9989; '+actionText+'</p></div>':'';
+
+  var sh=cardText?'<div class="sc"><div class="sc-label">✦ 핵심 한줄 요약</div><p>'+cardText+'</p></div>':'';
+  var ah=actionText?'<div class="ac"><div class="ac-label">✅ 오늘 바로 실천</div><p>'+actionText+'</p></div>':'';
   return sh+html+ah;
 }
 
@@ -735,7 +844,7 @@ function buildLinearPDF() {
     var sections=parseSecs(result); var time=f.h?f.h+'시 '+(f.min||'00')+'분':'미상';
     var css=getLinearCSS(f.name||'고객');
     var coverHtml='<div class="cover"><div class="cv-ey">✦ CHEONMYEONGDANG · 天命堂</div><div class="cv-moon">🌙</div><div class="cv-title">'+(f.name||'고객')+' 님의<br/>사주 명리 분석 보고서</div><div class="cv-sub">사주팔자 종합 분석 · 프리미엄 에디션</div><div class="cv-info"><div class="cv-row"><span class="cv-k">성 명</span><span class="cv-v">'+(f.name||'미입력')+'</span></div><div class="cv-row"><span class="cv-k">성 별</span><span class="cv-v">'+f.gender+'</span></div><div class="cv-row"><span class="cv-k">생년월일</span><span class="cv-v">'+f.cal+' '+f.y+'년 '+f.m+'월 '+f.d+'일</span></div><div class="cv-row"><span class="cv-k">출생시각</span><span class="cv-v">'+time+'</span></div></div><div class="cv-date">발행일 · '+today+'</div></div>';
-    var secHtml=sections.map(function(s,i){ return '<div class="sec"><div style="background:linear-gradient(160deg,#0d1a26,#1C2B3A);padding:36px 40px 28px;"><div class="sec-ey">✦ SECTION '+(i+1<10?'0':'')+(i+1)+'</div><div class="sec-title">'+s.title+'</div></div><div class="sec-div" style="margin:0 40px"></div><div class="sb" style="padding:28px 40px;">'+renderBody(s.body||'')+'</div></div>'; }).join('');
+    var secHtml=sections.map(function(s,i){ return '<div class="sec"><div class="sec-hd"><div class="sec-ey">✦ SECTION '+(i+1<10?'0':'')+(i+1)+'</div><div class="sec-title">'+s.title+'</div></div><div class="sec-div"></div><div class="sec-body"><div class="sb">'+renderBody(s.body||'')+'</div></div></div>'; }).join('');
     var finHtml='<div class="fin"><div class="fin-moon">🌙</div><div class="fin-line"></div><div class="fin-t">'+(f.name||'고객')+' 님의<br/>사주 분석을 마칩니다</div><div class="fin-s">본 보고서가 삶의 방향을 잡는 데<br/>작은 도움이 되기를 바랍니다.</div><div class="fin-brand">天命堂 천명당</div><div style="font-size:9px;color:#1a2a34;letter-spacing:2px;margin-top:8px">천명당은 당신의 방향을 응원합니다</div></div>';
     openPDF(css+coverHtml+'<div style="background:#080808">'+secHtml+'</div>'+finHtml+'</body></html>',(f.name||'고객')+'_사주보고서_전체.html');
   } catch(e) { document.getElementById('err2').textContent='PDF 생성 오류: '+e.message; document.getElementById('err2').style.display='block'; }
@@ -797,11 +906,184 @@ function openPDF(html, fname) {
 }
 
 function getBasePDFStyle(name) {
-  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/><title>'+name+' 사주 분석 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;height:100%;overflow:hidden;background:#f5f5f7;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}.deck{display:flex;width:100%;height:100dvh;overflow-x:scroll;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:#f5f5f7}.deck::-webkit-scrollbar{display:none}.card{flex:0 0 100vw;width:100vw;height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;overflow:hidden;position:relative}.cover-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 28px}.cv-eyebrow{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:24px}.cv-moon{font-size:44px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:26px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:6px}.cv-sub{font-size:11px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:32px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:18px 24px;width:100%;max-width:280px;text-align:left;margin-bottom:24px}.cv-row{display:flex;gap:12px;margin-bottom:7px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:9px;color:#C9A84C;width:52px;flex-shrink:0;letter-spacing:1px;padding-top:2px;font-weight:600}.cv-v{font-size:11px;color:#c0d0da;font-weight:400}.cv-date{font-size:8px;color:#1a2a34;letter-spacing:2px}.cv-swipe{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4050;letter-spacing:2px;white-space:nowrap}.toc-card{background:#1C2B3A;padding:36px 24px 20px;justify-content:flex-start}.toc-label{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.toc-title{font-family:"Noto Serif KR",serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:24px;line-height:1.3}.toc-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;scrollbar-width:none}.toc-list::-webkit-scrollbar{display:none}.toc-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #111}.toc-item:last-child{border-bottom:none}.toc-n{font-size:10px;font-weight:900;color:#C9A84C;width:18px;flex-shrink:0}.toc-t{font-size:13px;color:#888;font-weight:400;letter-spacing:.2px}.sec-card{background:#fff;display:flex;flex-direction:column;border:1.5px solid #e8edf5}.sec-header{flex-shrink:0;padding:24px 22px 16px;background:linear-gradient(160deg,#0d1a26 0%,#1C2B3A 100%)}.sec-eyebrow{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:7px}.sec-title{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:900;color:#fff;line-height:1.3}.sec-divider{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:10px 22px 0}.sec-body{flex:1;overflow-y:auto;padding:18px 22px 28px;scrollbar-width:none}.sec-body::-webkit-scrollbar{display:none}.sb{font-size:13.5px;line-height:2.1;color:#2a2a2a;font-weight:400;word-break:keep-all}.sb p{margin-bottom:16px;line-height:2.1;color:#2a2a2a;padding-bottom:16px;border-bottom:1px solid #f0f0f0}.sb p:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}.summary-box{background:rgba(201,168,76,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:14px 16px;margin:16px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:12.5px;color:#6b4c00;line-height:1.85;margin-bottom:6px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.sb strong{color:#e8d4a0;font-weight:600}.sub-h{font-size:13px;font-weight:900;color:#1C2B3A;margin:20px 0 10px;padding:10px 14px;background:rgba(201,168,76,0.08);border:1.5px solid rgba(201,168,76,0.35);border-radius:8px;letter-spacing:.3px;display:block}.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:4px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:14px 18px;margin:14px 0;box-shadow:0 2px 8px rgba(201,168,76,.15)}.sc-label{font-size:7px;letter-spacing:3px;color:#C9A84C;margin-bottom:6px;font-weight:700}.sc p{font-size:13.5px;font-weight:600;color:#7a5200;line-height:1.85;word-break:keep-all;margin:0}.ac{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border:1px solid rgba(39,174,96,.3);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 18px;margin-top:16px}.ac-label{font-size:7px;letter-spacing:3px;color:#27ae60;margin-bottom:6px;font-weight:700}.ac p{font-size:13px;font-weight:700;color:#1a6b3c;line-height:1.8;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#1C2B3A,#2d4a6b);padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.3)}.seun-year-num{font-size:8px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fafbfc;padding:12px 14px}.seun-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eef0f3;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11px;font-weight:700;flex-shrink:0;width:76px;padding-top:2px;color:#C9A84C}.seun-val{font-size:11px;line-height:1.75;color:#333;flex:1;word-break:keep-all;font-weight:400}.seun-summary{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border-left:3px solid #27ae60;padding:10px 14px;border-top:1px solid rgba(39,174,96,.2)}.seun-summary-label{font-size:7px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#1a6b3c;font-weight:700;word-break:keep-all}.card-counter{position:absolute;top:16px;right:18px;font-size:9px;color:#888;letter-spacing:1px;font-weight:500}.fin-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 32px}.fin-moon{font-size:36px;margin-bottom:16px}.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}.fin-t{font-family:"Noto Serif KR",serif;font-size:17px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}.fin-s{font-size:10px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:24px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:13px;color:#C9A84C;font-weight:700;letter-spacing:2px}.fin-date{font-size:8px;color:#141e24;letter-spacing:2px;margin-top:6px}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}.card{page-break-after:always}}</style></head><body style="background:#f5f5f7"><div class="deck">';
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>'
+    +'<title>'+name+' 사주 분석 보고서</title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>'
+    +'<style>'
+    +'*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}'
+    +'html,body{width:100%;height:100%;overflow:hidden;background:#0a0f1a;font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif}'
+    +'.deck{display:flex;width:100%;height:100dvh;overflow-x:scroll;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:#0a0f1a}'
+    +'.deck::-webkit-scrollbar{display:none}'
+    +'.card{flex:0 0 100vw;width:100vw;height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;overflow:hidden;position:relative}'
+    /* 표지 */
+    +'.cover-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 28px}'
+    +'.cv-eyebrow{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}'
+    +'.cv-moon{font-size:44px;margin-bottom:14px}'
+    +'.cv-title{font-family:"Noto Serif KR",serif;font-size:24px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:6px}'
+    +'.cv-sub{font-size:10px;color:#2a4050;font-weight:300;letter-spacing:1px;margin-bottom:28px}'
+    +'.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:16px 22px;width:100%;max-width:280px;text-align:left;margin-bottom:20px}'
+    +'.cv-row{display:flex;gap:12px;margin-bottom:7px}.cv-row:last-child{margin-bottom:0}'
+    +'.cv-k{font-size:9px;color:#C9A84C;width:52px;flex-shrink:0;letter-spacing:1px;padding-top:2px;font-weight:600}'
+    +'.cv-v{font-size:11px;color:#c0d0da;font-weight:400}'
+    +'.cv-date{font-size:8px;color:#1a2a34;letter-spacing:2px}'
+    +'.cv-swipe{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4050;letter-spacing:2px;white-space:nowrap}'
+    /* 목차 */
+    +'.toc-card{background:#0d1a26;padding:32px 22px 20px;justify-content:flex-start}'
+    +'.toc-label{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:18px}'
+    +'.toc-title{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:900;color:#fff;margin-bottom:22px}'
+    +'.toc-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;scrollbar-width:none}'
+    +'.toc-list::-webkit-scrollbar{display:none}'
+    +'.toc-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}'
+    +'.toc-item:last-child{border-bottom:none}'
+    +'.toc-n{font-size:10px;font-weight:900;color:#C9A84C;width:18px;flex-shrink:0}'
+    +'.toc-t{font-size:12px;color:#7a98ae;font-weight:400}'
+    /* 섹션 카드 */
+    +'.sec-card{background:#f8f7f4;display:flex;flex-direction:column}'
+    +'.sec-header{flex-shrink:0;padding:20px 20px 14px;background:linear-gradient(160deg,#0d1a26 0%,#1C2B3A 100%)}'
+    +'.sec-eyebrow{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:6px}'
+    +'.sec-title{font-family:"Noto Serif KR",serif;font-size:18px;font-weight:900;color:#fff;line-height:1.3}'
+    +'.sec-divider{height:2px;background:linear-gradient(90deg,#C9A84C 30%,rgba(201,168,76,.3) 70%,transparent);flex-shrink:0}'
+    +'.sec-body{flex:1;overflow-y:auto;padding:16px 18px 24px;scrollbar-width:none;background:#f8f7f4}'
+    +'.sec-body::-webkit-scrollbar{display:none}'
+    /* 본문 */
+    +'.sb{font-size:13px;line-height:2.0;color:#2a2a2a;font-weight:400;word-break:keep-all}'
+    +'.sb p{margin-bottom:14px;line-height:2.0;color:#333;padding-bottom:14px;border-bottom:1px solid rgba(0,0,0,.06)}'
+    +'.sb p:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}'
+    +'.sb strong{color:#1C2B3A;font-weight:700}'
+    /* 키워드 강조 */
+    +'.kw-gold{color:#8a6200;font-weight:700;background:rgba(201,168,76,.12);padding:0 3px;border-radius:3px}'
+    +'.kw-red{color:#c0392b;font-weight:600}'
+    +'.kw-green{color:#1a7040;font-weight:600}'
+    +'.kw-blue{color:#1a4a8a;font-weight:700;background:rgba(26,74,138,.08);padding:0 3px;border-radius:3px}'
+    /* 소제목 박스 - 연한 남색 배경 */
+    +'.sub-h{font-size:13px;font-weight:900;color:#0d1a26;margin:18px 0 10px;padding:10px 14px;background:rgba(14,26,38,.07);border:1.5px solid rgba(14,26,38,.15);border-left:4px solid #1C2B3A;border-radius:0 8px 8px 0;display:block;word-break:keep-all}'
+    /* 한눈에 보기 */
+    +'.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:4px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:12px 16px;margin-bottom:14px}'
+    +'.sc-label{font-size:7px;letter-spacing:3px;color:#C9A84C;margin-bottom:5px;font-weight:700}'
+    +'.sc p{font-size:13px;font-weight:700;color:#6a4200;line-height:1.8;word-break:keep-all;margin:0}'
+    /* 핵심 요약 */
+    +'.summary-box{background:rgba(14,26,38,.04);border:1.5px solid rgba(14,26,38,.12);border-radius:10px;padding:14px 16px;margin:16px 0}'
+    +'.summary-box-label{font-size:7px;letter-spacing:3px;color:#1C2B3A;font-weight:700;margin-bottom:8px}'
+    +'.summary-box p{font-size:12.5px;color:#2a3a4a;line-height:1.85;margin-bottom:5px;padding-left:12px;position:relative}'
+    +'.summary-box p::before{content:"▸";position:absolute;left:0;color:#C9A84C;font-weight:900}'
+    /* 오늘 실천 박스 */
+    +'.ac{background:linear-gradient(135deg,#f0fdf4,#e6f9ee);border:1.5px solid rgba(39,174,96,.3);border-left:4px solid #27ae60;border-radius:4px 10px 10px 4px;padding:12px 16px;margin-top:14px}'
+    +'.ac-label{font-size:7px;letter-spacing:3px;color:#27ae60;margin-bottom:5px;font-weight:700}'
+    +'.ac p{font-size:12.5px;font-weight:700;color:#155724;line-height:1.8;word-break:keep-all;margin:0}'
+    /* 세운 카드 */
+    +'.seun-year{margin-bottom:14px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1.5px solid #e0e4ec}'
+    +'.seun-year-hd{background:linear-gradient(90deg,#0d1a26,#1C2B3A);padding:9px 14px;display:flex;align-items:center;gap:10px}'
+    +'.seun-year-num{font-size:13px;font-weight:900;color:#C9A84C;letter-spacing:1px}'
+    +'.seun-year-title{font-size:12px;font-weight:700;color:#c0d0da}'
+    +'.seun-year-body{background:#fff;padding:10px 14px}'
+    +'.seun-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #f0f2f5;align-items:flex-start}'
+    +'.seun-row:last-child{border-bottom:none}'
+    +'.seun-label{font-size:11px;font-weight:700;flex-shrink:0;width:72px;padding-top:2px}'
+    +'.seun-val{font-size:11px;line-height:1.75;color:#333;flex:1;word-break:keep-all;font-weight:400}'
+    +'.seun-summary{background:linear-gradient(135deg,#f8fbff,#f0f4ff);border-left:3px solid #4a90d9;padding:9px 14px;border-top:1px solid #e0e8f0}'
+    +'.seun-summary-label{font-size:7px;letter-spacing:3px;color:#4a90d9;font-weight:700;margin-bottom:4px}'
+    +'.seun-summary-text{font-size:11.5px;line-height:1.8;color:#1a3060;font-weight:600;word-break:keep-all}'
+    +'.seun-action{background:linear-gradient(135deg,#f0fdf4,#e6f9ee);border-left:3px solid #27ae60;padding:8px 14px;border-top:1px solid rgba(39,174,96,.2);font-size:11px;color:#155724;font-weight:600}'
+    /* 대운 테이블 */
+    +'table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px;border-radius:8px;overflow:hidden}'
+    +'th{background:#0d1a26;color:#C9A84C;padding:9px 10px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px}'
+    +'td{padding:8px 10px;text-align:center;border-bottom:1px solid #eef0f3;color:#333;font-size:11px}'
+    +'tr:nth-child(even) td{background:#f8f7f4}'
+    +'tr:last-child td{border-bottom:none}'
+    /* 카드 번호 */
+    +'.card-counter{position:absolute;top:14px;right:16px;font-size:9px;color:rgba(255,255,255,.5);letter-spacing:1px}'
+    +'.sec-card .card-counter{color:#aaa}'
+    /* 마지막 */
+    +'.fin-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 32px}'
+    +'.fin-moon{font-size:36px;margin-bottom:16px}'
+    +'.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}'
+    +'.fin-t{font-family:"Noto Serif KR",serif;font-size:17px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}'
+    +'.fin-s{font-size:10px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:22px}'
+    +'.fin-brand{font-family:"Noto Serif KR",serif;font-size:13px;color:#C9A84C;font-weight:700;letter-spacing:2px}'
+    +'.fin-date{font-size:8px;color:#141e24;letter-spacing:2px;margin-top:6px}'
+    +'@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}}'
+    +'</style></head><body style="background:#0a0f1a"><div class="deck">';
 }
 
 function getLinearCSS(name) {
-  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>'+name+' 사주 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:0}.cover{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.cv-moon{font-size:52px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}.cv-sub{font-size:12px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:36px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600;letter-spacing:1px}.cv-v{font-size:12px;color:#c0d0da;font-weight:300}.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}.sec{background:#f5f5f7;padding:0 0 52px 0;page-break-before:always;border-bottom:1px solid #e0e0e0}.sec:last-child{border-bottom:none}.sec-ey{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:8px}.sec-title{font-family:"Noto Serif KR",serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:4px;line-height:1.3}.sec-div{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:14px 0 22px}.sb{font-size:14px;line-height:2.15;color:#333;font-weight:400;word-break:keep-all}.sb p{margin-bottom:22px}.sb p:last-child{margin-bottom:0}.sub-h{font-size:13px;font-weight:900;color:#1C2B3A;margin:22px 0 10px;padding:10px 14px;background:rgba(201,168,76,0.08);border:1.5px solid rgba(201,168,76,0.35);border-radius:8px;display:block}.sc{background:linear-gradient(135deg,#0f1e2e,#0a1520);border:1px solid rgba(201,168,76,.25);border-left:5px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:16px 20px;margin:0 0 20px 0}.sc-label{font-size:8px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px;font-weight:700}.sc p{font-size:14px;font-weight:600;color:#e8d490;line-height:1.9;word-break:keep-all;margin:0}.summary-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:16px 20px;margin:20px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:13px;color:#d4b96a;line-height:1.9;margin-bottom:7px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.ac{background:linear-gradient(135deg,#081c10,#040c08);border:1px solid rgba(39,174,96,.2);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 20px;margin-top:20px}.ac-label{font-size:8px;letter-spacing:3px;color:#2ecc71;margin-bottom:7px;font-weight:700}.ac p{font-size:13.5px;font-weight:700;color:#7adba0;line-height:1.85;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#0f1c2a,#111);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.12)}.seun-year-num{font-size:9px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fff;padding:10px 16px}.seun-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #131313;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11.5px;font-weight:700;flex-shrink:0;width:80px;color:#C9A84C;padding-top:2px}.seun-val{font-size:12px;line-height:1.8;color:#888;flex:1;word-break:keep-all;font-weight:300}.seun-summary{background:linear-gradient(135deg,#071a0f,#040c08);border-left:3px solid #27ae60;padding:10px 16px;border-top:1px solid rgba(39,174,96,.1)}.seun-summary-label{font-size:8px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12.5px;line-height:1.85;color:#7adba0;font-weight:700;word-break:keep-all}.fin{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);padding:60px 40px;text-align:center;page-break-before:always;min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center}.fin-moon{font-size:44px;margin-bottom:18px}.fin-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 18px}.fin-t{font-family:"Noto Serif KR",serif;font-size:19px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.6}.fin-s{font-size:11px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:26px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}th{background:#0f1c2a;color:#C9A84C;padding:8px 14px;text-align:left;font-weight:700;border-bottom:1px solid rgba(201,168,76,.2)}td{padding:8px 14px;border-bottom:1px solid #161616;color:#999;font-weight:300}tr:last-child td{border-bottom:none}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}}</style></head><body style="background:#f5f5f7">';
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>'
+    +'<title>'+name+' 사주 보고서</title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/>'
+    +'<style>'
+    +'*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:0}'
+    +'.cover{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}'
+    +'.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}'
+    +'.cv-moon{font-size:52px;margin-bottom:14px}'
+    +'.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}'
+    +'.cv-sub{font-size:12px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:36px}'
+    +'.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}'
+    +'.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}'
+    +'.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600;letter-spacing:1px}'
+    +'.cv-v{font-size:12px;color:#c0d0da;font-weight:300}'
+    +'.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}'
+    /* 섹션 */
+    +'.sec{background:#fff;page-break-before:always;border-bottom:1px solid #e0e0e0}'
+    +'.sec:last-child{border-bottom:none}'
+    +'.sec-hd{background:linear-gradient(160deg,#0d1a26,#1C2B3A);padding:36px 40px 28px}'
+    +'.sec-ey{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:8px}'
+    +'.sec-title{font-family:"Noto Serif KR",serif;font-size:22px;font-weight:900;color:#fff;line-height:1.3}'
+    +'.sec-div{height:2px;background:linear-gradient(90deg,#C9A84C 30%,rgba(201,168,76,.2) 70%,transparent);margin:0 40px}'
+    +'.sec-body{padding:28px 40px 48px}'
+    /* 본문 */
+    +'.sb{font-size:14px;line-height:2.1;color:#2a2a2a;font-weight:400;word-break:keep-all}'
+    +'.sb p{margin-bottom:18px;padding-bottom:18px;border-bottom:1px solid #f0f0f0}'
+    +'.sb p:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0}'
+    +'.sb strong{color:#1C2B3A;font-weight:700}'
+    /* 키워드 */
+    +'.kw-gold{color:#8a6200;font-weight:700;background:rgba(201,168,76,.1);padding:0 3px;border-radius:3px}'
+    +'.kw-red{color:#c0392b;font-weight:600}'
+    +'.kw-green{color:#1a7040;font-weight:600}'
+    +'.kw-blue{color:#1a4a8a;font-weight:700;background:rgba(26,74,138,.08);padding:0 3px;border-radius:3px}'
+    /* 소제목 - 연한 남색 박스 */
+    +'.sub-h{font-size:13px;font-weight:900;color:#0d1a26;margin:22px 0 12px;padding:11px 16px;background:rgba(14,26,38,.06);border:1.5px solid rgba(14,26,38,.14);border-left:4px solid #1C2B3A;border-radius:0 8px 8px 0;display:block;word-break:keep-all}'
+    /* 한눈에 보기 */
+    +'.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:5px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:16px 20px;margin:0 0 22px 0}'
+    +'.sc-label{font-size:8px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px;font-weight:700}'
+    +'.sc p{font-size:14px;font-weight:700;color:#6a4200;line-height:1.9;word-break:keep-all;margin:0}'
+    /* 핵심 요약 */
+    +'.summary-box{background:rgba(14,26,38,.04);border:1.5px solid rgba(14,26,38,.12);border-radius:10px;padding:16px 20px;margin:20px 0}'
+    +'.summary-box-label{font-size:8px;letter-spacing:3px;color:#1C2B3A;font-weight:700;margin-bottom:10px}'
+    +'.summary-box p{font-size:13px;color:#2a3a4a;line-height:1.9;margin-bottom:7px;padding-left:14px;position:relative}'
+    +'.summary-box p::before{content:"▸";position:absolute;left:0;color:#C9A84C;font-weight:900}'
+    /* 오늘 실천 */
+    +'.ac{background:linear-gradient(135deg,#f0fdf4,#e6f9ee);border:1.5px solid rgba(39,174,96,.3);border-left:4px solid #27ae60;border-radius:4px 10px 10px 4px;padding:14px 20px;margin-top:20px}'
+    +'.ac-label{font-size:8px;letter-spacing:3px;color:#27ae60;margin-bottom:7px;font-weight:700}'
+    +'.ac p{font-size:13.5px;font-weight:700;color:#155724;line-height:1.85;word-break:keep-all;margin:0}'
+    /* 세운 */
+    +'.seun-year{margin-bottom:16px;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);border:1.5px solid #e0e4ec}'
+    +'.seun-year-hd{background:linear-gradient(90deg,#0d1a26,#1C2B3A);padding:10px 16px;display:flex;align-items:center;gap:10px}'
+    +'.seun-year-num{font-size:14px;font-weight:900;color:#C9A84C;letter-spacing:1px}'
+    +'.seun-year-title{font-size:12px;font-weight:700;color:#c0d0da}'
+    +'.seun-year-body{background:#fff;padding:10px 16px}'
+    +'.seun-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #f0f2f5;align-items:flex-start}'
+    +'.seun-row:last-child{border-bottom:none}'
+    +'.seun-label{font-size:12px;font-weight:700;flex-shrink:0;width:80px;padding-top:2px}'
+    +'.seun-val{font-size:12px;line-height:1.8;color:#333;flex:1;word-break:keep-all}'
+    +'.seun-summary{background:linear-gradient(135deg,#f8fbff,#f0f4ff);border-left:3px solid #4a90d9;padding:10px 16px;border-top:1px solid #e0e8f0}'
+    +'.seun-summary-label{font-size:7px;letter-spacing:3px;color:#4a90d9;font-weight:700;margin-bottom:5px}'
+    +'.seun-summary-text{font-size:12.5px;line-height:1.85;color:#1a3060;font-weight:600;word-break:keep-all}'
+    +'.seun-action{background:linear-gradient(135deg,#f0fdf4,#e6f9ee);border-left:3px solid #27ae60;padding:9px 16px;border-top:1px solid rgba(39,174,96,.2);font-size:12px;color:#155724;font-weight:600}'
+    /* 테이블 */
+    +'table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;border-radius:8px;overflow:hidden}'
+    +'th{background:#0d1a26;color:#C9A84C;padding:10px 14px;text-align:center;font-weight:700;font-size:12px;letter-spacing:1px}'
+    +'td{padding:9px 14px;border-bottom:1px solid #eef0f3;color:#333;text-align:center}'
+    +'tr:nth-child(even) td{background:#f8f7f4}'
+    +'tr:last-child td{border-bottom:none}'
+    /* 마지막 */
+    +'.fin{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);padding:60px 40px;text-align:center;page-break-before:always;min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center}'
+    +'.fin-moon{font-size:44px;margin-bottom:18px}'
+    +'.fin-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 18px}'
+    +'.fin-t{font-family:"Noto Serif KR",serif;font-size:19px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.6}'
+    +'.fin-s{font-size:11px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:26px}'
+    +'.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}'
+    +'@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}}'
+    +'</style></head><body style="background:#f5f5f7">';
 }
 
 function getMiniCSS() {
