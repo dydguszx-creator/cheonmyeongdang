@@ -575,7 +575,7 @@ async function requestAnalysis() {
   status.style.display = 'block';
 
   try {
-    var payload = Object.assign({}, formDataGlobal, { email: email, paymentId: window._paymentId || '' });
+    var payload = Object.assign({}, formDataGlobal, { email: email });
     var res = await fetch('/api/payment', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
