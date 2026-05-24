@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 32000,
+        max_tokens: 16000,
         stream: true,
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -67,3 +67,8 @@ export default async function handler(req, res) {
 
   res.end();
 }
+
+export const config = {
+  runtime: 'nodejs',
+  maxDuration: 300,
+};
