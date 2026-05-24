@@ -487,6 +487,9 @@ footer .gold{color:var(--gold)}
             'font-size:16px;font-weight:900;text-decoration:none;text-align:center">' +
             '💬 카카오 채팅방 입장하기</a>' +
             '</div>';
+          setTimeout(function() {
+            emailStep.scrollIntoView({behavior:'smooth', block:'center'});
+          }, 300);
         }
       });
     }
