@@ -454,6 +454,45 @@ footer .gold{color:var(--gold)}
 </footer>
 
 <script>
+// 모바일 결제 완료 처리
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'complete') {
+    var impUid = params.get('imp_uid');
+    var merchantUid = params.get('merchant_uid');
+    var impSuccess = params.get('imp_success');
+    if (impSuccess === 'true' || impUid) {
+      // 결제 성공 - 완료 화면 표시
+      window.addEventListener('DOMContentLoaded', function() {
+        var formSection = document.getElementById('form-section');
+        if (formSection) {
+          formSection.scrollIntoView({behavior:'smooth'});
+        }
+        var payStep = document.getElementById('paymentStep');
+        var emailStep = document.getElementById('emailStep');
+        var submitBtn = document.getElementById('submitBtn');
+        if (payStep) payStep.style.display = 'none';
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (emailStep) {
+          emailStep.style.display = 'block';
+          emailStep.innerHTML =
+            '<div style="padding:32px;text-align:center">' +
+            '<div style="font-size:48px;margin-bottom:16px">✅</div>' +
+            '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">결제 완료!</div>' +
+            '<div style="font-size:13px;color:#555;line-height:1.9;margin-bottom:20px">' +
+            '아래 버튼을 눌러 카카오 채팅방에 입장해주세요.<br/>' +
+            '보고서 제작이 시작됩니다 😊</div>' +
+            '<a href="https://open.kakao.com/o/sFcws2si" target="_blank" ' +
+            'style="display:block;padding:15px;background:#F9E000;color:#3A1D1D;border-radius:12px;' +
+            'font-size:16px;font-weight:900;text-decoration:none;text-align:center">' +
+            '💬 카카오 채팅방 입장하기</a>' +
+            '</div>';
+        }
+      });
+    }
+  }
+})();
+
 var stockOptions = [3, 5, 7];
 var stockNum = stockOptions[Math.floor(Math.random() * stockOptions.length)];
 document.getElementById('stockNum').textContent = stockNum;
@@ -496,7 +535,7 @@ function submitForm() {
     name: '천명당 사주 분석 보고서',
     amount: 14000,
     buyer_name: name,
-    m_redirect_url: window.location.href,
+    m_redirect_url: 'https://cheonmyeongdang-seven.vercel.app/?payment=complete',
   }, function(rsp) {
     if (rsp.success) {
       // 결제 성공 → 완료 화면 표시 후 카카오 오픈채팅으로 이동
