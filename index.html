@@ -8,7 +8,7 @@
 <meta http-equiv="Pragma" content="no-cache"/>
 <meta http-equiv="Expires" content="0"/>
 <title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
-<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -126,7 +126,7 @@ footer .gold{color:var(--gold)}
 </style>
 </head>
 <body>
-<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+
 
 <header>
   <div class="logo">
@@ -231,18 +231,297 @@ footer .gold{color:var(--gold)}
   <div class="form-group">
     <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
     <div class="cat-grid">
-      <button class="cat-btn" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
-      <button class="cat-btn" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
-      <button class="cat-btn" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
-      <button class="cat-btn" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
-      <button class="cat-btn" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
-      <button class="cat-btn" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
-      <button class="cat-btn" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
-      <button class="cat-btn" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
     </div>
   </div>
 
   <!-- 신청 버튼 -->
+  <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
+
+  <!-- 완료 화면 -->
+  <div id="complete-section" style="display:none;padding:24px 16px">
+    <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:480px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:36px;margin-bottom:8px">✅</div>
+        <div style="font-size:18px;font-weight:700;color:#1C2B3A">신청 정보가 복사됐어요!</div>
+        <div style="font-size:13px;color:#888;margin-top:4px">아래 버튼으로 카카오 채팅방에 입장 후 붙여넣기 해주세요</div>
+      </div>
+
+      <textarea id="copyPreview" readonly rows="7"
+        style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
+
+      <button id="copyAgainBtn" onclick="copyAgain()" type="button"
+        style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px">
+        📋 다시 복사
+      </button>
+
+      <a href="https://open.kakao.com/o/sFcws2si" target="_blank"
+        style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">
+        💬 카카오 오픈채팅 입장하기
+      </a>
+
+      <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
+        <div style="font-size:12px;color:#6a4200;line-height:1.8">
+          📌 <strong>입장 후 붙여넣기 → 전송</strong>해주시면<br>
+          계좌번호 안내 후 <strong>입금 확인 시 12시간 이내</strong> 발송해드려요!
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- /결제단계 -->l>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --navy: #0E1A26;
+  --gold: #C9A84C;
+  --gold-light: #E8C87A;
+  --cream: #F5EDD8;
+  --bg: #F8F7F4;
+  --card-bg: #fff;
+  --text: #1a1a2e;
+  --sub: #6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-badge{width:40px;height:40px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:15px;color:var(--gold);font-weight:700}
+.logo-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy)}
+.logo-sub{font-size:11px;color:var(--gold);letter-spacing:1px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 22px 40px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(170deg,#f0ede6 0%,#f8f7f4 60%)}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 40%,rgba(201,168,76,0.10) 0%,transparent 60%);pointer-events:none}
+.hero-eyebrow{display:inline-block;background:var(--navy);border-radius:20px;padding:7px 18px;font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:20px;font-weight:600}
+.hero h1{font-family:'Noto Serif KR',serif;font-size:34px;font-weight:900;line-height:1.35;color:var(--navy);margin-bottom:20px;word-break:keep-all}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 24px rgba(14,26,38,0.10);border:1px solid rgba(201,168,76,0.15)}
+.hero-desc p{font-size:15px;color:#2a2a3a;line-height:1.9;word-break:keep-all;font-weight:400}
+.hero-desc p+p{margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
+.stats-row{display:flex;gap:10px;margin-bottom:22px;justify-content:center}
+.stat-item{flex:1;background:var(--navy);border-radius:14px;padding:14px 8px;text-align:center}
+.stat-num{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
+.stat-label{font-size:11px;color:#7a98ae;margin-top:4px;word-break:keep-all}
+.cta-btn{width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 6px 24px rgba(201,168,76,0.35);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
+.cta-btn:active{transform:scale(0.98)}
+.price-section{background:linear-gradient(135deg,var(--navy),#1a2f42);padding:30px 22px}
+.price-original{font-size:13px;color:#5a7a8a;text-decoration:line-through;margin-bottom:4px}
+.price-main{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
+.price-badge-sale{background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.price-amount{font-family:'Noto Serif KR',serif;font-size:38px;font-weight:900;color:#fff}
+.price-notice{font-size:12px;color:#3a5a6a;margin-top:6px;line-height:1.7}
+.stock-bar{background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between}
+.stock-text{font-size:12px;color:#7a98ae}
+.stock-count{font-size:14px;font-weight:700;color:var(--gold)}
+.form-section{background:#fff;padding:32px 22px}
+.form-section h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
+.form-section .form-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:7px}
+.form-group input,.form-group select{width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border 0.2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cat-btn{padding:10px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:12px;font-family:inherit;background:#fff;color:var(--sub);cursor:pointer;text-align:center;transition:all 0.2s;word-break:keep-all;line-height:1.4}
+.cat-btn.on{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
+.submit-btn{width:100%;padding:17px;background:var(--gold);color:var(--navy);border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:8px;box-shadow:0 4px 16px rgba(201,168,76,0.3)}
+.submit-btn:active{transform:scale(0.98)}
+.form-notice{font-size:11.5px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6}
+.copy-notice{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12.5px;color:#15803d;line-height:1.7;text-align:center}
+.diff-section{padding:48px 22px;background:var(--bg)}
+.diff-section h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:10px;word-break:keep-all;line-height:1.4}
+.diff-section .diff-sub{font-size:15px;color:#3a3a4a;text-align:center;margin-bottom:20px;line-height:1.8;word-break:keep-all;font-weight:400}
+.doubt-box{background:var(--navy);border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 20px rgba(14,26,38,0.15)}
+.doubt-q{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;line-height:1.5}
+.doubt-a{font-size:13.5px;color:#c0d0da;line-height:1.9;word-break:keep-all}
+.diff-label{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;text-align:center;margin-bottom:16px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:7px 20px;display:inline-block;width:100%}
+.diff-cards{display:flex;flex-direction:column;gap:14px}
+.diff-card{background:#fff;border-radius:16px;padding:20px 20px;box-shadow:0 2px 16px rgba(14,26,38,0.07);border:1px solid rgba(201,168,76,0.12)}
+.diff-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.diff-icon{width:42px;height:42px;border-radius:12px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.diff-card h3{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
+.diff-card p{font-size:13.5px;color:#4a4a5a;line-height:1.9;word-break:keep-all;margin-bottom:6px}
+.diff-card p:last-child{margin-bottom:0}
+.content-section{padding:44px 22px;background:#fff}
+.content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all;line-height:1.4}
+.content-section .sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:26px;line-height:1.7}
+.content-cards{display:flex;flex-direction:column;gap:12px}
+.content-card{border-radius:16px;padding:20px 18px;display:flex;align-items:flex-start;gap:14px;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
+.content-card.visible{opacity:1;transform:translateY(0)}
+.content-card.blue{background:#EEF2FF}
+.content-card.yellow{background:#FFFBEB}
+.content-card.green{background:#ECFDF5}
+.content-card.pink{background:#FFF1F2}
+.content-card.purple{background:#F5F0FF}
+.content-card.gray{background:#F3F4F6}
+.content-card.teal{background:#F0FDFA}
+.content-card.orange{background:#FFF7ED}
+.card-icon{width:44px;height:44px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.card-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px}
+.card-body p{font-size:13px;color:#4a4a5a;line-height:1.85;word-break:keep-all;margin-bottom:5px}
+.card-body p:last-child{margin-bottom:0}
+.review-section{padding:44px 22px;background:var(--bg)}
+.review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:6px}
+.review-sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:24px;line-height:1.7}
+.review-grid{display:flex;flex-direction:column;gap:12px}
+.review-card{background:#fff;border-radius:14px;padding:18px 18px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.review-stars{color:#f59e0b;font-size:13px;letter-spacing:1px}
+.review-date{font-size:11px;color:#bbb}
+.review-source{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px}
+.review-text{font-size:13px;color:#333;line-height:1.9;word-break:keep-all}
+.review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
+.review-avatar{width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
+.cta-section{background:var(--navy);padding:52px 24px;text-align:center}
+.cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:#fff;line-height:1.6;margin-bottom:28px;word-break:keep-all}
+.cta-quote em{color:var(--gold);font-style:normal}
+.cta-bottom-btn{display:block;width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 6px 24px rgba(201,168,76,0.35);text-decoration:none;text-align:center}
+.cta-urgent{margin-top:16px;font-size:13.5px;color:#7a98ae;line-height:1.8}
+.cta-urgent strong{color:var(--gold-light)}
+footer{background:#0a1420;padding:28px 24px;text-align:center}
+footer p{font-size:11px;color:#3d5a6c;line-height:2}
+footer .gold{color:var(--gold)}
+.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+
+<header>
+  <div class="logo">
+    <div class="logo-badge">命</div>
+    <div>
+      <div class="logo-text">천명당</div>
+      <div class="logo-sub">사주명리</div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div style="margin-bottom:18px;margin-top:8px">
+    <div class="hero-eyebrow">✦ 1년간 문의 2,476건 · 만족도 98%</div>
+  </div>
+  <h1>아직 풀리지 않은 질문,<br/><em>사주에 답이 있습니다.</em></h1>
+  <div class="hero-desc">
+    <p>생년월일만 알려주시면<br/>전문가가 <strong>직접 분석</strong>해드립니다.</p>
+    <p>성격 · 재물 · 연애 · 건강 · 대운<br/>9가지 항목 PDF 보고서로 정리해드립니다.</p>
+  </div>
+  <div class="stats-row fade-up">
+    <div class="stat-item">
+      <div class="stat-num">2,476<span style="font-size:13px">건</span></div>
+      <div class="stat-label">1년간 문의</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">98<span style="font-size:13px">%</span></div>
+      <div class="stat-label">고객 만족도</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">12<span style="font-size:13px">h</span></div>
+      <div class="stat-label">최대 발송</div>
+    </div>
+  </div>
+  <a href="#form-section" class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">
+    지금 바로 신청하기 →
+  </a>
+</section>
+
+<div class="price-section">
+  <div style="text-align:center">
+    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
+    <div style="font-size:12px;color:#4a6a7a;margin-bottom:6px">감사의 의미로, 매일 선착순 10명</div>
+    <div class="price-original">정가 28,000원</div>
+    <div class="price-main">
+      <span class="price-badge-sale">50% OFF</span>
+      <span class="price-amount">14,000원</span>
+    </div>
+    <div class="stock-bar">
+      <div class="stock-text">오늘 남은 할인 자리</div>
+      <div class="stock-count">⏳ <span id="stockNum">7</span>명</div>
+    </div>
+    <div class="price-notice">· 계좌이체 · 12시간 이내 PDF 발송<br/>· 카카오 오픈채팅으로 신청</div>
+  </div>
+</div>
+
+<div class="form-section" id="form-section">
+  <h2>정보 입력하기</h2>
+  <p class="form-sub">입력하신 내용이 자동으로 정리되어<br/>카카오 채팅으로 전달됩니다.</p>
+
+  <div class="form-group">
+    <label>성함</label>
+    <input id="f-name" placeholder="예: 홍길동"/>
+  </div>
+  <div class="form-group">
+    <label>생년월일</label>
+    <div class="form-row3">
+      <input id="f-year" placeholder="년도 (예: 1990)" type="number"/>
+      <input id="f-month" placeholder="월" type="number"/>
+      <input id="f-day" placeholder="일" type="number"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="form-row">
+      <div>
+        <label>성별</label>
+        <select id="f-gender">
+          <option>여성</option>
+          <option>남성</option>
+        </select>
+      </div>
+      <div>
+        <label>양력 / 음력</label>
+        <select id="f-cal">
+          <option>양력</option>
+          <option>음력</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
+  <div class="form-group">
+    <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
+    <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
+      ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <input id="f-hour" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/>
+      <input id="f-min" placeholder="분 (예: 30)" type="number" min="0" max="59"/>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
+    <div class="cat-grid">
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
+      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
+    </div>
+  </div>
+
+  <!-- 신청 버튼 -->
+  <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
   <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
 
   <!-- STEP 1: 결제 안내 -->
@@ -254,8 +533,8 @@ footer .gold{color:var(--gold)}
     <div style="padding:20px">
       <div style="background:#f8f7f4;border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
         <div style="font-size:12px;color:#888;margin-bottom:6px">입금 계좌</div>
-        <div style="font-size:22px;font-weight:900;color:#1C2B3A;letter-spacing:1px">카카오뱅크 3333-37-3493547</div>
-        <div style="font-size:13px;color:#666;margin-top:4px">예금주: 천명당</div>
+        <div style="font-size:22px;font-weight:900;color:#1C2B3A;letter-spacing:1px">카카오뱅크 3333-XXXX-XXXX</div>
+        <div style="font-size:13px;color:#666;margin-top:4px">예금주: 박상환</div>
       </div>
       <div style="display:flex;gap:10px;margin-bottom:14px">
         <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
@@ -454,317 +733,93 @@ footer .gold{color:var(--gold)}
 </footer>
 
 <script>
-// 모바일 결제 완료 처리
-(function() {
-  var params = new URLSearchParams(window.location.search);
-  if (params.get('payment') === 'complete') {
-    var impUid = params.get('imp_uid');
-    var merchantUid = params.get('merchant_uid');
-    var impSuccess = params.get('imp_success');
-    if (impSuccess === 'true' || impUid) {
-      // 결제 성공 - 완료 화면 표시
-      window.addEventListener('DOMContentLoaded', function() {
-        var formSection = document.getElementById('form-section');
-        if (formSection) {
-          formSection.scrollIntoView({behavior:'smooth'});
-        }
-        var payStep = document.getElementById('paymentStep');
-        var emailStep = document.getElementById('emailStep');
-        var submitBtn = document.getElementById('submitBtn');
-        if (payStep) payStep.style.display = 'none';
-        if (submitBtn) submitBtn.style.display = 'none';
-        if (emailStep) {
-          emailStep.style.display = 'block';
-          var urlParams = new URLSearchParams(window.location.search);
-          var nm = decodeURIComponent(urlParams.get('nm')||'');
-          var gd = decodeURIComponent(urlParams.get('gd')||'');
-          var cl = decodeURIComponent(urlParams.get('cl')||'');
-          var yr = decodeURIComponent(urlParams.get('yr')||'');
-          var mo = decodeURIComponent(urlParams.get('mo')||'');
-          var dy = decodeURIComponent(urlParams.get('dy')||'');
-          var tm = decodeURIComponent(urlParams.get('tm')||'모름');
-          var ct = decodeURIComponent(urlParams.get('ct')||'전체 분석');
-          var autoMsg = '안녕하세요! 천명당 사주 분석 보고서 신청합니다 :)' +
-            '\n\n성함: ' + nm +
-            '\n성별: ' + gd +
-            '\n생년월일: ' + cl + ' ' + yr + '년 ' + mo + '월 ' + dy + '일' +
-            '\n태어난 시각: ' + tm +
-            '\n궁금한 것: ' + ct +
-            '\n\n결제 완료했습니다. 잘 부탁드립니다!';
-          // 파라미터 다 읽은 후 URL 정리
-          window.history.replaceState({}, document.title, window.location.pathname);
-          if (navigator.clipboard) navigator.clipboard.writeText(autoMsg).catch(function(){});
-          emailStep.innerHTML =
-            '<div style="padding:28px 20px;text-align:center">' +
-            '<div style="font-size:44px;margin-bottom:12px">✅</div>' +
-            '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">결제 완료!</div>' +
-            '<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left">' +
-            '<div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:8px">📋 신청 내용이 자동 복사됐어요!</div>' +
-            '<div style="font-size:12px;color:#166534;line-height:1.8">' +
-            '① 아래 버튼으로 카카오 채팅방 입장<br/>' +
-            '② 채팅창에 <b>붙여넣기(길게 누르기)</b> 후 전송<br/>' +
-            '③ 잠시 후 PDF 보고서를 받아보실 수 있어요!</div>' +
-            '</div>' +
-            '<a href="https://open.kakao.com/o/sFcws2si" target="_blank" ' +
-            'style="display:block;padding:15px;background:#F9E000;color:#3A1D1D;border-radius:12px;' +
-            'font-size:16px;font-weight:900;text-decoration:none;text-align:center;margin-bottom:10px">' +
-            '💬 카카오 채팅방 입장하기</a>' +
-            '<div style="font-size:11px;color:#aaa">복사가 안 됐다면 아래 내용을 직접 복사해주세요</div>' +
-            '<textarea id="autoMsgTA" readonly style="width:100%;height:120px;margin-top:8px;padding:10px;font-size:11px;border:1px solid #e5e7eb;border-radius:8px;resize:none;background:#f9f9f9;box-sizing:border-box">' + autoMsg + '</textarea>' +
-            '<button onclick="copyAutoMsg()" style="width:100%;margin-top:8px;padding:10px;background:#1C2B3A;color:#C9A84C;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit">📋 복사하기</button>' +
-            '</div>';
-          setTimeout(function() {
-            emailStep.scrollIntoView({behavior:'smooth', block:'center'});
-          }, 300);
-        }
-      });
-    }
-  }
-})();
-
-var stockOptions = [3, 5, 7];
-var stockNum = stockOptions[Math.floor(Math.random() * stockOptions.length)];
-document.getElementById('stockNum').textContent = stockNum;
-document.getElementById('stockNum2').textContent = stockNum;
-
+// 카테고리 버튼 onclick
 document.querySelectorAll('.cat-btn').forEach(function(btn) {
   btn.addEventListener('click', function() { this.classList.toggle('on'); });
 });
 
-// 전역 변수
-var formDataGlobal = {};
-var countdownTimer = null;
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
 
 function submitForm() {
-  var name = document.getElementById('f-name').value.trim();
-  var year = document.getElementById('f-year').value.trim();
-  var month = document.getElementById('f-month').value.trim();
-  var day = document.getElementById('f-day').value.trim();
-  var gender = document.getElementById('f-gender').value;
-  var cal = document.getElementById('f-cal').value;
-  var hour = document.getElementById('f-hour').value.trim();
-  var min = document.getElementById('f-min') ? document.getElementById('f-min').value.trim() : '';
-  var cats = [];
-  document.querySelectorAll('.cat-btn.on').forEach(function(b) { cats.push(b.getAttribute('data-val')); });
-  if (!name || !year || !month || !day) { alert('성함과 생년월일을 입력해주세요.'); return; }
+  var y = getVal('y'), m = getVal('m'), d = getVal('d');
+  var errEl = document.getElementById('formErr');
+  if (!y || !m || !d) {
+    errEl.textContent = '생년월일은 필수입니다.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
 
-  // 폼 데이터 저장
-  formDataGlobal = { name:name, gender:gender, cal:cal, year:year, month:month, day:day, hour:hour, min:min, categories:cats };
+  var name = getVal('name');
+  var gender = getVal('gender') || '남성';
+  var cal = getVal('cal') || '양력';
+  var h = getVal('h'), mn = getVal('mn');
+  var time = h ? h+'시 '+(mn||'00')+'분' : '미상';
 
-  // 포트원 결제창 열기
-  var IMP = window.IMP;
-  IMP.init('imp13401624');
+  var qArr = [];
+  document.querySelectorAll('.cat-btn.on').forEach(function(c) { qArr.push(c.getAttribute('data-val')); });
+  var qDirect = getVal('q');
+  if (qDirect) qArr.push(qDirect);
 
-  var merchantUid = 'cheonmyeongdang_' + Date.now();
+  var copyText = '✦ 천명당 사주 신청\n'
+    + '━━━━━━━━━━━━━━\n'
+    + '이름: ' + (name||'미입력') + '\n'
+    + '성별: ' + gender + '\n'
+    + '생년월일: ' + cal + ' ' + y + '년 ' + m + '월 ' + d + '일\n'
+    + '출생시각: ' + time + '\n'
+    + (qArr.length > 0 ? '궁금한 것: ' + qArr.join(' / ') + '\n' : '')
+    + '━━━━━━━━━━━━━━\n'
+    + '입금 후 이 내용을 채팅방에 붙여넣어 주세요 🙏';
 
-  // m_redirect_url 미리 생성 (formDataGlobal 값이 확실히 있을 때)
-  var _d = formDataGlobal;
-  var _cats = _d.categories && _d.categories.length > 0 ? encodeURIComponent(_d.categories.join(',')) : '';
-  var _timeStr = _d.hour ? _d.hour + '시 ' + (_d.min||'00') + '분' : '모름';
-  var mRedirectUrl = 'https://cheonmyeongdang-seven.vercel.app/?payment=complete' +
-    '&nm=' + encodeURIComponent(_d.name||'') +
-    '&gd=' + encodeURIComponent(_d.gender||'') +
-    '&cl=' + encodeURIComponent(_d.cal||'') +
-    '&yr=' + encodeURIComponent(_d.year||'') +
-    '&mo=' + encodeURIComponent(_d.month||'') +
-    '&dy=' + encodeURIComponent(_d.day||'') +
-    '&tm=' + encodeURIComponent(_timeStr) +
-    '&ct=' + _cats;
-
-  IMP.request_pay({
-    pg: 'kakaopay.TC0ONETIME',
-    pay_method: 'kakaopay',
-    merchant_uid: merchantUid,
-    name: '천명당 사주 분석 보고서',
-    amount: 14000,
-    buyer_name: name,
-    m_redirect_url: mRedirectUrl,
-  }, function(rsp) {
-    if (rsp.success) {
-      // 결제 성공 → 완료 화면 표시 후 카카오 오픈채팅으로 이동
-      document.getElementById('paymentStep').style.display = 'none';
-      document.getElementById('submitBtn').style.display = 'none';
-      document.getElementById('emailStep').style.display = 'block';
-      var d = formDataGlobal;
-      var cats = d.categories && d.categories.length > 0 ? d.categories.join(', ') : '전체 분석';
-      var timeStr = d.hour ? d.hour + '시 ' + (d.min || '00') + '분' : '모름';
-      var autoMsg = '안녕하세요! 천명당 사주 분석 보고서 신청합니다 :)' +
-        '\n\n성함: ' + (d.name||'') +
-        '\n성별: ' + (d.gender||'') +
-        '\n생년월일: ' + (d.cal||'') + ' ' + (d.year||'') + '년 ' + (d.month||'') + '월 ' + (d.day||'') + '일' +
-        '\n태어난 시각: ' + timeStr +
-        '\n궁금한 것: ' + cats +
-        '\n\n결제 완료했습니다. 잘 부탁드립니다!';
-      if (navigator.clipboard) navigator.clipboard.writeText(autoMsg).catch(function(){});
-      document.getElementById('emailStep').innerHTML =
-        '<div style="padding:28px 20px;text-align:center">' +
-        '<div style="font-size:44px;margin-bottom:12px">✅</div>' +
-        '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">결제 완료!</div>' +
-        '<div style="background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 16px;margin-bottom:16px;text-align:left">' +
-        '<div style="font-size:13px;font-weight:700;color:#15803d;margin-bottom:8px">📋 신청 내용이 자동 복사됐어요!</div>' +
-        '<div style="font-size:12px;color:#166534;line-height:1.8">' +
-        '① 아래 버튼으로 카카오 채팅방 입장<br/>' +
-        '② 채팅창에 <b>붙여넣기(길게 누르기)</b> 후 전송<br/>' +
-        '③ 잠시 후 PDF 보고서를 받아보실 수 있어요!</div>' +
-        '</div>' +
-        '<a href="https://open.kakao.com/o/sFcws2si" target="_blank" ' +
-        'style="display:block;padding:15px;background:#F9E000;color:#3A1D1D;border-radius:12px;' +
-        'font-size:16px;font-weight:900;text-decoration:none;text-align:center;margin-bottom:10px">' +
-        '💬 카카오 채팅방 입장하기</a>' +
-        '<div style="font-size:11px;color:#aaa">복사가 안 됐다면 아래 내용을 직접 복사해주세요</div>' +
-        '<textarea readonly style="width:100%;height:120px;margin-top:8px;padding:10px;font-size:11px;border:1px solid #e5e7eb;border-radius:8px;resize:none;background:#f9f9f9;box-sizing:border-box">' + autoMsg.replace(/\n/g,'\n') + '</textarea>' +
-        '</div>';
-      document.getElementById('emailStep').scrollIntoView({behavior:'smooth', block:'start'});
-    } else {
-      alert('결제 실패: ' + rsp.error_msg);
+  function doShow() {
+    var formSec = document.getElementById('form-section');
+    var completeSec = document.getElementById('complete-section');
+    if (formSec) formSec.style.display = 'none';
+    if (completeSec) {
+      completeSec.style.display = 'block';
+      completeSec.scrollIntoView({behavior:'smooth'});
     }
-  });
-}
+    var ta = document.getElementById('copyPreview');
+    if (ta) ta.value = copyText;
+  }
 
-function startCountdown(seconds) {
-  if (countdownTimer) clearInterval(countdownTimer);
-  var remaining = seconds;
-  var el = document.getElementById('countdown');
-  countdownTimer = setInterval(function() {
-    remaining--;
-    var m = Math.floor(remaining / 60);
-    var s = remaining % 60;
-    el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
-    if (remaining <= 0) {
-      clearInterval(countdownTimer);
-      el.textContent = '시간 초과';
-      el.style.color = '#cc0000';
-    }
-  }, 1000);
-}
-
-function openPayment() {
-  var d = formDataGlobal;
-  if (!d.name) { alert('정보를 먼저 입력해주세요.'); return; }
-
-  var IMP = window.IMP;
-  IMP.init('imp13401624');
-
-  var paymentId = 'cheonmyeong_' + Date.now();
-  window._paymentId = paymentId;
-
-  IMP.request_pay({
-    pg: 'kakaopay.TC0ONETIME',
-    pay_method: 'kakaopay',
-    merchant_uid: paymentId,
-    name: '천명당 사주 분석 보고서',
-    amount: 14000,
-    buyer_name: d.name,
-    buyer_tel: '010-0000-0000',
-  }, function(rsp) {
-    if (rsp.success) {
-      window._paymentId = rsp.merchant_uid;
-      showEmailStep();
-    } else {
-      alert('결제 실패: ' + rsp.error_msg);
-    }
-  });
-}
-
-function showEmailStep() {
-  document.getElementById('paymentStep').style.display = 'none';
-  document.getElementById('emailStep').style.display = 'block';
-  document.getElementById('emailStep').scrollIntoView({behavior:'smooth', block:'start'});
-  if (countdownTimer) clearInterval(countdownTimer);
-}
-
-async function requestAnalysis() {
-  var email = document.getElementById('f-email').value.trim();
-  if (!email) { alert('이메일 주소를 입력해주세요.'); return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('이메일 형식이 올바르지 않습니다.'); return; }
-
-  var btn = document.getElementById('analyzeBtn');
-  var status = document.getElementById('sendingStatus');
-  btn.disabled = true;
-  btn.textContent = '분석 시작 중...';
-  status.style.display = 'block';
-
-  try {
-    var payload = Object.assign({}, formDataGlobal, { email: email });
-    var res = await fetch('/api/payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(copyText).then(doShow).catch(function() {
+      fallbackCopy(copyText); doShow();
     });
-    var data = await res.json();
-    if (!res.ok) throw new Error(data.error || '오류 발생');
+  } else {
+    fallbackCopy(copyText); doShow();
+  }
+}
 
-    // 완료 화면
-    document.getElementById('emailStep').innerHTML =
-      '<div style="padding:32px;text-align:center">' +
-      '<div style="font-size:48px;margin-bottom:16px">✅</div>' +
-      '<div style="font-size:18px;font-weight:900;color:#1C2B3A;margin-bottom:8px">보고서 발송 완료!</div>' +
-      '<div style="font-size:13px;color:#555;line-height:1.8;margin-bottom:16px">' + email + '로<br/>사주 분석 보고서를 발송했어요.<br/>받은 편지함을 확인해주세요.</div>' +
-      '<div style="font-size:12px;color:#aaa">(스팸함도 함께 확인해주세요)</div>' +
-      '</div>';
-  } catch(err) {
-    status.style.color = '#f87171';
-    status.style.background = '#2b0d0d';
-    status.textContent = '❌ 오류: ' + err.message;
-    btn.disabled = false;
-    btn.textContent = '입력 완료 →';
-  }
-}
-function copyAutoMsg() {
-  var ta = document.getElementById('autoMsgTA');
-  if (!ta) return;
-  ta.focus();
-  ta.select();
-  ta.setSelectionRange(0, 99999);
-  try {
-    document.execCommand('copy');
-    var btn = ta.nextElementSibling;
-    if (btn) { btn.textContent = '✅ 복사됐어요!'; btn.style.background = '#166534'; btn.style.color = '#fff'; }
-  } catch(e) {
-    if (navigator.clipboard) navigator.clipboard.writeText(ta.value);
-  }
-}
 function fallbackCopy(text) {
   var ta = document.createElement('textarea');
-  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-  document.body.appendChild(ta); ta.select();
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
   try { document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta); showCopyNotice();
-}
-function showCopyNotice() {
-  var n = document.getElementById('copyNotice');
-  n.style.display = 'block';
-  n.scrollIntoView({behavior:'smooth', block:'nearest'});
+  document.body.removeChild(ta);
 }
 
-var reviews = [
-  {star:'★★★★★',date:'2026.05.10',source:'당근마켓 후기',text:'이곳은 처음 겪어볼 정도로 진심이 느껴지는 곳이었어요. 2만원도 안 되는 금액에 각각 분리해서 설명해주시고, 좋을 때는 좋은 대로 나쁠 때는 개운법으로 대처 방법까지 남겨주셔서 놀라면서 읽었습니다. 왜 내가 지금 이런 상황일 수밖에 없는지까지 알려주셔서 너무 감사합니다. 이 정도면 재능기부 아닌가 싶어요.',name:'당*임니당',av:'당'},
-  {star:'★★★★★',date:'2026.05.07',source:'당근마켓 후기',text:'철학관에서 보는 것보다 더 나에 대해 잘 꼬집어서 얘기해주시는 것 같아 마음에 와닿았어요. 저의 성격을 정확하게 파악하신 것 같아 놀라웠습니다. 앞으로의 방향도 잘 잡아주시고 부족한 점과 보완해야 할 것을 집어주시니 너무 만족스러워요.',name:'코*랑하니',av:'코'},
-  {star:'★★★★★',date:'2026.05.03',source:'당근마켓 후기',text:'말로 대화하듯이 풀어주셔서 이해하게 되었습니다. 궁금한 부분도 중점적으로 설명해주셔서 정말 도움이 됐어요. 사주풀이가 어렵다고 생각했는데 이렇게 자연스럽게 와닿은 건 처음이에요. 주변 지인들에게도 추천하고 싶습니다.',name:'후*하하',av:'후'},
-  {star:'★★★★★',date:'2026.04.28',source:'당근마켓 후기',text:'사주풀이 하면 이해하기가 어려운 부분이 많은데 꼼꼼한 설명과 디테일한 풀이에 매우 만족합니다. 나는 어떤 기질의 사람이고 답답함을 어떻게 하면 좋을지 좋은 답을 얻은 것 같아 좋습니다. 2~3년 후의 미래까지 봐주시는 게 대박인 것 같아요.',name:'사*72',av:'사'},
-  {star:'★★★★★',date:'2026.04.22',source:'네이버 후기',text:'요즘 뭔가 막히고 불안했는데 기질상 혼란스러운 시기라는 말이 너무 솔직하게 와닿더라고요. 왜 이 시기가 이럴 수밖에 없는지 구조적으로 납득이 됐어요. 개운법까지 알려주셔서 오늘부터 바로 실천해보고 있어요.',name:'강*희',av:'강'},
-  {star:'★★★★★',date:'2026.04.15',source:'카카오 후기',text:'오랫동안 연애운이 안 풀려서 혹시나 했는데 보고서 보면서 마음이 조금 가벼워졌어요. 기다려야 하는 시기라는 말이 위로가 됐어요. 그냥 운이 없는 게 아니라 이유가 있다는 걸 알게 되니까요. 2027년에 인연이 올 수 있다는 말도 설레었어요.',name:'이*수',av:'이'},
-  {star:'★★★★★',date:'2026.04.10',source:'카카오 후기',text:'이직 시기를 고민하던 차에 2028년에 시작하라는 흐름을 보고 믿음이 생겼습니다. 막연하게 좋아질 거예요가 아니라 왜, 언제, 어떻게를 구체적으로 알려주셔서 감사해요. 면접 때 어떤 방향 회사를 가면 좋은지까지 알려주신 게 신기하고 도움이 됐습니다.',name:'김*현',av:'김'},
-  {star:'★★★★★',date:'2026.03.28',source:'네이버 후기',text:'돈복 항목에서 실제 실패했던 게 딱 나와있어서 너무 신기했어요. 앞으로 조심해야 할 유형이 뭔지 명확히 알 수 있었어요. 12시간 안에 빠르게 받았고, 내용도 길고 꼼꼼해서 비용 대비 정말 만족스러워요.',name:'최*민',av:'최'},
-];
-
-var shown = 4;
-function renderReviews() {
-  var grid = document.getElementById('reviewGrid');
-  grid.innerHTML = '';
-  reviews.slice(0, shown).forEach(function(r) {
-    grid.innerHTML += '<div class="review-card">'
-      + '<div class="review-top"><div class="review-stars">' + r.star + '</div><div class="review-date">' + r.date + '</div></div>'
-      + '<div class="review-source">📍 ' + r.source + '</div>'
-      + '<div class="review-text">"' + r.text + '"</div>'
-      + '<div class="review-author"><div class="review-avatar">' + r.av + '</div>' + r.name + '</div>'
-      + '</div>';
-  });
-  document.getElementById('moreBtn').style.display = shown >= reviews.length ? 'none' : 'inline-block';
+function copyAgain() {
+  var ta = document.getElementById('copyPreview');
+  if (!ta) return;
+  var btn = document.getElementById('copyAgainBtn');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(ta.value).then(function() {
+      if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
+    });
+  } else {
+    fallbackCopy(ta.value);
+    if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
+  }
 }
-function loadMore() { shown += 3; renderReviews(); }
-renderReviews();
 
+// 스크롤 애니메이션
 var observer = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
     if (e.isIntersecting) {
