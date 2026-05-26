@@ -247,6 +247,22 @@ footer .gold{color:var(--gold)}
   <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
 
   <!-- 완료 화면 -->
+  <div id="completeStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
+    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
+      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">신청 완료</div>
+      <div style="font-size:17px;font-weight:900;color:#fff">✅ 정보가 복사됐어요!</div>
+    </div>
+    <div style="padding:20px">
+      <textarea id="copyPreview" readonly rows="7" style="width:100%;border:1.5px solid #e5e7eb;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
+      <button id="copyAgainBtn" onclick="copyAgain()" type="button" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px">📋 다시 복사</button>
+      <a href="https://open.kakao.com/o/sFcws2si" target="_blank" style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">💬 카카오 오픈채팅 입장하기</a>
+      <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
+        <div style="font-size:12px;color:#6a4200;line-height:1.8">📌 <strong>채팅방 입장 → 붙여넣기 → 전송</strong>해주시면<br/>계좌번호 안내 후 <strong>12시간 이내</strong> 보고서 발송!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 완료 화면 -->
   <div id="complete-section" style="display:none;padding:24px 16px">
     <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:480px;margin:0 auto">
       <div style="text-align:center;margin-bottom:20px">
@@ -255,13 +271,9 @@ footer .gold{color:var(--gold)}
         <div style="font-size:13px;color:#888;margin-top:4px">아래 버튼으로 카카오 채팅방에 입장 후 붙여넣기 해주세요</div>
       </div>
 
-      <textarea id="copyPreview" readonly rows="7"
-        style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
+      
 
-      <button id="copyAgainBtn" onclick="copyAgain()" type="button"
-        style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px">
-        📋 다시 복사
-      </button>
+      
 
       <a href="https://open.kakao.com/o/sFcws2si" target="_blank"
         style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">
@@ -455,93 +467,12 @@ footer .gold{color:var(--gold)}
     </div>
     <div class="stock-bar">
       <div class="stock-text">오늘 남은 할인 자리</div>
-      <div class="stock-count">⏳ <span id="stockNum">7</span>명</div>
+      <div class="stock-count">⏳ <span id="stockNum2"7</span>명</div>
     </div>
     <div class="price-notice">· 계좌이체 · 12시간 이내 PDF 발송<br/>· 카카오 오픈채팅으로 신청</div>
   </div>
 </div>
 
-<div class="form-section" id="form-section">
-  <h2>정보 입력하기</h2>
-  <p class="form-sub">입력하신 내용이 자동으로 정리되어<br/>카카오 채팅으로 전달됩니다.</p>
-
-  <div class="form-group">
-    <label>성함</label>
-    <input id="f-name" placeholder="예: 홍길동"/>
-  </div>
-  <div class="form-group">
-    <label>생년월일</label>
-    <div class="form-row3">
-      <input id="f-year" placeholder="년도 (예: 1990)" type="number"/>
-      <input id="f-month" placeholder="월" type="number"/>
-      <input id="f-day" placeholder="일" type="number"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-row">
-      <div>
-        <label>성별</label>
-        <select id="f-gender">
-          <option>여성</option>
-          <option>남성</option>
-        </select>
-      </div>
-      <div>
-        <label>양력 / 음력</label>
-        <select id="f-cal">
-          <option>양력</option>
-          <option>음력</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
-  <div class="form-group">
-    <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
-    <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
-      ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <input id="f-hour" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/>
-      <input id="f-min" placeholder="분 (예: 30)" type="number" min="0" max="59"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
-    <div class="cat-grid">
-      <button class="cat-btn" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
-      <button class="cat-btn" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
-      <button class="cat-btn" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
-      <button class="cat-btn" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
-      <button class="cat-btn" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
-      <button class="cat-btn" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
-      <button class="cat-btn" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
-      <button class="cat-btn" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
-    </div>
-  </div>
-
-  <!-- 신청 버튼 -->
-  <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
-  <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
-
-  <!-- 완료 화면 -->
-  <div id="completeStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
-    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
-      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">신청 완료</div>
-      <div style="font-size:17px;font-weight:900;color:#fff">✅ 정보가 복사됐어요!</div>
-    </div>
-    <div style="padding:20px">
-      <textarea id="copyPreview" readonly rows="7" style="width:100%;border:1.5px solid #e5e7eb;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
-      <button id="copyAgainBtn" onclick="copyAgain()" type="button" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px">📋 다시 복사</button>
-      <a href="https://open.kakao.com/o/sFcws2si" target="_blank" style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">💬 카카오 오픈채팅 입장하기</a>
-      <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
-        <div style="font-size:12px;color:#6a4200;line-height:1.8">📌 <strong>채팅방 입장 → 붙여넣기 → 전송</strong>해주시면<br/>계좌번호 안내 후 <strong>12시간 이내</strong> 보고서 발송!</div>
-      </div>
-    </div>
-  </div>
-
-  <p class="form-notice">입력하신 정보는 사주 분석에만 사용됩니다</p>
-</div>
 
 <section class="diff-section">
   <h2 class="fade-up">과거에 사주를 봤는데<br/>두루뭉술한 말만 들으셨나요?</h2>
@@ -677,7 +608,7 @@ footer .gold{color:var(--gold)}
   <div class="cta-urgent">
     하루라도 빨리 알아야<br/>
     <strong>현명한 대처를 할 수 있습니다.</strong><br/>
-    <span style="font-size:12px;color:#3a5a6a">선착순 10명 · 오늘 남은 자리 <span id="stockNum2">7</span>명</span>
+    <span style="font-size:12px;color:#3a5a6a">선착순 10명 · 오늘 남은 자리 7명명</span>
   </div>
 </section>
 
