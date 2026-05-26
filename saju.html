@@ -805,8 +805,8 @@ function renderBody(raw) {
   raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/^---+$/gm,'');
   raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2').replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
   var cm=raw.match(/\[한눈에 보기\]([^\n]*)/); var cardText=cm?cm[1].trim():'';
-  var am=raw.match(/지금 당장 할 수 있는 것[^\n]+/); var actionText=am?am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim():'';
-  var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?/g,'');
+  var am=raw.match(/지금 당장 할 수 있는 것[^\n]*(?:\n([^\n]+))?/); var actionText=am?(am[1]||am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'')).trim():'';
+  var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?([^\n]*\n?)?/g,'');
   bt=mdTableToHtml(bt);
   bt=bt.replace(/\[핵심 요약 3줄\]([\s\S]*?)(?=\n\n|지금 당장|$)/g,function(match,lines){
     var items=lines.trim().split('\n').filter(function(l){ return l.trim(); });
