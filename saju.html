@@ -511,8 +511,8 @@ async function doAutoAnalyze() {
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【6. 연애·결혼운】\n배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n오늘 실천: 인간관계·연애 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n오늘 실천: 가족 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위】\n취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n오늘 실천: 건강 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n과거연도: 그 시기 흐름 설명 / 현재연도: 지금부터 연말까지 / 미래연도: 이 해에는 OOO이 중요하니 OOO을 목표로\n재물운 좋은 해: 복권·로또 구매 방향·장소·보관법 포함\n형식: ### 🗓️ YYYY년 干支년\n💰 재물·직업:\n❤️ 연애·가족:\n🌿 건강 주의:\n🎰 복권·재물운: (해당시만)\n✨ 핵심 키워드:\n📝 총평:\n행동 조언:',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n미래이므로 각 해에 무엇을 준비하고 어떤 목표를 잡을지 구체적으로.\n재물운 좋은 해: 복권·로또 구매 방향·장소·보관법 포함\n형식: ### 🗓️ YYYY년 干支년\n💰 재물·직업:\n❤️ 연애·가족:\n🌿 건강 주의:\n🎰 복권·재물운: (해당시만)\n✨ 핵심 키워드:\n📝 총평:\n행동 조언:'
+    hdr+'아래 섹션 1개만 완성하세요:\\n---\\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\\n[현재 시점: '+curDate+']\\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 다른 형식 금지.\\n\\n### 🗓️ YYYY년 干支년\\n💰 재물·직업: 내용\\n❤️ 연애·가족: 내용\\n🌿 건강 주의: 내용\\n🎰 복권·재물운: (재물운 좋은 해만)\\n✨ 핵심 키워드: 키1 / 키2 / 키3\\n📝 총평: 한 문장\\n행동 조언: 한 문장\\n\\n각 연도 사이 빈 줄. 5개년 전부 완성.',
+    hdr+'아래 섹션 1개만 완성하세요:\\n---\\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 다른 형식 금지.\\n\\n### 🗓️ YYYY년 干支년\\n💰 재물·직업: 내용\\n❤️ 연애·가족: 내용\\n🌿 건강 주의: 내용\\n🎰 복권·재물운: (재물운 좋은 해만)\\n✨ 핵심 키워드: 키1 / 키2 / 키3\\n📝 총평: 한 문장\\n행동 조언: 한 문장\\n\\n각 연도 사이 빈 줄. 5개년 전부 완성.'
   ];
 
   var parts = ['','','','','','','','','',''];
@@ -739,6 +739,16 @@ function applyMarkup(text) {
 }
 function renderBody(raw) {
   raw=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  // fallback: "2026년\n丙午년\n✅..." 형식 처리
+  raw=raw.replace(/(\d{4}년)\n([가-힣A-Za-z]+년)\n([\s\S]*?)(?=\n\d{4}년\n[가-힣A-Za-z]+년|$)/g, function(m, yr, gz, body) {
+    if (m.indexOf('seun-year') !== -1) return m;
+    var action='', lines=body.trim().split('\n');
+    var rows=lines.filter(function(l){
+      if(l.startsWith('✅')){action=l.replace(/^✅\s*/,'').replace(/---$/,'').trim();return false;}
+      return l.trim() && !l.startsWith('---');
+    }).join('<br>');
+    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yr+'</span><span class="seun-year-title">'+gz+'</span></div><div class="seun-year-body"><div class="seun-val" style="width:100%">'+rows+'</div></div>'+(action?'<div class="seun-action">✅ '+action+'</div>':'')+'</div>';
+  });
   // 세운 연도 카드 먼저 처리 (마크다운 제거 전)
   raw=raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\[핵심 요약|$)/g,function(match,yearTitle,content){
     var rows='',summary='',actionRow='';
