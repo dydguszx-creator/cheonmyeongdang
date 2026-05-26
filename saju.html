@@ -767,7 +767,7 @@ function renderBody(raw) {
     for(var pi=0;pi<positions.length;pi++){
       var pos=positions[pi];var startIdx=pos.idx+pos.info.key.length;
       var endIdx=pi+1<positions.length?positions[pi+1].idx:content.length;
-      var value=content.slice(startIdx,endIdx).trim().replace(/\n/g,' ').replace(/\s{2,}/g,' ');
+      var value=content.slice(startIdx,endIdx).trim().replace(/\n/g,' ').replace(/\s{2,}/g,' ');if(!pos.info.isSummary&&!pos.info.isAction)value=applyMarkup(value);
       if(pos.info.isSummary)summary=value;
       else if(pos.info.isAction)actionRow=value;
       else rows+='<div class="seun-row"><span class="seun-label" style="color:'+pos.info.color+'">'+pos.info.label+'</span><span class="seun-val"'+(pos.info.bold?' style="font-weight:700"':'')+'>'+value+'</span></div>';
@@ -776,7 +776,7 @@ function renderBody(raw) {
     var yearSub=yearTitle.replace(/\d{4}년\s*/,'');
     return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yearNum+'</span><span class="seun-year-title">'+yearSub+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
   });
-  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/^---+$/gm,'');
+  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/^---+$/gm,'');
   raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2').replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
   var cm=raw.match(/\[한눈에 보기\]([^\n]*)/); var cardText=cm?cm[1].trim():'';
   var am=raw.match(/지금 당장 할 수 있는 것[^\n]+/); var actionText=am?am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim():'';
@@ -787,14 +787,14 @@ function renderBody(raw) {
     var inner=items.map(function(l){ return '<p>'+l.replace(/^[-·•\s]+/,'').trim()+'</p>'; }).join('');
     return '<div class="summary-box"><div class="summary-box-label">✦ 핵심 요약</div>'+inner+'</div>';
   });
-  bt=bt.replace(/(■[^\n]+)/g,'<div class="sub-h">$1</div>');
+  bt=bt.replace(/(■.+)/g,'<div class="sub-h">$1</div>\n');
   var parts=bt.split(/\n{2,}/); var html='';
   for (var i=0;i<parts.length;i++) {
     var p=parts[i].trim(); if (!p) continue;
     if (p.indexOf('<div')===0||p.indexOf('<table')===0) html+=p;
     else html+='<p>'+applyMarkup(p.replace(/\n/g,'<br>'))+'</p>';
   }
-  var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+cardText+'</p></div>':'';
+  var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+applyMarkup(cardText)+'</p></div>':'';
   var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>&#9989; '+actionText+'</p></div>':'';
   return sh+html+ah;
 }
