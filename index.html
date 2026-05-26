@@ -524,66 +524,22 @@ footer .gold{color:var(--gold)}
   <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
   <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
 
-  <!-- STEP 1: 결제 안내 -->
-  <div id="paymentStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
+  <!-- 완료 화면 -->
+  <div id="completeStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
     <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
-      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 1 · 결제 안내</div>
-      <div style="font-size:17px;font-weight:900;color:#fff">아래 계좌로 이체해주세요</div>
+      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">신청 완료</div>
+      <div style="font-size:17px;font-weight:900;color:#fff">✅ 정보가 복사됐어요!</div>
     </div>
     <div style="padding:20px">
-      <div style="background:#f8f7f4;border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
-        <div style="font-size:12px;color:#888;margin-bottom:6px">입금 계좌</div>
-        <div style="font-size:22px;font-weight:900;color:#1C2B3A;letter-spacing:1px">카카오뱅크 3333-XXXX-XXXX</div>
-        <div style="font-size:13px;color:#666;margin-top:4px">예금주: 박상환</div>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:14px">
-        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금액</div>
-          <div style="font-size:20px;font-weight:900;color:#856404">14,000원</div>
-        </div>
-        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금자명</div>
-          <div style="font-size:15px;font-weight:900;color:#856404" id="payerName">-</div>
-        </div>
-      </div>
-      <div style="background:#fff0f0;border:1px solid #ffcccc;border-radius:10px;padding:12px;margin-bottom:16px;text-align:center">
-        <div style="font-size:13px;color:#cc0000;font-weight:700">⏰ 신청 후 <span id="countdown">20:00</span> 안에 결제해주세요</div>
-        <div style="font-size:11px;color:#999;margin-top:4px">시간 초과 시 재신청 필요합니다</div>
-      </div>
-      <button onclick="openPayment()" style="width:100%;padding:15px;background:#C9A84C;color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
-        💳 카드 / 카카오페이로 결제하기
-      </button>
-      <div style="font-size:11px;color:#aaa;text-align:center;margin-top:8px">계좌이체도 가능 · 결제 완료 즉시 자동 분석 시작</div>
-      <div style="font-size:11px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6">
-        입금 확인 후 이메일로 보고서가 자동 발송돼요<br/>
-        문의: <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C">카카오 오픈채팅</a>
+      <textarea id="copyPreview" readonly rows="7" style="width:100%;border:1.5px solid #e5e7eb;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
+      <button id="copyAgainBtn" onclick="copyAgain()" type="button" style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-bottom:10px">📋 다시 복사</button>
+      <a href="https://open.kakao.com/o/sFcws2si" target="_blank" style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">💬 카카오 오픈채팅 입장하기</a>
+      <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
+        <div style="font-size:12px;color:#6a4200;line-height:1.8">📌 <strong>채팅방 입장 → 붙여넣기 → 전송</strong>해주시면<br/>계좌번호 안내 후 <strong>12시간 이내</strong> 보고서 발송!</div>
       </div>
     </div>
   </div>
 
-  <!-- STEP 2: 이메일 입력 -->
-  <div id="emailStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #1C2B3A;border-radius:16px;overflow:hidden">
-    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
-      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 2 · 이메일 입력</div>
-      <div style="font-size:17px;font-weight:900;color:#fff">보고서 받을 이메일을 입력해주세요</div>
-    </div>
-    <div style="padding:20px">
-      <div style="background:#f0f4ff;border:1px solid #c7d7ff;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#3a5acc;line-height:1.7;text-align:center">
-        📧 입력 완료 즉시 자동 분석이 시작돼요<br/>약 2분 후 이메일로 보고서가 도착합니다
-      </div>
-      <input id="f-email" placeholder="예: example@gmail.com" type="email" style="width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a2e;background:#fff;outline:none;margin-bottom:12px"/>
-      <button id="analyzeBtn" onclick="requestAnalysis()" style="width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
-        입력 완료 →
-      </button>
-      <div id="sendingStatus" style="display:none;text-align:center;padding:14px;font-size:13px;color:#C9A84C;margin-top:10px;background:#1C2B3A;border-radius:10px">
-        ⏳ 분석 중... 잠시만 기다려주세요
-      </div>
-    </div>
-  </div>
-  <div class="copy-notice" id="copyNotice">
-    ✅ 신청 내용이 클립보드에 복사됐어요!<br/>
-    카카오 채팅창이 열리면 <strong>붙여넣기(길게 누르기)</strong> 후 전송해주세요.
-  </div>
   <p class="form-notice">입력하신 정보는 사주 분석에만 사용됩니다</p>
 </div>
 
