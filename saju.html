@@ -531,6 +531,24 @@ async function doAutoAnalyze() {
     }
   }
 
+  async function streamFetch(prompt, onChunk, onDone) {
+    var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})});
+    if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
+    var reader=res.body.getReader(); var decoder=new TextDecoder();
+    while(true){
+      var sr=await reader.read(); if(sr.done) break;
+      var chunk=decoder.decode(sr.value,{stream:true});
+      for(var ln of chunk.split('\n')){
+        if(!ln.startsWith('data: ')) continue;
+        try{var j=JSON.parse(ln.slice(6).trim());
+          if(j.text) onChunk(j.text);
+          if(j.done) onDone();
+          if(j.error) throw new Error(j.error);
+        }catch(e2){}
+      }
+    }
+  }
+
   try {
     await Promise.all(prompts.map(function(prompt, i) {
       return streamFetch(prompt, function(t){parts[i]+=t;updateDisplay();}, function(){dones[i]=true;updateDisplay();});
