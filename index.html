@@ -722,15 +722,14 @@ function submitForm() {
     + '생년월일: ' + cal + ' ' + year + '년 ' + month + '월 ' + day + '일\n'
     + '출생시각: ' + time + '\n'
     + (cats.length > 0 ? '궁금한 것: ' + cats.join(' / ') + '\n' : '')
-    + '━━━━━━━━━━━━━━\n'
-    + '입금 후 이 내용을 채팅방에 붙여넣어 주세요 🙏';
+    + '━━━━━━━━━━━━━━';
 
   function doShow() {
     document.getElementById('submitBtn').style.display = 'none';
     var step = document.getElementById('completeStep');
     step.style.display = 'block';
-    step.scrollIntoView({behavior:'smooth', block:'start'});
     document.getElementById('copyPreview').value = copyText;
+    setTimeout(function(){ step.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
   }
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
