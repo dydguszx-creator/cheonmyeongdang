@@ -551,7 +551,12 @@ async function doAutoAnalyze() {
 
   try {
     await Promise.all(prompts.map(function(prompt, i) {
-      return streamFetch(prompt, function(t){parts[i]+=t;updateDisplay();}, function(){dones[i]=true;updateDisplay();});
+      return new Promise(function(resolve) {
+        setTimeout(function() {
+          streamFetch(prompt, function(t){parts[i]+=t;updateDisplay();}, function(){dones[i]=true;updateDisplay();resolve();})
+          .catch(function(e){ dones[i]=true; parts[i]='[오류: '+e.message+']'; updateDisplay(); resolve(); });
+        }, i * 300);
+      });
     }));
   } catch(err2) {
     statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
