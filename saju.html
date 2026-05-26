@@ -4,835 +4,848 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
-<title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<meta name="apple-mobile-web-app-title" content="사주 보고서"/>
+<title>사주 명리 보고서</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-:root {
-  --navy: #0E1A26;
-  --gold: #C9A84C;
-  --gold-light: #E8C87A;
-  --cream: #F5EDD8;
-  --bg: #F8F7F4;
-  --card-bg: #fff;
-  --text: #1a1a2e;
-  --sub: #6b7280;
-}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-badge{width:40px;height:40px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:15px;color:var(--gold);font-weight:700}
-.logo-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy)}
-.logo-sub{font-size:11px;color:var(--gold);letter-spacing:1px}
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 22px 40px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(170deg,#f0ede6 0%,#f8f7f4 60%)}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 40%,rgba(201,168,76,0.10) 0%,transparent 60%);pointer-events:none}
-.hero-eyebrow{display:inline-block;background:var(--navy);border-radius:20px;padding:7px 18px;font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:20px;font-weight:600}
-.hero h1{font-family:'Noto Serif KR',serif;font-size:34px;font-weight:900;line-height:1.35;color:var(--navy);margin-bottom:20px;word-break:keep-all}
-.hero h1 em{color:var(--gold);font-style:normal}
-.hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 24px rgba(14,26,38,0.10);border:1px solid rgba(201,168,76,0.15)}
-.hero-desc p{font-size:15px;color:#2a2a3a;line-height:1.9;word-break:keep-all;font-weight:400}
-.hero-desc p+p{margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
-.stats-row{display:flex;gap:10px;margin-bottom:22px;justify-content:center}
-.stat-item{flex:1;background:var(--navy);border-radius:14px;padding:14px 8px;text-align:center}
-.stat-num{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
-.stat-label{font-size:11px;color:#7a98ae;margin-top:4px;word-break:keep-all}
-.cta-btn{width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 6px 24px rgba(201,168,76,0.35);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
-.cta-btn:active{transform:scale(0.98)}
-.price-section{background:linear-gradient(135deg,var(--navy),#1a2f42);padding:30px 22px}
-.price-original{font-size:13px;color:#5a7a8a;text-decoration:line-through;margin-bottom:4px}
-.price-main{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
-.price-badge-sale{background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.price-amount{font-family:'Noto Serif KR',serif;font-size:38px;font-weight:900;color:#fff}
-.price-notice{font-size:12px;color:#3a5a6a;margin-top:6px;line-height:1.7}
-.stock-bar{background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between}
-.stock-text{font-size:12px;color:#7a98ae}
-.stock-count{font-size:14px;font-weight:700;color:var(--gold)}
-.form-section{background:#fff;padding:32px 22px}
-.form-section h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
-.form-section .form-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:7px}
-.form-group input,.form-group select{width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border 0.2s}
-.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.cat-btn{padding:10px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:12px;font-family:inherit;background:#fff;color:var(--sub);cursor:pointer;text-align:center;transition:all 0.2s;word-break:keep-all;line-height:1.4}
-.cat-btn.on{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
-.submit-btn{width:100%;padding:17px;background:var(--gold);color:var(--navy);border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:8px;box-shadow:0 4px 16px rgba(201,168,76,0.3)}
-.submit-btn:active{transform:scale(0.98)}
-.form-notice{font-size:11.5px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6}
-.copy-notice{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12.5px;color:#15803d;line-height:1.7;text-align:center}
-.diff-section{padding:48px 22px;background:var(--bg)}
-.diff-section h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:10px;word-break:keep-all;line-height:1.4}
-.diff-section .diff-sub{font-size:15px;color:#3a3a4a;text-align:center;margin-bottom:20px;line-height:1.8;word-break:keep-all;font-weight:400}
-.doubt-box{background:var(--navy);border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 20px rgba(14,26,38,0.15)}
-.doubt-q{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;line-height:1.5}
-.doubt-a{font-size:13.5px;color:#c0d0da;line-height:1.9;word-break:keep-all}
-.diff-label{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;text-align:center;margin-bottom:16px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:7px 20px;display:inline-block;width:100%}
-.diff-cards{display:flex;flex-direction:column;gap:14px}
-.diff-card{background:#fff;border-radius:16px;padding:20px 20px;box-shadow:0 2px 16px rgba(14,26,38,0.07);border:1px solid rgba(201,168,76,0.12)}
-.diff-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.diff-icon{width:42px;height:42px;border-radius:12px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.diff-card h3{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
-.diff-card p{font-size:13.5px;color:#4a4a5a;line-height:1.9;word-break:keep-all;margin-bottom:6px}
-.diff-card p:last-child{margin-bottom:0}
-.content-section{padding:44px 22px;background:#fff}
-.content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all;line-height:1.4}
-.content-section .sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:26px;line-height:1.7}
-.content-cards{display:flex;flex-direction:column;gap:12px}
-.content-card{border-radius:16px;padding:20px 18px;display:flex;align-items:flex-start;gap:14px;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
-.content-card.visible{opacity:1;transform:translateY(0)}
-.content-card.blue{background:#EEF2FF}
-.content-card.yellow{background:#FFFBEB}
-.content-card.green{background:#ECFDF5}
-.content-card.pink{background:#FFF1F2}
-.content-card.purple{background:#F5F0FF}
-.content-card.gray{background:#F3F4F6}
-.content-card.teal{background:#F0FDFA}
-.content-card.orange{background:#FFF7ED}
-.card-icon{width:44px;height:44px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.card-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px}
-.card-body p{font-size:13px;color:#4a4a5a;line-height:1.85;word-break:keep-all;margin-bottom:5px}
-.card-body p:last-child{margin-bottom:0}
-.review-section{padding:44px 22px;background:var(--bg)}
-.review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:6px}
-.review-sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:24px;line-height:1.7}
-.review-grid{display:flex;flex-direction:column;gap:12px}
-.review-card{background:#fff;border-radius:14px;padding:18px 18px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-.review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.review-stars{color:#f59e0b;font-size:13px;letter-spacing:1px}
-.review-date{font-size:11px;color:#bbb}
-.review-source{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px}
-.review-text{font-size:13px;color:#333;line-height:1.9;word-break:keep-all}
-.review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
-.review-avatar{width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
-.cta-section{background:var(--navy);padding:52px 24px;text-align:center}
-.cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:#fff;line-height:1.6;margin-bottom:28px;word-break:keep-all}
-.cta-quote em{color:var(--gold);font-style:normal}
-.cta-bottom-btn{display:block;width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 6px 24px rgba(201,168,76,0.35);text-decoration:none;text-align:center}
-.cta-urgent{margin-top:16px;font-size:13.5px;color:#7a98ae;line-height:1.8}
-.cta-urgent strong{color:var(--gold-light)}
-footer{background:#0a1420;padding:28px 24px;text-align:center}
-footer p{font-size:11px;color:#3d5a6c;line-height:2}
-footer .gold{color:var(--gold)}
-.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
+body{font-family:'Noto Sans KR','Apple SD Gothic Neo',sans-serif;background:#f2f2f7;color:#1a1a1a;min-height:100vh}
+.page{display:none;min-height:100vh;padding:20px 16px 80px}
+.page.active{display:block}
+.card{background:#fff;border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.07)}
+label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px}
+input,select,textarea{width:100%;border:1px solid #e0e0e0;border-radius:8px;padding:10px 13px;font-size:14px;color:#222;font-family:inherit;outline:none;background:#fff;box-sizing:border-box}
+textarea{resize:vertical;line-height:1.7}
+.row{display:flex;gap:10px}
+.row>div{flex:1}
+.field{margin-bottom:14px}
+.btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.btn-dark{background:#1C2B3A;color:#C9A84C}
+.btn-green{background:#27ae60;color:#fff}
+.btn-gray{background:#e0e0e0;color:#888}
+.err{color:#e74c3c;font-size:13px;margin-bottom:10px;display:none}
+.result-ok{color:#27ae60;font-size:12px;font-weight:600;margin-top:6px;display:none}
+.char-count{font-size:11px;color:#aaa;margin-top:4px;text-align:right;min-height:16px}
+.mode-tabs{display:flex;background:#fff;border-radius:12px;padding:4px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,0.07)}
+.mode-tab{flex:1;padding:10px 8px;border-radius:9px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;background:transparent;color:#888}
+.mode-tab.active{background:#1C2B3A;color:#C9A84C}
+.step-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.snum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;transition:all 0.3s}
+.snum-dark{background:#1C2B3A;color:#C9A84C}
+.snum-done{background:#27ae60;color:#fff}
+.snum-gray{background:#ddd;color:#aaa}
+.step-title{font-size:14px;font-weight:700}
+.step-desc{font-size:11px;color:#aaa;margin-top:2px}
+.bonus-badge{background:linear-gradient(135deg,#C9A84C,#E8C87A);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.bonus-badge span{font-size:12px;font-weight:700;color:#1C2B3A}
+.bonus-badge small{font-size:10px;color:#3a2500;display:block;margin-top:2px}
+.pdf-hint{text-align:center;font-size:11px;color:#aaa;margin-top:10px;line-height:1.7;display:none}
+.label-sm{font-size:10px;letter-spacing:2px;color:#aaa;margin-bottom:4px}
+.back-btn{background:#e8e8e8;border:none;border-radius:8px;padding:7px 13px;font-size:12px;color:#666;cursor:pointer;font-family:inherit}
+.top-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.cat-btn{padding:9px 6px;border:1.5px solid #e0e0e0;border-radius:8px;background:#fff;font-size:12px;font-weight:500;color:#555;cursor:pointer;font-family:inherit;text-align:center;transition:all 0.15s}
+.cat-btn.on{background:#1C2B3A;color:#C9A84C;border-color:#1C2B3A}
 </style>
 </head>
 <body>
-
-
-<header>
-  <div class="logo">
-    <div class="logo-badge">命</div>
-    <div>
-      <div class="logo-text">천명당</div>
-      <div class="logo-sub">사주명리</div>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div style="margin-bottom:18px;margin-top:8px">
-    <div class="hero-eyebrow">✦ 1년간 문의 2,476건 · 만족도 98%</div>
-  </div>
-  <h1>아직 풀리지 않은 질문,<br/><em>사주에 답이 있습니다.</em></h1>
-  <div class="hero-desc">
-    <p>생년월일만 알려주시면<br/>전문가가 <strong>직접 분석</strong>해드립니다.</p>
-    <p>성격 · 재물 · 연애 · 건강 · 대운<br/>9가지 항목 PDF 보고서로 정리해드립니다.</p>
-  </div>
-  <div class="stats-row fade-up">
-    <div class="stat-item">
-      <div class="stat-num">2,476<span style="font-size:13px">건</span></div>
-      <div class="stat-label">1년간 문의</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">98<span style="font-size:13px">%</span></div>
-      <div class="stat-label">고객 만족도</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">12<span style="font-size:13px">h</span></div>
-      <div class="stat-label">최대 발송</div>
-    </div>
-  </div>
-  <a href="#form-section" class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">
-    지금 바로 신청하기 →
-  </a>
-</section>
-
-<div class="price-section">
-  <div style="text-align:center">
-    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
-    <div style="font-size:12px;color:#4a6a7a;margin-bottom:6px">감사의 의미로, 매일 선착순 10명</div>
-    <div class="price-original">정가 28,000원</div>
-    <div class="price-main">
-      <span class="price-badge-sale">50% OFF</span>
-      <span class="price-amount">14,000원</span>
-    </div>
-    <div class="stock-bar">
-      <div class="stock-text">오늘 남은 할인 자리</div>
-      <div class="stock-count">⏳ <span id="stockNum">7</span>명</div>
-    </div>
-    <div class="price-notice">· 계좌이체 · 12시간 이내 PDF 발송<br/>· 카카오 오픈채팅으로 신청</div>
-  </div>
+<div id="pwOverlay" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0f1a;z-index:99999;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px">
+  <div style="font-size:32px;margin-bottom:12px">🌙</div>
+  <div style="font-family:'Noto Serif KR',serif;font-size:18px;font-weight:900;color:#fff;margin-bottom:6px">천명당 관리자</div>
+  <div style="font-size:12px;color:#3a5060;margin-bottom:28px">분석 도구</div>
+  <input id="pwInput" type="password" placeholder="비밀번호 입력"
+    style="width:100%;max-width:280px;padding:12px 16px;border-radius:10px;border:1.5px solid rgba(201,168,76,.3);background:rgba(255,255,255,.05);color:#fff;font-size:15px;text-align:center;outline:none;margin-bottom:10px"
+    onkeydown="if(event.key==='Enter')checkPw()"/>
+  <button onclick="checkPw()"
+    style="width:100%;max-width:280px;padding:13px;border-radius:10px;border:none;background:#C9A84C;color:#0a0f1a;font-size:15px;font-weight:700;cursor:pointer">
+    입장하기
+  </button>
+  <div id="pwErr" style="color:#f87171;font-size:13px;margin-top:10px;display:none">비밀번호가 틀렸어요</div>
 </div>
-
-<div class="form-section" id="form-section">
-  <h2>정보 입력하기</h2>
-  <p class="form-sub">입력하신 내용이 자동으로 정리되어<br/>카카오 채팅으로 전달됩니다.</p>
-
-  <div class="form-group">
-    <label>성함</label>
-    <input id="f-name" placeholder="예: 홍길동"/>
-  </div>
-  <div class="form-group">
-    <label>생년월일</label>
-    <div class="form-row3">
-      <input id="f-year" placeholder="년도 (예: 1990)" type="number"/>
-      <input id="f-month" placeholder="월" type="number"/>
-      <input id="f-day" placeholder="일" type="number"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-row">
-      <div>
-        <label>성별</label>
-        <select id="f-gender">
-          <option>여성</option>
-          <option>남성</option>
-        </select>
-      </div>
-      <div>
-        <label>양력 / 음력</label>
-        <select id="f-cal">
-          <option>양력</option>
-          <option>음력</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
-  <div class="form-group">
-    <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
-    <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
-      ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <input id="f-hour" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/>
-      <input id="f-min" placeholder="분 (예: 30)" type="number" min="0" max="59"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
-    <div class="cat-grid">
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
-    </div>
-  </div>
-
-  <!-- 신청 버튼 -->
-  <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
-  <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
-
-  <!-- 완료 화면 -->
-  <div id="complete-section" style="display:none;padding:24px 16px">
-    <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:480px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:20px">
-        <div style="font-size:36px;margin-bottom:8px">✅</div>
-        <div style="font-size:18px;font-weight:700;color:#1C2B3A">신청 정보가 복사됐어요!</div>
-        <div style="font-size:13px;color:#888;margin-top:4px">아래 버튼으로 카카오 채팅방에 입장 후 붙여넣기 해주세요</div>
-      </div>
-
-      <textarea id="copyPreview" readonly rows="7"
-        style="width:100%;border:1.5px solid #e0e0e0;border-radius:10px;padding:12px;font-size:12px;color:#444;background:#f8f8f8;resize:none;box-sizing:border-box;line-height:1.7;margin-bottom:12px"></textarea>
-
-      <button id="copyAgainBtn" onclick="copyAgain()" type="button"
-        style="width:100%;padding:12px;border-radius:10px;border:1.5px solid #1C2B3A;background:#fff;color:#1C2B3A;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:10px">
-        📋 다시 복사
-      </button>
-
-      <a href="https://open.kakao.com/o/sFcws2si" target="_blank"
-        style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">
-        💬 카카오 오픈채팅 입장하기
-      </a>
-
-      <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
-        <div style="font-size:12px;color:#6a4200;line-height:1.8">
-          📌 <strong>입장 후 붙여넣기 → 전송</strong>해주시면<br>
-          계좌번호 안내 후 <strong>입금 확인 시 12시간 이내</strong> 발송해드려요!
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- /결제단계 -->l>
-<html lang="ko">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
-<title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
-<style>
-:root {
-  --navy: #0E1A26;
-  --gold: #C9A84C;
-  --gold-light: #E8C87A;
-  --cream: #F5EDD8;
-  --bg: #F8F7F4;
-  --card-bg: #fff;
-  --text: #1a1a2e;
-  --sub: #6b7280;
+<script>
+function checkPw() {
+  var pw = document.getElementById('pwInput').value;
+  if (pw === 'saju1234') {
+    document.getElementById('pwOverlay').style.display = 'none';
+    sessionStorage.setItem('saju_auth', '1');
+  } else {
+    document.getElementById('pwErr').style.display = 'block';
+    document.getElementById('pwInput').value = '';
+  }
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-badge{width:40px;height:40px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:15px;color:var(--gold);font-weight:700}
-.logo-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy)}
-.logo-sub{font-size:11px;color:var(--gold);letter-spacing:1px}
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 22px 40px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(170deg,#f0ede6 0%,#f8f7f4 60%)}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 40%,rgba(201,168,76,0.10) 0%,transparent 60%);pointer-events:none}
-.hero-eyebrow{display:inline-block;background:var(--navy);border-radius:20px;padding:7px 18px;font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:20px;font-weight:600}
-.hero h1{font-family:'Noto Serif KR',serif;font-size:34px;font-weight:900;line-height:1.35;color:var(--navy);margin-bottom:20px;word-break:keep-all}
-.hero h1 em{color:var(--gold);font-style:normal}
-.hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 24px rgba(14,26,38,0.10);border:1px solid rgba(201,168,76,0.15)}
-.hero-desc p{font-size:15px;color:#2a2a3a;line-height:1.9;word-break:keep-all;font-weight:400}
-.hero-desc p+p{margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
-.stats-row{display:flex;gap:10px;margin-bottom:22px;justify-content:center}
-.stat-item{flex:1;background:var(--navy);border-radius:14px;padding:14px 8px;text-align:center}
-.stat-num{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
-.stat-label{font-size:11px;color:#7a98ae;margin-top:4px;word-break:keep-all}
-.cta-btn{width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 6px 24px rgba(201,168,76,0.35);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
-.cta-btn:active{transform:scale(0.98)}
-.price-section{background:linear-gradient(135deg,var(--navy),#1a2f42);padding:30px 22px}
-.price-original{font-size:13px;color:#5a7a8a;text-decoration:line-through;margin-bottom:4px}
-.price-main{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
-.price-badge-sale{background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.price-amount{font-family:'Noto Serif KR',serif;font-size:38px;font-weight:900;color:#fff}
-.price-notice{font-size:12px;color:#3a5a6a;margin-top:6px;line-height:1.7}
-.stock-bar{background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between}
-.stock-text{font-size:12px;color:#7a98ae}
-.stock-count{font-size:14px;font-weight:700;color:var(--gold)}
-.form-section{background:#fff;padding:32px 22px}
-.form-section h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
-.form-section .form-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:7px}
-.form-group input,.form-group select{width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border 0.2s}
-.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.cat-btn{padding:10px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:12px;font-family:inherit;background:#fff;color:var(--sub);cursor:pointer;text-align:center;transition:all 0.2s;word-break:keep-all;line-height:1.4}
-.cat-btn.on{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
-.submit-btn{width:100%;padding:17px;background:var(--gold);color:var(--navy);border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:8px;box-shadow:0 4px 16px rgba(201,168,76,0.3)}
-.submit-btn:active{transform:scale(0.98)}
-.form-notice{font-size:11.5px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6}
-.copy-notice{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12.5px;color:#15803d;line-height:1.7;text-align:center}
-.diff-section{padding:48px 22px;background:var(--bg)}
-.diff-section h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:10px;word-break:keep-all;line-height:1.4}
-.diff-section .diff-sub{font-size:15px;color:#3a3a4a;text-align:center;margin-bottom:20px;line-height:1.8;word-break:keep-all;font-weight:400}
-.doubt-box{background:var(--navy);border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 20px rgba(14,26,38,0.15)}
-.doubt-q{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;line-height:1.5}
-.doubt-a{font-size:13.5px;color:#c0d0da;line-height:1.9;word-break:keep-all}
-.diff-label{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;text-align:center;margin-bottom:16px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:7px 20px;display:inline-block;width:100%}
-.diff-cards{display:flex;flex-direction:column;gap:14px}
-.diff-card{background:#fff;border-radius:16px;padding:20px 20px;box-shadow:0 2px 16px rgba(14,26,38,0.07);border:1px solid rgba(201,168,76,0.12)}
-.diff-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.diff-icon{width:42px;height:42px;border-radius:12px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.diff-card h3{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
-.diff-card p{font-size:13.5px;color:#4a4a5a;line-height:1.9;word-break:keep-all;margin-bottom:6px}
-.diff-card p:last-child{margin-bottom:0}
-.content-section{padding:44px 22px;background:#fff}
-.content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all;line-height:1.4}
-.content-section .sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:26px;line-height:1.7}
-.content-cards{display:flex;flex-direction:column;gap:12px}
-.content-card{border-radius:16px;padding:20px 18px;display:flex;align-items:flex-start;gap:14px;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
-.content-card.visible{opacity:1;transform:translateY(0)}
-.content-card.blue{background:#EEF2FF}
-.content-card.yellow{background:#FFFBEB}
-.content-card.green{background:#ECFDF5}
-.content-card.pink{background:#FFF1F2}
-.content-card.purple{background:#F5F0FF}
-.content-card.gray{background:#F3F4F6}
-.content-card.teal{background:#F0FDFA}
-.content-card.orange{background:#FFF7ED}
-.card-icon{width:44px;height:44px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.card-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px}
-.card-body p{font-size:13px;color:#4a4a5a;line-height:1.85;word-break:keep-all;margin-bottom:5px}
-.card-body p:last-child{margin-bottom:0}
-.review-section{padding:44px 22px;background:var(--bg)}
-.review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:6px}
-.review-sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:24px;line-height:1.7}
-.review-grid{display:flex;flex-direction:column;gap:12px}
-.review-card{background:#fff;border-radius:14px;padding:18px 18px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-.review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.review-stars{color:#f59e0b;font-size:13px;letter-spacing:1px}
-.review-date{font-size:11px;color:#bbb}
-.review-source{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px}
-.review-text{font-size:13px;color:#333;line-height:1.9;word-break:keep-all}
-.review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
-.review-avatar{width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
-.cta-section{background:var(--navy);padding:52px 24px;text-align:center}
-.cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:#fff;line-height:1.6;margin-bottom:28px;word-break:keep-all}
-.cta-quote em{color:var(--gold);font-style:normal}
-.cta-bottom-btn{display:block;width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 6px 24px rgba(201,168,76,0.35);text-decoration:none;text-align:center}
-.cta-urgent{margin-top:16px;font-size:13.5px;color:#7a98ae;line-height:1.8}
-.cta-urgent strong{color:var(--gold-light)}
-footer{background:#0a1420;padding:28px 24px;text-align:center}
-footer p{font-size:11px;color:#3d5a6c;line-height:2}
-footer .gold{color:var(--gold)}
-.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
-</style>
-</head>
-<body>
+window.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('saju_auth') === '1') {
+    document.getElementById('pwOverlay').style.display = 'none';
+  }
+});
+</script>
 
+<!-- PAGE 1: 입력 -->
+<div id="page1" class="page active">
+<div style="max-width:500px;margin:0 auto">
+  <div style="margin-bottom:16px">
+    <div class="label-sm">SAJU REPORT</div>
+    <div style="font-size:22px;font-weight:700">사주 보고서 생성</div>
+  </div>
 
-<header>
-  <div class="logo">
-    <div class="logo-badge">命</div>
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab1" type="button" onclick="setMode('basic')">📄 기본 보고서</button>
+    <button class="mode-tab" id="tab2" type="button" onclick="setMode('mini')">⭐ 미니운세 보너스</button>
+  </div>
+
+  <div id="basicDesc" class="card" style="padding:12px 14px;box-shadow:none;border:1px solid #eee;margin-bottom:14px">
+    <div style="font-size:12px;color:#555;line-height:1.7">📋 <strong>9개 섹션</strong> 종합 분석 · 성격/재물/연애/건강/대운 포함</div>
+  </div>
+  <div id="miniDesc" style="display:none" class="bonus-badge">
+    <div style="font-size:20px">⭐</div>
+    <div><span>리뷰 작성 고객 전용 보너스</span><small>올해 1~12월 월별 미니 운세 · 4페이지 PDF</small></div>
+  </div>
+
+  <div class="card">
+    <div class="field">
+      <label>이름 (또는 닉네임)</label>
+      <input id="name" placeholder="예: 홍길동"/>
+    </div>
+    <div class="row field">
+      <div><label>성별</label>
+        <select id="gender"><option>남성</option><option>여성</option></select></div>
+      <div><label>양력/음력</label>
+        <select id="cal"><option>양력</option><option>음력</option></select></div>
+    </div>
+    <div class="field">
+      <label>생년월일 <span style="color:#e74c3c">*</span></label>
+      <div class="row">
+        <div style="flex:2"><input id="y" placeholder="년도 (예: 1990)" type="number"/></div>
+        <div><input id="m" placeholder="월" type="number"/></div>
+        <div><input id="d" placeholder="일" type="number"/></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>출생 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
+      <div style="font-size:11px;color:#C9A84C;background:#1C2B3A;padding:7px 10px;border-radius:7px;margin-bottom:7px;line-height:1.7">
+        ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
+      </div>
+      <div class="row">
+        <div><input id="h" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/></div>
+        <div style="flex:0.5;display:flex;align-items:center;justify-content:center;font-size:13px;color:#888">분 없음</div>
+      </div>
+    </div>
+    <div id="qField" class="field">
+      <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(탭 선택 · 복수 가능)</span></label>
+      <div class="cat-grid" id="catGrid"></div>
+      <input id="q" placeholder="직접 입력 (선택사항)"/>
+    </div>
+    <div id="err1" class="err"></div>
+    <button class="btn btn-dark" id="genBtn" type="button" onclick="doGenerate()">프롬프트 생성 →</button>
+    <!-- ⚡ 자동 분석 버튼 (API) -->
+    <button id="autoBtn" type="button" onclick="doAutoAnalyze()" style="display:block;width:100%;padding:14px;background:linear-gradient(135deg,#C9A84C,#E8C87A);color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;">⚡ 자동 분석 (API)</button>
+    <div id="autoStatus" style="display:none;text-align:center;padding:16px;font-size:14px;color:#C9A84C;background:#1C2B3A;border-radius:10px;margin-top:10px;line-height:1.8;">
+      <div id="autoStatusText">⏳ 분석 시작...</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PAGE 2: 복사/붙여넣기/PDF -->
+<div id="page2" class="page">
+<div style="max-width:500px;margin:0 auto">
+  <div class="top-bar">
     <div>
-      <div class="logo-text">천명당</div>
-      <div class="logo-sub">사주명리</div>
+      <div class="label-sm" id="p2mode">SAJU REPORT</div>
+      <div style="font-size:18px;font-weight:700" id="p2name">분석</div>
     </div>
+    <button class="back-btn" id="backBtn" type="button" onclick="showPage('page1')">← 다시 입력</button>
   </div>
-</header>
 
-<section class="hero">
-  <div style="margin-bottom:18px;margin-top:8px">
-    <div class="hero-eyebrow">✦ 1년간 문의 2,476건 · 만족도 98%</div>
+  <div id="miniBadge" style="display:none" class="bonus-badge">
+    <div style="font-size:18px">⭐</div>
+    <div><span>리뷰 고객 월별 미니운세 보너스</span><small>1~12월 운세 · 4페이지 PDF</small></div>
   </div>
-  <h1>아직 풀리지 않은 질문,<br/><em>사주에 답이 있습니다.</em></h1>
-  <div class="hero-desc">
-    <p>생년월일만 알려주시면<br/>전문가가 <strong>직접 분석</strong>해드립니다.</p>
-    <p>성격 · 재물 · 연애 · 건강 · 대운<br/>9가지 항목 PDF 보고서로 정리해드립니다.</p>
-  </div>
-  <div class="stats-row fade-up">
-    <div class="stat-item">
-      <div class="stat-num">2,476<span style="font-size:13px">건</span></div>
-      <div class="stat-label">1년간 문의</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">98<span style="font-size:13px">%</span></div>
-      <div class="stat-label">고객 만족도</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">12<span style="font-size:13px">h</span></div>
-      <div class="stat-label">최대 발송</div>
-    </div>
-  </div>
-  <a href="#form-section" class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">
-    지금 바로 신청하기 →
-  </a>
-</section>
 
-<div class="price-section">
-  <div style="text-align:center">
-    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
-    <div style="font-size:12px;color:#4a6a7a;margin-bottom:6px">감사의 의미로, 매일 선착순 10명</div>
-    <div class="price-original">정가 28,000원</div>
-    <div class="price-main">
-      <span class="price-badge-sale">50% OFF</span>
-      <span class="price-amount">14,000원</span>
+  <div id="sajuPreview" style="display:none;background:#1C2B3A;border-radius:12px;padding:14px 16px;margin-bottom:14px">
+    <div style="font-size:10px;color:#C9A84C;letter-spacing:2px;font-weight:700;margin-bottom:10px">✦ 자동계산 사주팔자 (앱 검증)</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">년주</div>
+        <div id="sp_year" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">월주</div>
+        <div id="sp_month" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.08);border:1px solid rgba(201,168,76,.3);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#C9A84C;margin-bottom:4px">일주(일간)</div>
+        <div id="sp_day" style="font-size:18px;font-weight:900;color:#fff"></div>
+      </div>
+      <div style="flex:1;text-align:center;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 4px">
+        <div style="font-size:9px;color:#888;margin-bottom:4px">시주</div>
+        <div id="sp_hour" style="font-size:18px;font-weight:900;color:#C9A84C"></div>
+      </div>
     </div>
-    <div class="stock-bar">
-      <div class="stock-text">오늘 남은 할인 자리</div>
-      <div class="stock-count">⏳ <span id="stockNum">7</span>명</div>
+    <div id="sp_ohaeng" style="font-size:11px;color:#7a98ae;text-align:center"></div>
+    <div id="sp_daewoon" style="font-size:10px;color:#555;margin-top:4px;text-align:center"></div>
+  </div>
+
+  <div class="card">
+    <div class="step-row">
+      <div class="snum snum-dark">1</div>
+      <div>
+        <div class="step-title">프롬프트 복사 → Claude 새 채팅에 붙여넣기</div>
+        <div class="step-desc">답변 받은 후 전체 복사 → 아래 2번에 붙여넣기</div>
+      </div>
     </div>
-    <div class="price-notice">· 계좌이체 · 12시간 이내 PDF 발송<br/>· 카카오 오픈채팅으로 신청</div>
+    <button class="btn btn-dark" id="copyBtn" type="button" onclick="doCopy()">📋 프롬프트 복사</button>
+  </div>
+
+  <div class="card">
+    <div class="step-row">
+      <div class="snum snum-gray" id="sn2">2</div>
+      <div>
+        <div class="step-title">Claude 답변 전체 붙여넣기</div>
+        <div class="step-desc">답변 전체 복사 → 아래에 붙여넣기</div>
+      </div>
+    </div>
+    <textarea id="result" rows="8" oninput="onResultInput()" placeholder="Claude의 분석 결과를 여기에 붙여넣으세요."></textarea>
+    <div class="char-count" id="charCount"></div>
+    <div class="result-ok" id="resultOk">✓ 결과 감지됨 — PDF 저장 버튼을 누르세요!</div>
+  </div>
+
+  <div id="err2" class="err"></div>
+  <button class="btn btn-gray" id="pdfBtn" type="button" onclick="buildPDF()">② 결과 붙여넣기 후 활성화됩니다</button>
+  <button class="btn btn-gray" id="pdfAllBtn" type="button" onclick="buildLinearPDF()" style="margin-top:8px">📑 전체 저장 (스크롤형)</button>
+  <div class="pdf-hint" id="pdfHint">
+    📱 <b>카드형:</b> 보고서 열기 → 스와이프로 읽기 → 공유(□↑) → 파일에 저장<br/>
+    📄 <b>전체 저장:</b> 한 페이지로 전체 출력 → iOS 공유 → PDF로 저장 / Android 인쇄 → PDF저장
   </div>
 </div>
-
-<div class="form-section" id="form-section">
-  <h2>정보 입력하기</h2>
-  <p class="form-sub">입력하신 내용이 자동으로 정리되어<br/>카카오 채팅으로 전달됩니다.</p>
-
-  <div class="form-group">
-    <label>성함</label>
-    <input id="f-name" placeholder="예: 홍길동"/>
-  </div>
-  <div class="form-group">
-    <label>생년월일</label>
-    <div class="form-row3">
-      <input id="f-year" placeholder="년도 (예: 1990)" type="number"/>
-      <input id="f-month" placeholder="월" type="number"/>
-      <input id="f-day" placeholder="일" type="number"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="form-row">
-      <div>
-        <label>성별</label>
-        <select id="f-gender">
-          <option>여성</option>
-          <option>남성</option>
-        </select>
-      </div>
-      <div>
-        <label>양력 / 음력</label>
-        <select id="f-cal">
-          <option>양력</option>
-          <option>음력</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
-  <div class="form-group">
-    <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
-    <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
-      ⏰ 24시간 기준 · 오전 8시 → <b>08</b> / 오후 8시 → <b>20</b>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <input id="f-hour" placeholder="시 (예: 08, 20)" type="number" min="0" max="23"/>
-      <input id="f-min" placeholder="분 (예: 30)" type="number" min="0" max="59"/>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>가장 궁금한 것 <span style="font-size:11px;color:#bbb;font-weight:400">(복수 선택 가능)</span></label>
-    <div class="cat-grid">
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="이직·전직 시기와 방향">💼 이직·전직 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="창업·사업 가능성과 시기">🚀 창업·사업 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="수입 안정되는 시기">💰 수입 안정 시기</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="연애·결혼 시기와 인연">💕 연애·결혼 인연</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="자녀 인연과 가족 관계">👨‍👩‍👧 자녀·가족 관계</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="건강 취약점과 관리법">🏥 건강 취약점</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="올해 전반적인 운세 흐름">📅 올해 운세 흐름</button>
-      <button class="cat-btn" onclick="this.classList.toggle('on')" data-val="나다운 삶의 방향 찾기">🌙 나다운 삶 방향</button>
-    </div>
-  </div>
-
-  <!-- 신청 버튼 -->
-  <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
-  <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
-
-  <!-- STEP 1: 결제 안내 -->
-  <div id="paymentStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
-    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
-      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 1 · 결제 안내</div>
-      <div style="font-size:17px;font-weight:900;color:#fff">아래 계좌로 이체해주세요</div>
-    </div>
-    <div style="padding:20px">
-      <div style="background:#f8f7f4;border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
-        <div style="font-size:12px;color:#888;margin-bottom:6px">입금 계좌</div>
-        <div style="font-size:22px;font-weight:900;color:#1C2B3A;letter-spacing:1px">카카오뱅크 3333-XXXX-XXXX</div>
-        <div style="font-size:13px;color:#666;margin-top:4px">예금주: 박상환</div>
-      </div>
-      <div style="display:flex;gap:10px;margin-bottom:14px">
-        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금액</div>
-          <div style="font-size:20px;font-weight:900;color:#856404">14,000원</div>
-        </div>
-        <div style="flex:1;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:11px;color:#856404;margin-bottom:4px">입금자명</div>
-          <div style="font-size:15px;font-weight:900;color:#856404" id="payerName">-</div>
-        </div>
-      </div>
-      <div style="background:#fff0f0;border:1px solid #ffcccc;border-radius:10px;padding:12px;margin-bottom:16px;text-align:center">
-        <div style="font-size:13px;color:#cc0000;font-weight:700">⏰ 신청 후 <span id="countdown">20:00</span> 안에 결제해주세요</div>
-        <div style="font-size:11px;color:#999;margin-top:4px">시간 초과 시 재신청 필요합니다</div>
-      </div>
-      <button onclick="openPayment()" style="width:100%;padding:15px;background:#C9A84C;color:#1C2B3A;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
-        💳 카드 / 카카오페이로 결제하기
-      </button>
-      <div style="font-size:11px;color:#aaa;text-align:center;margin-top:8px">계좌이체도 가능 · 결제 완료 즉시 자동 분석 시작</div>
-      <div style="font-size:11px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6">
-        입금 확인 후 이메일로 보고서가 자동 발송돼요<br/>
-        문의: <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C">카카오 오픈채팅</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 2: 이메일 입력 -->
-  <div id="emailStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #1C2B3A;border-radius:16px;overflow:hidden">
-    <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
-      <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">STEP 2 · 이메일 입력</div>
-      <div style="font-size:17px;font-weight:900;color:#fff">보고서 받을 이메일을 입력해주세요</div>
-    </div>
-    <div style="padding:20px">
-      <div style="background:#f0f4ff;border:1px solid #c7d7ff;border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:#3a5acc;line-height:1.7;text-align:center">
-        📧 입력 완료 즉시 자동 분석이 시작돼요<br/>약 2분 후 이메일로 보고서가 도착합니다
-      </div>
-      <input id="f-email" placeholder="예: example@gmail.com" type="email" style="width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:#1a1a2e;background:#fff;outline:none;margin-bottom:12px"/>
-      <button id="analyzeBtn" onclick="requestAnalysis()" style="width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit">
-        입력 완료 →
-      </button>
-      <div id="sendingStatus" style="display:none;text-align:center;padding:14px;font-size:13px;color:#C9A84C;margin-top:10px;background:#1C2B3A;border-radius:10px">
-        ⏳ 분석 중... 잠시만 기다려주세요
-      </div>
-    </div>
-  </div>
-  <div class="copy-notice" id="copyNotice">
-    ✅ 신청 내용이 클립보드에 복사됐어요!<br/>
-    카카오 채팅창이 열리면 <strong>붙여넣기(길게 누르기)</strong> 후 전송해주세요.
-  </div>
-  <p class="form-notice">입력하신 정보는 사주 분석에만 사용됩니다</p>
 </div>
-
-<section class="diff-section">
-  <h2 class="fade-up">과거에 사주를 봤는데<br/>두루뭉술한 말만 들으셨나요?</h2>
-  <p class="diff-sub fade-up">"언젠가 좋아질 거예요" "조심하세요"<br/>이런 말로는 아무것도 달라지지 않아요.</p>
-  <div class="doubt-box fade-up">
-    <div class="doubt-q">❓ 왜 지금 내가 이런 상황일까요?</div>
-    <div class="doubt-a">단순히 운이 없어서가 아니에요. 사주 구조가 특정 시기에 특정 압박을 만들어내도록 되어 있어요. 천명당은 그 원인을 납득할 수 있도록 구조적으로 직접 설명해드립니다. 이유를 알면 자책이 줄고, 어떻게 이겨나가야 하는지도 보여요.</div>
-  </div>
-  <div style="text-align:center;margin-bottom:18px">
-    <span class="diff-label">✦ 천명당은 이렇게 다릅니다</span>
-  </div>
-  <div class="diff-cards">
-    <div class="diff-card fade-up">
-      <div class="diff-card-top"><div class="diff-icon">🗓️</div><h3>2~3년 후 미래까지 구체적으로</h3></div>
-      <p>올해만 보지 않아요. 2027년, 2028년, 2029년 — 언제 기회가 오는지, 언제 조심해야 하는지 연도별로 명확히 알려드려요.</p>
-      <p>이직·창업·결혼 등 중요한 결정, 언제 하면 좋을지 구체적인 타이밍까지 드립니다.</p>
-    </div>
-    <div class="diff-card fade-up">
-      <div class="diff-card-top"><div class="diff-icon">🌿</div><h3>나쁜 시기엔 개운법·대처법까지</h3></div>
-      <p>힘든 시기가 있다는 걸 말해주는 것에서 끝내지 않아요. 어떻게 이겨낼 수 있는지, 어떤 방향으로 에너지를 써야 하는지 실질적인 방법을 드려요.</p>
-      <p>색상, 방향, 음식, 생활 습관까지 — 오늘부터 바로 실천할 수 있는 개운법이에요.</p>
-    </div>
-    <div class="diff-card fade-up">
-      <div class="diff-card-top"><div class="diff-icon">🎯</div><h3>성격·기질을 정확하게 꼬집어서</h3></div>
-      <p>읽다가 "어떻게 알았지?" 싶을 정도로 구체적인 장면으로 설명해드려요. 막연한 성격 묘사가 아니라 실제 생활에서 어떻게 나타나는지를 정확하게요.</p>
-      <p>철학관에서 보는 것보다 더 정확하다는 후기가 많아요.</p>
-    </div>
-    <div class="diff-card fade-up">
-      <div class="diff-card-top"><div class="diff-icon">📊</div><h3>지금 힘든 이유를 납득시켜드려요</h3></div>
-      <p>"왜 지금 이런 상황일 수밖에 없는지" 사주 구조로 직접 설명해드려요. 이유를 알면 자책이 줄고, 어떻게 이겨나가야 하는지도 보여요.</p>
-      <p>위로를 받고, 방향을 얻어가세요.</p>
-    </div>
-    <div class="diff-card fade-up">
-      <div class="diff-card-top"><div class="diff-icon">📋</div><h3>어려운 용어 없이, 쉽게 설명</h3></div>
-      <p>한자나 어려운 사주 용어 없이, 누구나 읽어도 이해되는 말로 직접 풀어드립니다.</p>
-      <p>전문가가 옆에서 설명해주는 것처럼, 쉽고 명확하게 정리해드려요.</p>
-    </div>
-  </div>
-</section>
-
-<section class="content-section">
-  <h2 class="fade-up">9가지 항목을<br/>빠짐없이 분석해드립니다</h2>
-  <p class="sub fade-up">두루뭉술하지 않게, 본인에게만 해당하는 말로.</p>
-  <div class="content-cards">
-    <div class="content-card blue">
-      <div class="card-icon">🧬</div>
-      <div class="card-body">
-        <h3>타고난 성격·기질 분석</h3>
-        <!-- ✅ 수정: "이 사람만의 기질" → "본인만의 기질" -->
-        <p>본인만의 기질을 직접 분석해드려요. 겉으로 보이는 모습과 속마음이 왜 다른지, 어떤 상황에서 강하고 약한지를 구체적 장면으로 설명해드려요.</p>
-        <p>강점을 살리고 약점을 보완하는 방향도 함께 알려드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card yellow">
-      <div class="card-icon">📅</div>
-      <div class="card-body">
-        <h3>대운·세운 10년 흐름 분석</h3>
-        <p>2026~2035년 연도별 흐름을 분석해요. 어느 해가 기회의 해인지, 어느 해가 조심해야 하는 해인지 구체적으로 알려드려요.</p>
-        <p>투자, 이직, 창업, 결혼 등 중요한 결정을 언제 해야 하는지 연도 단위로 명시해드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card purple">
-      <div class="card-icon">💼</div>
-      <div class="card-body">
-        <h3>재물·직업운</h3>
-        <p>어떤 방식으로 돈을 버는 게 본인 사주에 맞는지, 타고난 재물 구조가 어떤지 직접 분석해드려요. 안정적 직장이 맞는지, 사업이 맞는지도 판단해드려요.</p>
-        <p>이직·전직의 최적 타이밍과 어울리는 직종 방향도 함께 알려드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card teal">
-      <div class="card-icon">🚀</div>
-      <div class="card-body">
-        <h3>창업·사업 가능성과 시기</h3>
-        <p>창업 사주인지, 직장 사주인지 먼저 파악해요. 창업 에너지가 있다면 어떤 업종이 맞는지, 언제 시작하면 좋은지 구체적으로 알려드려요.</p>
-        <p>사업 방향, 파트너 선택, 규모 결정까지 사주 기반으로 조언해드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card green">
-      <div class="card-icon">💕</div>
-      <div class="card-body">
-        <h3>연애·결혼운</h3>
-        <p>배우자 자리 에너지를 분석해서 어떤 사람과 잘 맞는지, 잘 맞지 않는지 알려드려요. 인연이 오는 시기와 주의할 연애 패턴도 함께요.</p>
-        <p>반복되는 연애 패턴이 있다면 그 이유와 극복법도 직접 설명해드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card pink">
-      <div class="card-icon">🏠</div>
-      <div class="card-body">
-        <h3>부모·자녀·가족 관계</h3>
-        <p>부모와의 관계 에너지, 자녀 인연의 유무와 시기를 분석해요. 가족 내에서 어떤 역할을 맡게 되는지, 어떤 패턴이 반복되는지 설명해드려요.</p>
-        <p>양육 스타일과 자녀와의 관계에서 주의할 점도 알려드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card orange">
-      <div class="card-icon">🏥</div>
-      <div class="card-body">
-        <h3>건강·취약 부위 분석</h3>
-        <p>사주 구조에서 취약한 장기와 신체 부위를 직접 파악해요. 스트레스가 몸 어디로 나타나는지, 어떤 시기에 특히 조심해야 하는지 알려드려요.</p>
-        <p>본인 사주에 맞는 음식, 운동 방식, 생활 습관까지 맞춤 조언을 드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card gray">
-      <div class="card-icon">🌙</div>
-      <div class="card-body">
-        <h3>나다운 삶의 방향</h3>
-        <p>"나는 어떤 사람이고, 어떻게 살아야 맞는 삶인가?" 사주 구조에서 직접 답을 찾아드려요. 지금까지 왜 맞지 않는 방향으로 살아왔는지도 설명해드려요.</p>
-        <p>타고난 에너지를 살리는 삶의 방향을 함께 제시해드립니다.</p>
-      </div>
-    </div>
-    <div class="content-card blue">
-      <div class="card-icon">✨</div>
-      <div class="card-body">
-        <h3>개운법·생활 맞춤 조언</h3>
-        <p>본인 사주에서 가장 힘이 되는 색상, 방향, 음식, 장소를 알려드려요. 오늘부터 바로 실천할 수 있는 구체적인 개운법이에요.</p>
-        <p>복권 구매 방향, 계약 타이밍, 이사 방향, 차량 색상까지 — 삶 전반에 걸친 맞춤 조언을 드립니다.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="review-section">
-  <h2 class="fade-up">실제 경험자들의<br/>쏟아지는 후기</h2>
-  <p class="review-sub fade-up">1년간 문의 2,476건 · 만족도 98%<br/>직접 경험하신 분들의 솔직한 이야기를 들어보세요.</p>
-  <div class="review-grid" id="reviewGrid"></div>
-  <div style="text-align:center;margin-top:16px">
-    <button onclick="loadMore()" id="moreBtn" style="background:none;border:1.5px solid var(--gold);border-radius:20px;padding:8px 24px;font-size:13px;color:var(--gold);cursor:pointer;font-family:inherit">후기 더보기 →</button>
-  </div>
-</section>
-
-<section class="cta-section fade-up">
-  <div class="cta-quote">"왜 지금 이런 상황인지,<br/>어떻게 이겨나가야 하는지<br/><em>이제 알 수 있어요."</em></div>
-  <a href="#form-section" class="cta-bottom-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">지금 바로 신청하기 →</a>
-  <div class="cta-urgent">
-    하루라도 빨리 알아야<br/>
-    <strong>현명한 대처를 할 수 있습니다.</strong><br/>
-    <span style="font-size:12px;color:#3a5a6a">선착순 10명 · 오늘 남은 자리 <span id="stockNum2">7</span>명</span>
-  </div>
-</section>
-
-<footer>
-  <p class="gold" style="font-family:'Noto Serif KR',serif;font-size:15px;margin-bottom:8px">사주명리 ✦ 천명당</p>
-  <p>생년월일만 알면 되는 운명</p>
-  <p style="margin-top:10px">문의 및 신청: 카카오 오픈채팅<br/>
-  <a href="https://open.kakao.com/o/sFcws2si" style="color:#C9A84C;text-decoration:none">open.kakao.com/o/sFcws2si</a></p>
-</footer>
 
 <script>
-// 카테고리 버튼 onclick
-document.querySelectorAll('.cat-btn').forEach(function(btn) {
-  btn.addEventListener('click', function() { this.classList.toggle('on'); });
-});
+// ── 만세력 자동 계산 모듈 ──
+var MANSE = (function() {
+  var CG = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+  var JJ = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+  function toJDN(y, m, d) {
+    var a = Math.floor((14 - m) / 12);
+    var yy = y + 4800 - a;
+    var mm = m + 12 * a - 3;
+    return d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4) - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+  }
+  var JEOLGI_MONTH = [2,3,4,5,6,7,8,9,10,11,12,1];
+  var JEOLGI_C = [3.87,5.63,4.81,5.52,5.94,6.92,7.02,7.46,7.69,6.55,6.87,4.90];
+  function getJeolgiDay(year, termIdx) { return Math.floor(year * 0.2422 + JEOLGI_C[termIdx]) - Math.floor((year - 1) / 4); }
+  function getMonthTermIdx(year, month, day) {
+    var TERM_TO_JJ = [2,3,4,5,6,7,8,9,10,11,0,1];
+    if (month === 1) { return day >= getJeolgiDay(year, 11) ? TERM_TO_JJ[11] : TERM_TO_JJ[10]; }
+    if (month === 12) { return day >= getJeolgiDay(year, 10) ? TERM_TO_JJ[10] : TERM_TO_JJ[9]; }
+    var termIdx = month - 2;
+    return day >= getJeolgiDay(year, termIdx) ? TERM_TO_JJ[termIdx] : TERM_TO_JJ[(termIdx - 1 + 12) % 12];
+  }
+  function getMonthTermIdxRaw(year, month, day) {
+    if (month === 1) { return day >= getJeolgiDay(year, 11) ? 11 : 10; }
+    if (month === 12) { return day >= getJeolgiDay(year, 10) ? 10 : 9; }
+    var termIdx = month - 2;
+    return day >= getJeolgiDay(year, termIdx) ? termIdx : (termIdx - 1 + 12) % 12;
+  }
+  function getYearPillar(year, month, day) {
+    var ipchunDay = getJeolgiDay(year, 0);
+    var isBeforeIpchun = (month < 2) || (month === 2 && day < ipchunDay);
+    var adjYear = isBeforeIpchun ? year - 1 : year;
+    var idx = ((adjYear - 4) % 60 + 60) % 60;
+    return {cg: CG[idx % 10], jj: JJ[idx % 12], cgIdx: idx % 10, jjIdx: idx % 12};
+  }
+  function getDayPillar(year, month, day) {
+    var jdn = toJDN(year, month, day);
+    var idx = ((jdn + 49) % 60 + 60) % 60;
+    return {cg: CG[idx % 10], jj: JJ[idx % 12], cgIdx: idx % 10, jjIdx: idx % 12};
+  }
+  function getMonthPillar(year, month, day, yearCGIdx) {
+    var jjIdx = getMonthTermIdx(year, month, day);
+    var startMap = [2,4,6,8,0,2,4,6,8,0];
+    var yinMonthCG = startMap[yearCGIdx];
+    var offset = (jjIdx - 2 + 12) % 12;
+    var cgIdx = (yinMonthCG + offset) % 10;
+    return {cg: CG[cgIdx], jj: JJ[jjIdx], cgIdx: cgIdx, jjIdx: jjIdx};
+  }
+  function getHourPillar(hour, dayCGIdx) {
+    var jjIdx;
+    if (hour === 23 || hour === 0) jjIdx = 0;
+    else if (hour < 3) jjIdx = 1; else if (hour < 5) jjIdx = 2;
+    else if (hour < 7) jjIdx = 3; else if (hour < 9) jjIdx = 4;
+    else if (hour < 11) jjIdx = 5; else if (hour < 13) jjIdx = 6;
+    else if (hour < 15) jjIdx = 7; else if (hour < 17) jjIdx = 8;
+    else if (hour < 19) jjIdx = 9; else if (hour < 21) jjIdx = 10; else jjIdx = 11;
+    var startMap = [0,2,4,6,8,0,2,4,6,8];
+    var cgIdx = (startMap[dayCGIdx] + jjIdx) % 10;
+    return {cg: CG[cgIdx], jj: JJ[jjIdx], cgIdx: cgIdx, jjIdx: jjIdx};
+  }
+  function getDaewoon(year, month, day, gender, yearCGIdx, monthPillar) {
+    var isYangYear = (yearCGIdx % 2 === 0);
+    var isMale = (gender === '남성');
+    var isForward = (isYangYear && isMale) || (!isYangYear && !isMale);
+    var birthJDN = toJDN(year, month, day);
+    var termIdxNow = getMonthTermIdxRaw(year, month, day);
+    var termIdxNext = (termIdxNow + 1) % 12;
+    var termMonth = JEOLGI_MONTH[termIdxNow];
+    var termDay = getJeolgiDay(year, termIdxNow);
+    var termJDN = toJDN(year, termMonth, termDay);
+    var nextTermMonth = JEOLGI_MONTH[termIdxNext];
+    var nextYear = (termIdxNext === 0) ? year + 1 : year;
+    if (termIdxNow === 11) nextYear = year + 1;
+    var nextTermDay = getJeolgiDay(nextYear, termIdxNext);
+    var nextTermJDN = toJDN(nextYear, nextTermMonth, nextTermDay);
+    var diffDays = isForward ? (nextTermJDN - birthJDN) : (birthJDN - termJDN);
+    if (diffDays < 0) diffDays = 0;
+    var startAge = Math.round(diffDays / 3);
+    if (startAge < 1) startAge = 1;
+    var list = [];
+    var mCG = monthPillar.cgIdx, mJJ = monthPillar.jjIdx;
+    for (var i = 1; i <= 8; i++) {
+      var step = isForward ? i : -i;
+      var newCG = ((mCG + step) % 10 + 10) % 10;
+      var newJJ = ((mJJ + step) % 12 + 12) % 12;
+      list.push({cg: CG[newCG], jj: JJ[newJJ], startAge: startAge + (i-1)*10, endAge: startAge + i*10 - 1});
+    }
+    return {startAge: startAge, list: list, isForward: isForward};
+  }
+  var OHAENG_MAP = {'甲':0,'乙':0,'丙':1,'丁':1,'戊':2,'己':2,'庚':3,'辛':3,'壬':4,'癸':4};
+  var JJ_OHAENG = {'子':4,'丑':2,'寅':0,'卯':0,'辰':2,'巳':1,'午':1,'未':2,'申':3,'酉':3,'戌':2,'亥':4};
+  function getOhaengCount(saju) {
+    var counts = [0,0,0,0,0];
+    [saju.year, saju.month, saju.day, saju.hour].forEach(function(p) {
+      counts[OHAENG_MAP[p.cg]]++;
+      counts[JJ_OHAENG[p.jj]]++;
+    });
+    return counts;
+  }
+  function calc(year, month, day, hour, gender) {
+    var yearP = getYearPillar(year, month, day);
+    var monthP = getMonthPillar(year, month, day, yearP.cgIdx);
+    var dayP = getDayPillar(year, month, day);
+    var hourP = getHourPillar(hour, dayP.cgIdx);
+    var daewoon = getDaewoon(year, month, day, gender, yearP.cgIdx, monthP);
+    var ohaeng = getOhaengCount({year:yearP, month:monthP, day:dayP, hour:hourP});
+    return {year:yearP, month:monthP, day:dayP, hour:hourP, daewoon:daewoon, ohaeng:ohaeng, ilgan:dayP.cg, iljji:dayP.jj};
+  }
+  function toPromptText(saju, name) {
+    var onames = ['木','火','土','金','水'];
+    var ostr = onames.map(function(n,i){ return n+':'+saju.ohaeng[i]+'개'; }).join(' / ');
+    var dwStr = saju.daewoon.list.slice(0,5).map(function(d){ return d.cg+d.jj+'('+d.startAge+'세~'+d.endAge+'세)'; }).join(', ');
+    return '\n[앱 자동계산 사주팔자 — Claude는 아래 8글자를 그대로 사용하고 직접 계산하지 마세요]\n'
+      +'년주: '+saju.year.cg+saju.year.jj+' / 월주: '+saju.month.cg+saju.month.jj
+      +' / 일주: '+saju.day.cg+saju.day.jj+' / 시주: '+saju.hour.cg+saju.hour.jj+'\n'
+      +'일간: '+saju.ilgan+' / 오행분포: '+ostr+'\n'
+      +'대운: '+(saju.daewoon.isForward?'순행':'역행')+' / 대운시작: '+saju.daewoon.startAge+'세\n'
+      +'주요대운: '+dwStr+'\n';
+  }
+  return {calc:calc, toPromptText:toPromptText, CG:CG, JJ:JJ};
+})();
 
-function getVal(id) {
-  var el = document.getElementById(id);
-  return el ? el.value.trim() : '';
+var formData = {};
+var promptText = '';
+var currentMode = 'basic';
+
+var CATS = [
+  {label:'💼 이직·전직', val:'이직 또는 전직 시기와 방향이 궁금합니다'},
+  {label:'🏢 창업·사업', val:'창업 또는 사업 가능성과 시기가 궁금합니다'},
+  {label:'💰 재물·수입', val:'언제쯤 수입이 안정될지 궁금합니다'},
+  {label:'❤️ 연애·결혼', val:'연애 또는 결혼 시기와 인연이 궁금합니다'},
+  {label:'👶 자녀·가족', val:'자녀 인연과 가족 관계가 궁금합니다'},
+  {label:'🌿 건강 관리', val:'건강 취약점과 관리법이 궁금합니다'},
+  {label:'🔮 올해 운세', val:'올해 전반적인 운세 흐름이 궁금합니다'},
+  {label:'🧭 인생 방향', val:'앞으로 나다운 삶의 방향을 찾고 싶습니다'}
+];
+
+function initCats() {
+  var grid = document.getElementById('catGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  for (var i = 0; i < CATS.length; i++) {
+    (function(cat) {
+      var btn = document.createElement('button');
+      btn.type = 'button'; btn.className = 'cat-btn';
+      btn.textContent = cat.label; btn.setAttribute('data-val', cat.val);
+      btn.onclick = function() { this.classList.toggle('on'); };
+      grid.appendChild(btn);
+    })(CATS[i]);
+  }
 }
 
-function submitForm() {
-  var y = getVal('y'), m = getVal('m'), d = getVal('d');
-  var errEl = document.getElementById('formErr');
-  if (!y || !m || !d) {
-    errEl.textContent = '생년월일은 필수입니다.';
-    errEl.style.display = 'block';
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('tab1').className = 'mode-tab'+(mode==='basic'?' active':'');
+  document.getElementById('tab2').className = 'mode-tab'+(mode==='mini'?' active':'');
+  document.getElementById('basicDesc').style.display = mode==='basic'?'block':'none';
+  document.getElementById('miniDesc').style.display = mode==='mini'?'flex':'none';
+  document.getElementById('qField').style.display = mode==='basic'?'block':'none';
+}
+
+function getVal(id) { var el=document.getElementById(id); return el?el.value.trim():''; }
+
+function buildInfo() {
+  var cats = document.querySelectorAll('.cat-btn.on');
+  var vals = [];
+  for (var i=0;i<cats.length;i++) vals.push(cats[i].getAttribute('data-val'));
+  var direct = getVal('q'); if (direct) vals.push(direct);
+  var q = vals.length>0?vals.join(' / '):'없음';
+  var h=getVal('h'), mn=getVal('mn');
+  var time = h?h+'시 '+(mn||'00')+'분':'미상';
+  var base = '이름: '+(getVal('name')||'미입력')+' / 성별: '+getVal('gender')
+    +' / 생년월일: '+getVal('cal')+' '+getVal('y')+'년 '+getVal('m')+'월 '+getVal('d')+'일'
+    +' / 출생시각: '+time+' / 특별 궁금한 점: '+q;
+  if (getVal('cal')==='양력') {
+    try {
+      var y=parseInt(getVal('y')), m=parseInt(getVal('m')), d=parseInt(getVal('d'));
+      var hr=h?parseInt(h):0;
+      if (y&&m&&d) { var saju=MANSE.calc(y,m,d,hr,getVal('gender')); base+=MANSE.toPromptText(saju,getVal('name')); }
+    } catch(e) {}
+  }
+  return base;
+}
+
+// ── ⚡ 자동 분석 (스트리밍 API) ──────────────────────
+async function doAutoAnalyze() {
+  var name=getVal('name'), year=getVal('y'), month=getVal('m'), day=getVal('d');
+  if (!name||!year||!month||!day) { alert('이름과 생년월일을 입력해주세요.'); return; }
+
+  var cats=[];
+  document.querySelectorAll('.cat-btn.on').forEach(function(b){ cats.push(b.getAttribute('data-val')); });
+  var direct=getVal('q'); if(direct) cats.push(direct);
+
+  var sajuPayload=null;
+  if (getVal('cal')==='양력') {
+    try {
+      var y2=parseInt(year),m2=parseInt(month),d2=parseInt(day);
+      var hr2=getVal('h')?parseInt(getVal('h')):0;
+      var saju2=MANSE.calc(y2,m2,d2,hr2,getVal('gender'));
+      var onames=['木','火','土','金','水'];
+      var ostr2=onames.map(function(n,i){ return n+':'+saju2.ohaeng[i]+'개'; }).join(' / ');
+      var dwStr2=saju2.daewoon.list.slice(0,5).map(function(d){ return d.cg+d.jj+'('+d.startAge+'세~'+d.endAge+'세)'; }).join(', ');
+      sajuPayload={year:saju2.year.cg+saju2.year.jj, month:saju2.month.cg+saju2.month.jj,
+        day:saju2.day.cg+saju2.day.jj, hour:saju2.hour.cg+saju2.hour.jj,
+        ilgan:saju2.ilgan, ohaeng:ostr2, daewoon:(saju2.daewoon.isForward?'순행':'역행')+' / 시작: '+saju2.daewoon.startAge+'세 / '+dwStr2};
+    } catch(e) {}
+  }
+
+  formData={name:name,gender:getVal('gender'),cal:getVal('cal'),y:year,m:month,d:day,h:getVal('h'),min:getVal('mn')};
+
+  var btn=document.getElementById('autoBtn');
+  btn.disabled=true; btn.textContent='분석 중...';
+
+  document.getElementById('p2name').textContent=(name||'고객')+' 님';
+  document.getElementById('p2mode').textContent='SAJU REPORT';
+  document.getElementById('miniBadge').style.display='none';
+  document.getElementById('sajuPreview').style.display='none';
+  showPage('page2');
+
+  var statusEl=document.getElementById('err2');
+  statusEl.style.display='block';
+  statusEl.style.color='#C9A84C';
+  statusEl.style.background='#1C2B3A';
+  statusEl.style.padding='12px';
+  statusEl.style.borderRadius='10px';
+  statusEl.style.marginBottom='10px';
+  statusEl.textContent='⏳ 분석 시작...';
+
+  var resultArea=document.getElementById('result');
+  if(resultArea) resultArea.value='';
+
+  if(currentMode==='mini') {
+    // 미니운세 단일 호출
+    try {
+      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()})});
+      if(!res.ok){var e=await res.json();throw new Error(e.error||'오류');}
+      var reader=res.body.getReader(); var decoder=new TextDecoder(); var fullText='';
+      while(true){var sr=await reader.read();if(sr.done)break;
+        for(var ln of decoder.decode(sr.value,{stream:true}).split('\n')){
+          if(!ln.startsWith('data: '))continue;
+          try{var j=JSON.parse(ln.slice(6).trim());
+            if(j.text){fullText+=j.text;if(resultArea){resultArea.value=fullText;resultArea.scrollTop=resultArea.scrollHeight;}statusEl.textContent='✍️ 작성 중...('+fullText.length.toLocaleString()+'자)';}
+            if(j.done){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
+          }catch(e2){}
+        }
+      }
+    } catch(err){statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';statusEl.textContent='❌ '+err.message;}
+    finally{btn.disabled=false;btn.textContent='⚡ 자동 분석 (API)';}
     return;
   }
-  errEl.style.display = 'none';
 
-  var name = getVal('name');
-  var gender = getVal('gender') || '남성';
-  var cal = getVal('cal') || '양력';
-  var h = getVal('h'), mn = getVal('mn');
-  var time = h ? h+'시 '+(mn||'00')+'분' : '미상';
+  // 기본 보고서: 섹션 1개씩 10개 병렬 호출
+  var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
+  var curDate=sy+'년 '+(now.getMonth()+1)+'월 현재';
+  var info=buildInfo();
+  var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
+  var curMonth=now.getMonth()+1;
+  var curDate=sy+'년 '+curMonth+'월 현재';
 
-  var qArr = [];
-  document.querySelectorAll('.cat-btn.on').forEach(function(c) { qArr.push(c.getAttribute('data-val')); });
-  var qDirect = getVal('q');
-  if (qDirect) qArr.push(qDirect);
+  // 공통 헤더
+  var hdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
+    +'[고객 정보]\n'+info+'\n\n'
+    +'[만세력 정확성 주의]\n'
+    +'⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n\n'
+    +'[핵심 분석 기준]\n'
+    +'① 일간 확인 ② 신강/신약 판단 ③ 용신·희신·기신 도출\n'
+    +'④ 오행 과다/부재 ⑤ 십성 조합 ⑥ 지지 충·합·형\n\n'
+    +'[작성 원칙]\n'
+    +'① 이 사람에게만 해당하는 말만. 일반론 금지.\n'
+    +'② 간결하고 중복 없이. 분량 채우기 금지.\n'
+    +'③ 전문가가 옆에서 말해주듯 존댓말 구어체. AI 느낌 X.\n'
+    +'- 나쁜 시기엔 반드시 대처법. 섹션 1에서만 한자 허용.\n'
+    +'- 소제목(■)마다 이모지. **핵심 내용 굵게**.\n'
+    +'- 마크업: ==텍스트==(금색/핵심) !!텍스트!!(빨간/주의) ++텍스트++(초록/기회) ~~텍스트~~(파란/전환점)\n'
+    +'- 섹션 1에서만 한자 허용. 이후 한자 금지.\n'
+    +'- 세운 간지: 2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑\n\n'
+    +'[섹션 마무리 형식]\n'
+    +'[한눈에 보기] 핵심 한 문장\n'
+    +'[핵심 요약 3줄] - 요약1\n- 요약2\n- 요약3\n'
+    +'지금 당장 할 수 있는 것: '+curDate+' 기준 오늘 실행 가능한 행동 1가지 (해당 섹션 주제와 일치)\n\n';
 
-  var copyText = '✦ 천명당 사주 신청\n'
-    + '━━━━━━━━━━━━━━\n'
-    + '이름: ' + (name||'미입력') + '\n'
-    + '성별: ' + gender + '\n'
-    + '생년월일: ' + cal + ' ' + y + '년 ' + m + '월 ' + d + '일\n'
-    + '출생시각: ' + time + '\n'
-    + (qArr.length > 0 ? '궁금한 것: ' + qArr.join(' / ') + '\n' : '')
-    + '━━━━━━━━━━━━━━\n'
-    + '입금 후 이 내용을 채팅방에 붙여넣어 주세요 🙏';
+  // 섹션별 프롬프트 10개
+  var prompts = [
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【1. 사주 구조 분석】\n사주팔자 8글자 도표(년/월/일/시×천간/지지) · 오행 분포 표 · 신강/신약 판단 · 용신·희신·기신 도출 · 일간 핵심 성격\n오늘 실천: 오행 관련 소품/색상/음식 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【2. 타고난 성격·기질】\n일간과 십성 기반 핵심 성격 · 구체적 생활 장면으로 묘사 · 강점·약점 · 인간관계 패턴\n오늘 실천: 오늘 강점을 활용할 수 있는 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【3. 대운 흐름 분석】\n전체 대운 목록 표(나이/기간/간지/핵심테마) · 현재 대운 상세 · 직전·다음 대운 비교 · 지금 해야 할 행동\n오늘 실천: 현재 대운에 맞는 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【4. 재물·직업운】\n재물 구조 · 직장형/사업형 판단 · 이직 타이밍 · 재물운 개선 방법\n오늘 실천: 돈·커리어 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【5. 창업·사업 가능성】\n창업 사주 여부 · 어울리는 업종 · 시작 타이밍 · 주의사항\n오늘 실천: 창업·사업 준비 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【6. 연애·결혼운】\n배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n오늘 실천: 인간관계·연애 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n오늘 실천: 가족 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위】\n취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n오늘 실천: 건강 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n과거연도: 그 시기 흐름 설명 / 현재연도: 지금부터 연말까지 / 미래연도: 이 해에는 OOO이 중요하니 OOO을 목표로\n재물운 좋은 해: 복권·로또 구매 방향·장소·보관법 포함\n형식: ### 🗓️ YYYY년 干支년\n💰 재물·직업:\n❤️ 연애·가족:\n🌿 건강 주의:\n🎰 복권·재물운: (해당시만)\n✨ 핵심 키워드:\n📝 총평:\n행동 조언:',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n미래이므로 각 해에 무엇을 준비하고 어떤 목표를 잡을지 구체적으로.\n재물운 좋은 해: 복권·로또 구매 방향·장소·보관법 포함\n형식: ### 🗓️ YYYY년 干支년\n💰 재물·직업:\n❤️ 연애·가족:\n🌿 건강 주의:\n🎰 복권·재물운: (해당시만)\n✨ 핵심 키워드:\n📝 총평:\n행동 조언:'
+  ];
 
-  function doShow() {
-    var formSec = document.getElementById('form-section');
-    var completeSec = document.getElementById('complete-section');
-    if (formSec) formSec.style.display = 'none';
-    if (completeSec) {
-      completeSec.style.display = 'block';
-      completeSec.scrollIntoView({behavior:'smooth'});
+  var parts = ['','','','','','','','','',''];
+  var dones = [false,false,false,false,false,false,false,false,false,false];
+
+  function updateDisplay() {
+    var combined = parts.join('\n\n').trim();
+    if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
+    var done_count = dones.filter(Boolean).length;
+    var total_chars = combined.length;
+    if(done_count === 10){
+      statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
+      statusEl.innerHTML='✅ 분석 완료! 총 '+total_chars.toLocaleString()+'자';
+      onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
+    } else {
+      statusEl.innerHTML='✍️ 분석 중... ('+done_count+'/10 완료 · '+total_chars.toLocaleString()+'자)';
     }
-    var ta = document.getElementById('copyPreview');
-    if (ta) ta.value = copyText;
   }
 
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(copyText).then(doShow).catch(function() {
-      fallbackCopy(copyText); doShow();
-    });
-  } else {
-    fallbackCopy(copyText); doShow();
-  }
-}
+  try {
+    await Promise.all(prompts.map(function(prompt, i) {
+      return streamFetch(prompt, function(t){parts[i]+=t;updateDisplay();}, function(){dones[i]=true;updateDisplay();});
+    }));
+  } catch(err2) {
+    statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
+    statusEl.textContent='❌ 오류: '+err2.message;
+    btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
+  }}
 
-function fallbackCopy(text) {
-  var ta = document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
-  document.body.appendChild(ta);
-  ta.focus(); ta.select();
-  try { document.execCommand('copy'); } catch(e) {}
-  document.body.removeChild(ta);
-}
-
-function copyAgain() {
-  var ta = document.getElementById('copyPreview');
-  if (!ta) return;
-  var btn = document.getElementById('copyAgainBtn');
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(ta.value).then(function() {
-      if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
-    });
-  } else {
-    fallbackCopy(ta.value);
-    if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
-  }
-}
-
-// 스크롤 애니메이션
-var observer = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e) {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      if (e.target.classList.contains('content-card')) {
-        document.querySelectorAll('.content-card').forEach(function(c, i) {
-          setTimeout(function() { c.classList.add('visible'); }, i * 80);
-        });
+function doGenerate() {
+  var y=getVal('y'),m=getVal('m'),d=getVal('d');
+  var err=document.getElementById('err1');
+  if (!y||!m||!d) { err.textContent='생년월일은 필수입니다.'; err.style.display='block'; return; }
+  err.style.display='none';
+  formData={name:getVal('name'),gender:getVal('gender'),cal:getVal('cal'),y:y,m:m,d:d,h:getVal('h'),min:getVal('mn')};
+  promptText = currentMode==='mini' ? buildMiniPrompt() : buildBasicPrompt();
+  document.getElementById('p2name').textContent=(formData.name||'고객')+' 님';
+  if (formData.cal==='양력') {
+    try {
+      var sy=parseInt(formData.y),sm=parseInt(formData.m),sd=parseInt(formData.d);
+      var sh=formData.h?parseInt(formData.h):0;
+      if (sy&&sm&&sd) {
+        var saju=MANSE.calc(sy,sm,sd,sh,formData.gender);
+        document.getElementById('sp_year').textContent=saju.year.cg+saju.year.jj;
+        document.getElementById('sp_month').textContent=saju.month.cg+saju.month.jj;
+        document.getElementById('sp_day').textContent=saju.day.cg+saju.day.jj;
+        document.getElementById('sp_hour').textContent=saju.hour.cg+saju.hour.jj;
+        var onames=['木','火','土','金','水'];
+        document.getElementById('sp_ohaeng').textContent='오행: '+onames.map(function(n,i){ return n+saju.ohaeng[i]; }).join(' ')+'  |  일간: '+saju.ilgan;
+        document.getElementById('sp_daewoon').textContent='대운'+(saju.daewoon.isForward?'순행':'역행')+' '+saju.daewoon.startAge+'세 시작';
+        document.getElementById('sajuPreview').style.display='block';
       }
-    }
+    } catch(e) { document.getElementById('sajuPreview').style.display='none'; }
+  } else { document.getElementById('sajuPreview').style.display='none'; }
+  document.getElementById('p2mode').textContent=currentMode==='mini'?'⭐ 미니운세 보너스':'SAJU REPORT';
+  document.getElementById('miniBadge').style.display=currentMode==='mini'?'flex':'none';
+  var resultEl=document.getElementById('result');
+  if (resultEl) resultEl.value='';
+  document.getElementById('resultOk').style.display='none';
+  document.getElementById('charCount').textContent='';
+  document.getElementById('sn2').className='snum snum-gray';
+  document.getElementById('pdfBtn').className='btn btn-gray';
+  document.getElementById('pdfBtn').textContent='② 결과 붙여넣기 후 활성화됩니다';
+  document.getElementById('pdfAllBtn').className='btn btn-gray';
+  document.getElementById('pdfHint').style.display='none';
+  document.getElementById('err2').style.display='none';
+  showPage('page2');
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function doCopy() {
+  var btn=document.getElementById('copyBtn');
+  if (!promptText) { btn.textContent='⚠️ 먼저 프롬프트를 생성해주세요'; btn.className='btn btn-gray'; setTimeout(function(){ btn.textContent='📋 프롬프트 복사'; btn.className='btn btn-dark'; },2000); return; }
+  var box=document.getElementById('copyFallbackBox');
+  if (!box) {
+    box=document.createElement('div'); box.id='copyFallbackBox';
+    box.style.cssText='margin-top:12px;padding:14px;background:#e8f5e9;border:2px solid #4caf50;border-radius:10px;';
+    box.innerHTML='<div style="font-size:13px;font-weight:700;color:#2e7d32;margin-bottom:4px">✅ 아래 텍스트 전체 복사 → Claude 새 채팅에 붙여넣기</div>'
+      +'<div style="font-size:11px;color:#555;margin-bottom:8px">꾹 누르기 → 전체 선택 → 복사</div>'
+      +'<textarea id="copyFallbackTA" readonly style="width:100%;height:120px;font-size:11px;border:1px solid #a5d6a7;border-radius:6px;padding:8px;resize:none;background:#fff;box-sizing:border-box;-webkit-user-select:all;user-select:all"></textarea>';
+    btn.parentNode.insertBefore(box, btn.nextSibling);
+  }
+  box.style.display='block';
+  var ta=document.getElementById('copyFallbackTA'); ta.value=promptText;
+  if (navigator.clipboard&&navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(promptText).then(function(){ btn.textContent='✓ 자동 복사 완료!'; btn.className='btn btn-green'; setTimeout(function(){ btn.textContent='📋 프롬프트 복사'; btn.className='btn btn-dark'; },3000); }).catch(function(){ btn.textContent='⬇️ 아래에서 직접 복사하세요'; btn.className='btn btn-gray'; });
+  } else { btn.textContent='⬇️ 아래에서 직접 복사하세요'; btn.className='btn btn-gray'; }
+  setTimeout(function(){ ta.focus(); ta.setSelectionRange(0,ta.value.length); },100);
+}
+
+function onResultInput() {
+  var val=document.getElementById('result')?document.getElementById('result').value:'';
+  var len=val.length;
+  var cnt=document.getElementById('charCount'); if (cnt) cnt.textContent=len>0?len.toLocaleString()+'자':'';
+  var ok=len>200;
+  document.getElementById('resultOk').style.display=ok?'block':'none';
+  document.getElementById('pdfBtn').className=ok?'btn btn-dark':'btn btn-gray';
+  document.getElementById('pdfBtn').textContent=ok?'📱 카드형 보고서 열기':'② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfAllBtn').className=ok?'btn btn-dark':'btn btn-gray';
+  document.getElementById('pdfAllBtn').textContent=ok?'📑 전체 저장 (스크롤형 PDF)':'② 분석 완료 후 활성화됩니다';
+  document.getElementById('pdfHint').style.display=ok?'block':'none';
+}
+
+function buildBasicPrompt() {
+  var info=buildInfo(); var now=new Date();
+  var sy=now.getFullYear(), ey=sy+9;
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객 정보를 바탕으로 9개 섹션을 순서대로 빠짐없이 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 직접 말해주듯 존댓말로 자연스럽게. AI 보고서 느낌 절대 금지.\n- 두루뭉술·일반론 절대 금지. 이 사람 사주에서만 나올 수 있는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 본문에 한자 절대 금지. 쉬운 말로 풀어서.\n- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로.\n- 각 섹션 최소 1,500자 이상. 전체 최소 20,000자 이상. 절대 요약·생략 금지.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축 2034=갑인 2035=을묘\n\n[섹션별 작성 지침]\n\n【1. 사주 구조 분석】\n- 사주팔자 8글자 도표 (년/월/일/시 × 천간/지지) 마크다운 표로\n- 오행 분포 표 (木火土金水 각 개수와 강약)\n- 신강/신약 판단 근거\n- 용신·희신·기신 도출\n- 일간 성격 핵심 요약 3줄\n\n【2. 타고난 성격·기질】\n- 이 사람만의 기질을 구체적 생활 장면으로\n- 강점·약점·대인관계 패턴·스트레스 반응\n- 직장·연애·일상에서 어떻게 나타나는지\n\n【3. 대운 흐름 분석】\n- 전체 대운 목록 표 (나이/기간/간지/핵심테마)\n- 현재 대운 상세 분석\n- 직전·다음 대운 비교\n- 지금 해야 할 행동 조언\n\n【4. 재물·직업운】\n- 재성 분석·직업 유형\n- 직장형/사업형 판단\n- 이직·전직 최적 타이밍\n- 수입 안정 시기\n\n【5. 창업·사업 가능성】\n- 창업 사주 여부\n- 어울리는 업종 방향 3가지 이상\n- 시작 타이밍·동업 적합성\n\n【6. 연애·결혼운】\n- 배우자 자리 에너지 분석\n- 이상형 유형·인연 오는 시기\n- 반복되는 연애 패턴과 극복법\n\n【7. 부모·자녀·가족 관계】\n- 가족 내 역할 에너지\n- 자녀 인연 시기\n- 반복되는 패턴과 주의점\n\n【8. 건강·취약 부위】\n- 취약 장기·신체 부위\n- 조심해야 할 시기\n- 맞춤 음식·운동·생활습관 조언\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'+sy+'년부터 '+ey+'년까지 10개년을 각 연도별로 반드시 아래 형식으로 작성:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (이 사주에 맞는 상세한 재물·직업 흐름)\n❤️ 연애·가족: (이 사주에 맞는 상세한 연애·가족 흐름)\n🌿 건강 주의: (이 사주에 맞는 건강 주의사항)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n각 연도 사이 반드시 빈 줄 삽입. 10개년 모두 빠짐없이 작성.';
+}
+
+function buildMiniPrompt() {
+  var info=buildInfo(); var y=new Date().getFullYear();
+  // 2026년 기준 월별 간지
+  var monthJanji = {
+    2025:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子'],
+    2026:['丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子'],
+    2027:['己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子'],
+    2028:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子']
+  };
+  var mj = monthJanji[y] || monthJanji[2026];
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객의 사주를 바탕으로 '+y+'년 월별 미니 운세를 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[작성 원칙]\n- 각 달은 재물/직업, 연애/관계, 건강 세 가지 반드시 포함. 각 항목 2~3문장 이상.\n- 이 사주에서만 나오는 구체적인 말로. 일반론 금지.\n- 용신이 강한 달은 ⭐, 기신이 강한 달은 ⚠️ 제목 옆에 표시.\n- 각 달 마지막에 반드시: 💡 이달의 핵심: 한 줄 요약\n- 전문가가 말해주듯 존댓말로 자연스럽게. 한자 금지.\n\n---\n【1월】 '+mj[0]+'월\n【2월】 '+mj[1]+'월\n【3월】 '+mj[2]+'월\n【4월】 '+mj[3]+'월\n【5월】 '+mj[4]+'월\n【6월】 '+mj[5]+'월\n【7월】 '+mj[6]+'월\n【8월】 '+mj[7]+'월\n【9월】 '+mj[8]+'월\n【10월】 '+mj[9]+'월\n【11월】 '+mj[10]+'월\n【12월】 '+mj[11]+'월\n---\n['+y+'년 전체 총평]\n5줄 이상 풍부하게 작성. 올해 전체 흐름·핵심 기회·주의할 시기·마무리 조언 포함.';
+}
+
+function parseSecs(text) {
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  var titles=['사주 구조 분석','타고난 성격·기질','대운 흐름 분석','재물·직업운','창업·사업 가능성','연애·결혼운','부모·자녀·가족 관계','건강·취약 부위','연도별 세운 분석'];
+  var altTitles=['사주 구조 분석','성격·적성 분석','재물·직업운','연애·결혼운','건강운','부모·자녀 관계','대운 흐름 분석','연도별 세운 분석','종합 조언'];
+  var positions=[];
+  for (var i=0;i<9;i++) {
+    var idx=-1;
+    var tries=['\u3010'+(i+1)+'.','【'+(i+1)+'.','\n'+(i+1)+'. ',(i+1)+'. '];
+    for (var t=0;t<tries.length;t++) { idx=text.indexOf(tries[t]); if (idx!==-1) break; }
+    positions.push(idx);
+  }
+  return titles.map(function(title,i) {
+    var si=positions[i]; if (si===-1) return {title:title,body:''};
+    var ei=text.length;
+    for (var j=i+1;j<9;j++) { if (positions[j]!==-1&&positions[j]>si) { ei=positions[j]; break; } }
+    var chunk=text.slice(si,ei).trim();
+    var firstNewline=chunk.indexOf('\n');
+    return {title:title,body:firstNewline!==-1?chunk.slice(firstNewline+1).trim():chunk};
   });
-}, { threshold: 0.1 });
-document.querySelectorAll('.fade-up, .content-card').forEach(function(el) { observer.observe(el); });
+}
+
+function parseMiniSecs(text) {
+  text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  var months=['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  return months.map(function(month,i) {
+    var s='\u3010'+month+'\u3011'; var next=i<11?'\u3010'+months[i+1]+'\u3011':null;
+    var si=text.indexOf(s); if (si===-1) return {title:month,body:''};
+    var ei=next?text.indexOf(next,si):text.length; if (ei===-1) ei=text.length;
+    var chunk=text.slice(si,ei).trim();
+    var firstNewline=chunk.indexOf('\n');
+    var titleLine=firstNewline!==-1?chunk.slice(0,firstNewline).trim():chunk;
+    var body=firstNewline!==-1?chunk.slice(firstNewline+1).trim():'';
+    body=body.replace(/^---\n?/,'').trim();
+    return {title:titleLine,body:body};
+  });
+}
+
+function mdTableToHtml(text) {
+  var lines=text.split('\n'),out=[],rows=[];
+  var inTbl=false;
+  for (var i=0;i<lines.length;i++) {
+    var line=lines[i].trim();
+    if (line.startsWith('|')&&line.endsWith('|')) {
+      if (/^[\|\-\s]+$/.test(line)) continue;
+      inTbl=true; rows.push(line.slice(1,-1).split('|').map(function(c){ return c.trim(); }));
+    } else {
+      if (inTbl) { out.push(buildHtmlTable(rows)); rows=[]; inTbl=false; }
+      out.push(lines[i]);
+    }
+  }
+  if (inTbl&&rows.length) out.push(buildHtmlTable(rows));
+  return out.join('\n');
+}
+
+function buildHtmlTable(rows) {
+  var html='<table style="width:100%;border-collapse:collapse;font-size:13px;margin:12px 0">';
+  for (var r=0;r<rows.length;r++) {
+    html+='<tr>';
+    for (var c=0;c<rows[r].length;c++) {
+      if (r===0) html+='<th style="background:#1C2B3A;color:#C9A84C;padding:8px;text-align:center;font-size:12px">'+rows[r][c]+'</th>';
+      else html+='<td style="padding:7px 8px;text-align:center;border-bottom:1px solid #eee;word-break:keep-all">'+rows[r][c]+'</td>';
+    }
+    html+='</tr>';
+  }
+  return html+'</table>';
+}
+
+function renderBody(raw) {
+  raw=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'$1').replace(/^---+$/gm,'');
+  raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2').replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
+  var cm=raw.match(/\[한눈에 보기\]([^\n]*)/); var cardText=cm?cm[1].trim():'';
+  var am=raw.match(/지금 당장 할 수 있는 것[^\n]+/); var actionText=am?am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim():'';
+  var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?/g,'');
+  bt=mdTableToHtml(bt);
+  bt=bt.replace(/\[핵심 요약 3줄\]([\s\S]*?)(?=\n\n|지금 당장|$)/g,function(match,lines){
+    var items=lines.trim().split('\n').filter(function(l){ return l.trim(); });
+    var inner=items.map(function(l){ return '<p>'+l.replace(/^[-·•\s]+/,'').trim()+'</p>'; }).join('');
+    return '<div class="summary-box"><div class="summary-box-label">✦ 핵심 요약</div>'+inner+'</div>';
+  });
+  bt=bt.replace(/(■[^\n]+)/g,'<div class="sub-h">$1</div>');
+  bt=bt.replace(/### 🗓️ (\d{4}년[^\n]*)\n([\s\S]*?)(?=### 🗓️ |\[핵심 요약|$)/g,function(match,yearTitle,content){
+    var rows='',summary='';
+    var labels=[
+      {key:'💰 재물·직업:',color:'#8a6500',label:'💰 재물·직업'},
+      {key:'❤️ 연애·가족:',color:'#b03060',label:'❤️ 연애·가족'},
+      {key:'🌿 건강 주의:',color:'#1a7040',label:'🌿 건강 주의'},
+      {key:'✨ 핵심 키워드:',color:'#5c2dd3',label:'✨ 키워드',bold:true},
+      {key:'📝 총평:',isSummary:true}
+    ];
+    var positions=[];
+    for (var li=0;li<labels.length;li++) { var idx=content.indexOf(labels[li].key); if (idx!==-1) positions.push({idx:idx,info:labels[li]}); }
+    positions.sort(function(a,b){ return a.idx-b.idx; });
+    for (var pi=0;pi<positions.length;pi++) {
+      var pos=positions[pi];
+      var startIdx=pos.idx+pos.info.key.length;
+      var endIdx=pi+1<positions.length?positions[pi+1].idx:content.length;
+      var value=content.slice(startIdx,endIdx).trim().replace(/\n/g,' ').replace(/\s{2,}/g,' ');
+      if (pos.info.isSummary) summary=value;
+      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+pos.info.color+'">'+pos.info.label+'</span><span class="seun-val"'+(pos.info.bold?' style="font-weight:600"':'')+'>'+value+'</span></div>';
+    }
+    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">📅 '+yearTitle.replace(/년.*/,'년')+'</span><span class="seun-year-title">'+yearTitle.replace(/\d{4}년\s*/,'')+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">SUMMARY</div><div class="seun-summary-text">'+summary+'</div></div>':'')+'</div>';
+  });
+  var parts=bt.split(/\n{2,}/); var html='';
+  for (var i=0;i<parts.length;i++) {
+    var p=parts[i].trim(); if (!p) continue;
+    if (p.indexOf('<div')===0||p.indexOf('<table')===0) html+=p;
+    else html+='<p>'+p.replace(/\n/g,'<br>')+'</p>';
+  }
+  var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+cardText+'</p></div>':'';
+  var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>&#9989; '+actionText+'</p></div>':'';
+  return sh+html+ah;
+}
+
+function buildPDF() {
+  var result=document.getElementById('result')?document.getElementById('result').value.trim():'';
+  var err=document.getElementById('err2');
+  if (result.length<100) { err.textContent='분석 결과를 먼저 붙여넣어 주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  try { if (currentMode==='mini') buildMiniPDF(result); else buildBasicPDF(result); }
+  catch(e) { err.textContent='PDF 생성 오류: '+e.message; err.style.display='block'; }
+}
+
+function buildLinearPDF() {
+  var result=document.getElementById('result')?document.getElementById('result').value.trim():'';
+  var err=document.getElementById('err2');
+  if (result.length<100) { err.textContent='분석 결과를 먼저 붙여넣어 주세요.'; err.style.display='block'; return; }
+  err.style.display='none';
+  try {
+    var f=formData; var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+    var sections=parseSecs(result); var time=f.h?f.h+'시 '+(f.min||'00')+'분':'미상';
+    var css=getLinearCSS(f.name||'고객');
+    var coverHtml='<div class="cover"><div class="cv-ey">✦ CHEONMYEONGDANG · 天命堂</div><div class="cv-moon">🌙</div><div class="cv-title">'+(f.name||'고객')+' 님의<br/>사주 명리 분석 보고서</div><div class="cv-sub">사주팔자 종합 분석 · 프리미엄 에디션</div><div class="cv-info"><div class="cv-row"><span class="cv-k">성 명</span><span class="cv-v">'+(f.name||'미입력')+'</span></div><div class="cv-row"><span class="cv-k">성 별</span><span class="cv-v">'+f.gender+'</span></div><div class="cv-row"><span class="cv-k">생년월일</span><span class="cv-v">'+f.cal+' '+f.y+'년 '+f.m+'월 '+f.d+'일</span></div><div class="cv-row"><span class="cv-k">출생시각</span><span class="cv-v">'+time+'</span></div></div><div class="cv-date">발행일 · '+today+'</div></div>';
+    var secHtml=sections.map(function(s,i){ return '<div class="sec"><div class="sec-ey">✦ SECTION '+(i+1<10?'0':'')+(i+1)+'</div><div class="sec-title">'+s.title+'</div><div class="sec-div"></div><div class="sb">'+renderBody(s.body||'')+'</div></div>'; }).join('');
+    var finHtml='<div class="fin"><div class="fin-moon">🌙</div><div class="fin-line"></div><div class="fin-t">'+(f.name||'고객')+' 님의<br/>사주 분석을 마칩니다</div><div class="fin-s">본 보고서가 삶의 방향을 잡는 데<br/>작은 도움이 되기를 바랍니다.</div><div class="fin-brand">天命堂 천명당</div><div style="font-size:9px;color:#1a2a34;letter-spacing:2px;margin-top:8px">천명당은 당신의 방향을 응원합니다</div></div>';
+    openPDF(css+coverHtml+'<div style="background:#080808">'+secHtml+'</div>'+finHtml+'</body></html>',(f.name||'고객')+'_사주보고서_전체.html');
+  } catch(e) { document.getElementById('err2').textContent='PDF 생성 오류: '+e.message; document.getElementById('err2').style.display='block'; }
+}
+
+function buildBasicPDF(result) {
+  var f=formData; var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var sections=parseSecs(result); var time=f.h?f.h+'시 '+(f.min||'00')+'분':'미상';
+  var cards=[];
+  for (var i=0;i<sections.length;i++) {
+    var s=sections[i];
+    if (s.title.indexOf('세운')!==-1||s.title.indexOf('대운')!==-1) {
+      var sy=new Date().getFullYear();
+      var parts=s.body.split(/(?=### 🗓️ \d{4}년)/);
+      if (parts.length>5) {
+        cards.push({title:s.title,body:parts.slice(0,Math.ceil(parts.length/2)).join(''),eyebrow:'🗓 세운 '+sy+'~'+(sy+4)});
+        cards.push({title:s.title,body:parts.slice(Math.ceil(parts.length/2)).join(''),eyebrow:'🗓 세운 '+(sy+5)+'~'+(sy+9)});
+      } else cards.push({title:s.title,body:s.body,eyebrow:null});
+    } else cards.push({title:s.title,body:s.body,eyebrow:null});
+  }
+  var total=cards.length+3; var secNum=0;
+  var coverCard='<div class="card cover-card"><div class="cv-eyebrow">✦ CHEONMYEONGDANG · 天命堂</div><div class="cv-moon">🌙</div><div class="cv-title">'+(f.name||'고객')+' 님의<br/>사주 명리 분석 보고서</div><div class="cv-sub">사주팔자 종합 분석 · 프리미엄 에디션</div><div class="cv-info"><div class="cv-row"><span class="cv-k">성 명</span><span class="cv-v">'+(f.name||'미입력')+'</span></div><div class="cv-row"><span class="cv-k">성 별</span><span class="cv-v">'+f.gender+'</span></div><div class="cv-row"><span class="cv-k">생년월일</span><span class="cv-v">'+f.cal+' '+f.y+'년 '+f.m+'월 '+f.d+'일</span></div><div class="cv-row"><span class="cv-k">출생시각</span><span class="cv-v">'+time+'</span></div></div><div class="cv-date">발행일 · '+today+'</div><div class="cv-swipe">← 스와이프해서 넘기세요 →</div></div>';
+  var tocCard='<div class="card toc-card"><div class="toc-label">✦ TABLE OF CONTENTS</div><div class="toc-title">목 차</div><div class="toc-list">'+sections.map(function(s,i){ return '<div class="toc-item"><span class="toc-n">'+(i+1<10?'0':'')+(i+1)+'</span><span class="toc-t">'+s.title+'</span></div>'; }).join('')+'</div><div style="margin-top:14px;font-size:9px;color:#2a2a2a;text-align:center;letter-spacing:1px">총 '+total+'장 · 좌우 스와이프</div></div>';
+  var secCards=cards.map(function(c,i){
+    var eyebrow; if (c.eyebrow) { eyebrow='✦ '+c.eyebrow; } else { secNum++; eyebrow='✦ SECTION '+(secNum<10?'0':'')+secNum; }
+    return '<div class="card sec-card"><div class="sec-header"><div class="sec-eyebrow">'+eyebrow+'</div><div class="sec-title">'+c.title+'</div></div><div class="sec-divider"></div><div class="sec-body"><div class="sb">'+renderBody(c.body||'')+'</div></div><div class="card-counter">'+(i+3)+' / '+total+'</div></div>';
+  }).join('');
+  var finCard='<div class="card fin-card"><div class="fin-moon">🌙</div><div class="fin-line"></div><div class="fin-t">'+(f.name||'고객')+' 님의<br/>사주 분석을 마칩니다</div><div class="fin-s">본 보고서가 삶의 방향을 잡는 데<br/>작은 도움이 되기를 바랍니다.</div><div class="fin-brand">天命堂 천명당</div><div class="fin-date">발행일 · '+today+'</div></div>';
+  openPDF(getBasePDFStyle(f.name||'고객')+coverCard+tocCard+secCards+finCard+'</div></body></html>',(f.name||'고객')+'_사주보고서.html');
+}
+
+function buildMiniPDF(result) {
+  var f=formData; var y=new Date().getFullYear(); var today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  var months=parseMiniSecs(result); var totalIdx=result.indexOf('['+y+'년 전체 총평');
+  var totalHtml=totalIdx!==-1?result.slice(totalIdx).replace(/\[.*?\]/g,'').replace(/\n/g,'<br>'):'';
+  var mkMonth=function(s){
+    var isGood=s.title.indexOf('⭐')!==-1; var isWarn=s.title.indexOf('⚠️')!==-1;
+    var cls=isGood?'mi good':(isWarn?'mi warn':'mi');
+    var badge=isGood?'<span class="mh-badge good">이달 주목</span>':(isWarn?'<span class="mh-badge warn">주의 필요</span>':'');
+    var body=s.body.replace(/💡 이달의 핵심:(.*?)(\n|$)/g,'<span class="tip">💡 이달의 핵심:$1</span>').replace(/\n/g,'<br>');
+    return '<div class="'+cls+'"><div class="mh">'+s.title+badge+'</div><div class="mb">'+body+'</div></div>';
+  };
+  var html='<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><title>'+y+'년 미니운세</title>'+getMiniCSS()+'</head><body>'
+    +'<div class="cover"><div class="cb">✦ CHEONMYEONGDANG · MINI FORTUNE ✦</div><div class="cl"></div><div class="star">⭐</div><div class="ct">'+(f.name||'고객')+' 님의<br/>'+y+'년 월별 미니운세</div><div class="cs">리뷰 작성 감사 보너스 · 1~12월 흐름 완전 분석</div><div class="ci"><div class="cr"><span class="ck">성 명</span><span class="cv">'+(f.name||'미입력')+'</span></div><div class="cr"><span class="ck">생년월일</span><span class="cv">'+f.cal+' '+f.y+'년 '+f.m+'월 '+f.d+'일</span></div><div class="cr"><span class="ck">분석 연도</span><span class="cv">'+y+'년</span></div></div><div class="cd">발행일 · '+today+'</div></div>'
+    +'<div class="half"><div class="page-label">1월 — 6월</div>'+months.slice(0,6).map(mkMonth).join('')+'</div>'
+    +'<div class="half"><div class="page-label">7월 — 12월</div>'+months.slice(6,12).map(mkMonth).join('')+'</div>'
+    +'<div class="total"><div class="total-top"><div class="tt2">'+y+'년 전체 총평</div><div class="tt2-sub">ANNUAL FORTUNE SUMMARY</div></div><div class="tb">'+totalHtml+'</div><div class="fin2"><div class="fl"></div><div class="ft">천명당 天命堂</div><div class="ft-sub">리뷰 작성에 감사드립니다 · 천명당은 당신의 방향을 응원합니다 🌙</div></div></div>'
+    +'</body></html>';
+  openPDF(html,(f.name||'고객')+'_미니운세.html');
+}
+
+function openPDF(html, fname) {
+  var old=document.getElementById('pdfOverlay'); if (old) old.remove();
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'}); var url=URL.createObjectURL(blob);
+  var overlay=document.createElement('div'); overlay.id='pdfOverlay';
+  overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML='<div style="background:#fff;border-radius:18px;padding:30px 24px;width:100%;max-width:420px;text-align:center"><div style="font-size:40px;margin-bottom:14px">📄</div><div style="font-size:18px;font-weight:700;color:#1C2B3A;margin-bottom:8px">보고서 준비 완료!</div><div style="font-size:13px;color:#666;line-height:1.9;margin-bottom:22px">아래 버튼을 누르면 보고서가 열려요.<br>📱 <strong style="color:#1C2B3A">iOS:</strong> 공유(□↑) → 파일에 저장<br>🤖 <strong style="color:#1C2B3A">Android:</strong> 인쇄 → PDF로 저장<br>저장 후 뒤로가기로 돌아오세요.</div><a id="pdfLink" href="'+url+'" target="_blank" style="display:block;width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none;text-align:center">📋 보고서 열기</a><button onclick="document.getElementById(\'pdfOverlay\').remove()" style="width:100%;padding:12px;background:#f0f0f0;color:#666;border:none;border-radius:10px;font-size:14px;cursor:pointer">✕ 취소</button></div>';
+  document.body.appendChild(overlay);
+}
+
+function getBasePDFStyle(name) {
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/><title>'+name+' 사주 분석 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;height:100%;overflow:hidden;background:#f5f5f7;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}.deck{display:flex;width:100%;height:100dvh;overflow-x:scroll;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:#f5f5f7}.deck::-webkit-scrollbar{display:none}.card{flex:0 0 100vw;width:100vw;height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;overflow:hidden;position:relative}.cover-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 28px}.cv-eyebrow{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:24px}.cv-moon{font-size:44px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:26px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:6px}.cv-sub{font-size:11px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:32px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:18px 24px;width:100%;max-width:280px;text-align:left;margin-bottom:24px}.cv-row{display:flex;gap:12px;margin-bottom:7px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:9px;color:#C9A84C;width:52px;flex-shrink:0;letter-spacing:1px;padding-top:2px;font-weight:600}.cv-v{font-size:11px;color:#c0d0da;font-weight:400}.cv-date{font-size:8px;color:#1a2a34;letter-spacing:2px}.cv-swipe{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4050;letter-spacing:2px;white-space:nowrap}.toc-card{background:#1C2B3A;padding:36px 24px 20px;justify-content:flex-start}.toc-label{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.toc-title{font-family:"Noto Serif KR",serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:24px;line-height:1.3}.toc-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;scrollbar-width:none}.toc-list::-webkit-scrollbar{display:none}.toc-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #111}.toc-item:last-child{border-bottom:none}.toc-n{font-size:10px;font-weight:900;color:#C9A84C;width:18px;flex-shrink:0}.toc-t{font-size:13px;color:#888;font-weight:400;letter-spacing:.2px}.sec-card{background:#fff;display:flex;flex-direction:column;border:1.5px solid #e8edf5}.sec-header{flex-shrink:0;padding:24px 22px 14px;background:linear-gradient(180deg,#1C2B3A 0%,#2d4a6b 40%,#f0f4f8 100%)}.sec-eyebrow{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:7px}.sec-title{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:900;color:#1C2B3A;line-height:1.3}.sec-divider{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:10px 22px 0}.sec-body{flex:1;overflow-y:auto;padding:18px 22px 28px;scrollbar-width:none}.sec-body::-webkit-scrollbar{display:none}.sb{font-size:13.5px;line-height:2.1;color:#2a2a2a;font-weight:400;word-break:keep-all}.sb p{margin-bottom:20px;line-height:2.1;color:#333}.sb p:last-child{margin-bottom:0}.summary-box{background:rgba(201,168,76,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:14px 16px;margin:16px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:12.5px;color:#6b4c00;line-height:1.85;margin-bottom:6px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.sb strong{color:#e8d4a0;font-weight:600}.sub-h{font-size:12px;font-weight:700;color:#1C2B3A;margin:20px 0 10px;padding:8px 14px 8px 16px;background:linear-gradient(90deg,rgba(28,43,58,.08),rgba(28,43,58,.02));border-left:3px solid #C9A84C;border-radius:0 8px 8px 0;letter-spacing:.3px}.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:4px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:14px 18px;margin:14px 0;box-shadow:0 2px 8px rgba(201,168,76,.15)}.sc-label{font-size:7px;letter-spacing:3px;color:#C9A84C;margin-bottom:6px;font-weight:700}.sc p{font-size:13.5px;font-weight:600;color:#7a5200;line-height:1.85;word-break:keep-all;margin:0}.ac{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border:1px solid rgba(39,174,96,.3);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 18px;margin-top:16px}.ac-label{font-size:7px;letter-spacing:3px;color:#27ae60;margin-bottom:6px;font-weight:700}.ac p{font-size:13px;font-weight:700;color:#1a6b3c;line-height:1.8;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#1C2B3A,#2d4a6b);padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.3)}.seun-year-num{font-size:8px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fafbfc;padding:12px 14px}.seun-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eef0f3;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11px;font-weight:700;flex-shrink:0;width:76px;padding-top:2px;color:#C9A84C}.seun-val{font-size:11px;line-height:1.75;color:#333;flex:1;word-break:keep-all;font-weight:400}.seun-summary{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border-left:3px solid #27ae60;padding:10px 14px;border-top:1px solid rgba(39,174,96,.2)}.seun-summary-label{font-size:7px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#1a6b3c;font-weight:700;word-break:keep-all}.card-counter{position:absolute;top:16px;right:18px;font-size:9px;color:#888;letter-spacing:1px;font-weight:500}.fin-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 32px}.fin-moon{font-size:36px;margin-bottom:16px}.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}.fin-t{font-family:"Noto Serif KR",serif;font-size:17px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}.fin-s{font-size:10px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:24px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:13px;color:#C9A84C;font-weight:700;letter-spacing:2px}.fin-date{font-size:8px;color:#141e24;letter-spacing:2px;margin-top:6px}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}.card{page-break-after:always}}</style></head><body style="background:#f5f5f7"><div class="deck">';
+}
+
+function getLinearCSS(name) {
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>'+name+' 사주 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:0}.cover{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.cv-moon{font-size:52px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}.cv-sub{font-size:12px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:36px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600;letter-spacing:1px}.cv-v{font-size:12px;color:#c0d0da;font-weight:300}.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}.sec{background:linear-gradient(180deg,#1C2B3A 0%,#f5f5f7 80px);padding:48px 40px 52px;page-break-before:always;border-bottom:1px solid #141414}.sec:last-child{border-bottom:none}.sec-ey{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:8px}.sec-title{font-family:"Noto Serif KR",serif;font-size:22px;font-weight:900;color:#1C2B3A;margin-bottom:4px;line-height:1.3}.sec-div{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:14px 0 22px}.sb{font-size:14px;line-height:2.15;color:#333;font-weight:400;word-break:keep-all}.sb p{margin-bottom:22px}.sb p:last-child{margin-bottom:0}.sub-h{font-size:12.5px;font-weight:700;color:#e8d4a0;margin:22px 0 10px;padding:8px 16px 8px 18px;background:linear-gradient(90deg,rgba(201,168,76,.15),rgba(201,168,76,.03));border-left:3px solid #C9A84C;border-radius:0 8px 8px 0}.sc{background:linear-gradient(135deg,#0f1e2e,#0a1520);border:1px solid rgba(201,168,76,.25);border-left:5px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:16px 20px;margin:0 0 20px 0}.sc-label{font-size:8px;letter-spacing:3px;color:#C9A84C;margin-bottom:8px;font-weight:700}.sc p{font-size:14px;font-weight:600;color:#e8d490;line-height:1.9;word-break:keep-all;margin:0}.summary-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:16px 20px;margin:20px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:13px;color:#d4b96a;line-height:1.9;margin-bottom:7px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.ac{background:linear-gradient(135deg,#081c10,#040c08);border:1px solid rgba(39,174,96,.2);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 20px;margin-top:20px}.ac-label{font-size:8px;letter-spacing:3px;color:#2ecc71;margin-bottom:7px;font-weight:700}.ac p{font-size:13.5px;font-weight:700;color:#7adba0;line-height:1.85;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#0f1c2a,#111);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.12)}.seun-year-num{font-size:9px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fff;padding:10px 16px}.seun-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #131313;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11.5px;font-weight:700;flex-shrink:0;width:80px;color:#C9A84C;padding-top:2px}.seun-val{font-size:12px;line-height:1.8;color:#888;flex:1;word-break:keep-all;font-weight:300}.seun-summary{background:linear-gradient(135deg,#071a0f,#040c08);border-left:3px solid #27ae60;padding:10px 16px;border-top:1px solid rgba(39,174,96,.1)}.seun-summary-label{font-size:8px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12.5px;line-height:1.85;color:#7adba0;font-weight:700;word-break:keep-all}.fin{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);padding:60px 40px;text-align:center;page-break-before:always;min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center}.fin-moon{font-size:44px;margin-bottom:18px}.fin-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 18px}.fin-t{font-family:"Noto Serif KR",serif;font-size:19px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.6}.fin-s{font-size:11px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:26px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}th{background:#0f1c2a;color:#C9A84C;padding:8px 14px;text-align:left;font-weight:700;border-bottom:1px solid rgba(201,168,76,.2)}td{padding:8px 14px;border-bottom:1px solid #161616;color:#999;font-weight:300}tr:last-child td{border-bottom:none}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}}</style></head><body style="background:#f5f5f7">';
+}
+
+function getMiniCSS() {
+  return '<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans KR",sans-serif;color:#1a1a1a;background:#fff}.cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(160deg,#1C2B3A 0%,#0d1820 100%);color:#fff;page-break-after:always;text-align:center;padding:60px 40px}.cb{font-size:9px;letter-spacing:6px;color:#C9A84C;margin-bottom:20px;font-weight:600}.cl{width:48px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 28px}.star{font-size:40px;margin-bottom:16px}.ct{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;line-height:1.6;margin-bottom:8px;color:#fff}.cs{font-size:12px;color:#7a98ae;margin-bottom:40px;font-weight:300;letter-spacing:1px}.ci{border:1px solid rgba(201,168,76,0.25);border-radius:8px;padding:20px 36px;margin-bottom:40px;text-align:left;background:rgba(255,255,255,.04)}.cr{display:flex;gap:14px;margin-bottom:8px}.cr:last-child{margin-bottom:0}.ck{font-size:9px;color:#C9A84C;width:56px;flex-shrink:0;letter-spacing:1px;padding-top:2px}.cv{font-size:12px;color:#dde8f0;font-weight:400}.cd{font-size:9px;color:#3d5a6c;letter-spacing:3px}.half{padding:52px 60px;page-break-after:always;background:#fff}.page-label{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:600;margin-bottom:32px;display:flex;align-items:center;gap:12px}.page-label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}.mi{margin-bottom:28px;padding:20px 24px;border-radius:10px;background:#f9f8f6;border-left:3px solid #C9A84C;page-break-inside:avoid}.mi.good{background:#f0f7f0;border-left-color:#27ae60}.mi.warn{background:#fdf6f0;border-left-color:#e67e22}.mh{font-size:14px;font-weight:700;color:#1C2B3A;margin-bottom:10px;display:flex;align-items:center;gap:8px}.mh-badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600}.mh-badge.good{background:#e8f5e9;color:#27ae60}.mh-badge.warn{background:#fff3e0;color:#e67e22}.mb{font-size:12px;line-height:2.0;color:#333;font-weight:400;word-break:keep-all}.mb .tip{display:block;margin-top:8px;font-size:11px;font-weight:700;color:#1C2B3A;padding:6px 10px;background:rgba(201,168,76,.1);border-radius:6px}.total{padding:52px 60px;page-break-before:always;min-height:100vh}.total-top{background:linear-gradient(135deg,#1C2B3A 0%,#0d1820 100%);border-radius:12px;padding:28px 32px;margin-bottom:32px;color:#fff}.tt2{font-family:"Noto Serif KR",serif;font-size:20px;color:#C9A84C;font-weight:900;margin-bottom:6px}.tt2-sub{font-size:11px;color:#7a98ae;letter-spacing:1px}.tb{font-size:13px;line-height:2.2;color:#2a2a2a;font-weight:400;word-break:keep-all;padding:24px;background:#f9f8f6;border-radius:10px;border-left:3px solid #C9A84C}.fin2{text-align:center;margin-top:40px;padding-top:28px;border-top:1px solid #f0f0f0}.fl{width:40px;height:2px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 14px}.ft{font-size:13px;color:#1C2B3A;font-weight:600;letter-spacing:1px}.ft-sub{font-size:10px;color:#aaa;margin-top:4px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>';
+}
+
+window.onload = function() { initCats(); };
 </script>
 </body>
 </html>
