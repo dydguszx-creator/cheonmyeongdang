@@ -733,57 +733,48 @@ footer .gold{color:var(--gold)}
 </footer>
 
 <script>
-// 카테고리 버튼 onclick
+var stockOptions = [3, 5, 7];
+var stockNum = stockOptions[Math.floor(Math.random() * stockOptions.length)];
+document.getElementById('stockNum').textContent = stockNum;
+document.getElementById('stockNum2').textContent = stockNum;
+
 document.querySelectorAll('.cat-btn').forEach(function(btn) {
   btn.addEventListener('click', function() { this.classList.toggle('on'); });
 });
 
-function getVal(id) {
-  var el = document.getElementById(id);
-  return el ? el.value.trim() : '';
-}
-
 function submitForm() {
-  var y = getVal('f-year'), m = getVal('f-month'), d = getVal('f-day');
-  var errEl = document.getElementById('formErr');
-  if (!y || !m || !d) {
-    errEl.textContent = '생년월일은 필수입니다.';
-    errEl.style.display = 'block';
+  var name = document.getElementById('f-name').value.trim();
+  var year = document.getElementById('f-year').value.trim();
+  var month = document.getElementById('f-month').value.trim();
+  var day = document.getElementById('f-day').value.trim();
+  if (!name || !year || !month || !day) {
+    alert('성함과 생년월일을 입력해주세요.');
     return;
   }
-  errEl.style.display = 'none';
-
-  var name = getVal('f-name');
-  var gender = getVal('f-gender') || '남성';
-  var cal = getVal('f-cal') || '양력';
-  var h = getVal('f-hour'), mn = getVal('f-min');
-  var time = h ? h+'시 '+(mn||'00')+'분' : '미상';
-
-  var qArr = [];
-  document.querySelectorAll('.cat-btn.on').forEach(function(c) { qArr.push(c.getAttribute('data-val')); });
-  var qDirect = getVal('f-q');
-  if (qDirect) qArr.push(qDirect);
+  var gender = document.getElementById('f-gender').value;
+  var cal = document.getElementById('f-cal').value;
+  var hour = document.getElementById('f-hour').value.trim();
+  var min = document.getElementById('f-min') ? document.getElementById('f-min').value.trim() : '';
+  var time = hour ? hour + '시 ' + (min||'00') + '분' : '미상';
+  var cats = [];
+  document.querySelectorAll('.cat-btn.on').forEach(function(b) { cats.push(b.getAttribute('data-val')); });
 
   var copyText = '✦ 천명당 사주 신청\n'
     + '━━━━━━━━━━━━━━\n'
-    + '이름: ' + (name||'미입력') + '\n'
+    + '성함: ' + name + '\n'
     + '성별: ' + gender + '\n'
-    + '생년월일: ' + cal + ' ' + y + '년 ' + m + '월 ' + d + '일\n'
+    + '생년월일: ' + cal + ' ' + year + '년 ' + month + '월 ' + day + '일\n'
     + '출생시각: ' + time + '\n'
-    + (qArr.length > 0 ? '궁금한 것: ' + qArr.join(' / ') + '\n' : '')
+    + (cats.length > 0 ? '궁금한 것: ' + cats.join(' / ') + '\n' : '')
     + '━━━━━━━━━━━━━━\n'
     + '입금 후 이 내용을 채팅방에 붙여넣어 주세요 🙏';
 
   function doShow() {
-    var formSec = document.getElementById('form-section');
-    var completeSec = document.getElementById('complete-section');
-    if (formSec) formSec.style.display = 'none';
-    if (completeSec) {
-      completeSec.style.display = 'block';
-      completeSec.scrollIntoView({behavior:'smooth'});
-    }
-    var ta = document.getElementById('copyPreview');
-    if (ta) ta.value = copyText;
+    document.getElementById('submitBtn').style.display = 'none';
+    var step = document.getElementById('completeStep');
+    step.style.display = 'block';
+    step.scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('copyPreview').value = copyText;
   }
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -807,19 +798,47 @@ function fallbackCopy(text) {
 
 function copyAgain() {
   var ta = document.getElementById('copyPreview');
-  if (!ta) return;
   var btn = document.getElementById('copyAgainBtn');
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(ta.value).then(function() {
-      if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
+      btn.textContent = '✅ 복사됨!';
+      setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000);
     });
   } else {
     fallbackCopy(ta.value);
-    if (btn) { btn.textContent = '✅ 복사됨!'; setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000); }
+    btn.textContent = '✅ 복사됨!';
+    setTimeout(function(){ btn.textContent = '📋 다시 복사'; }, 2000);
   }
 }
 
-// 스크롤 애니메이션
+var reviews = [
+  {star:'★★★★★',date:'2026.05.10',source:'당근마켓 후기',text:'이곳은 처음 겪어볼 정도로 진심이 느껴지는 곳이었어요. 2만원도 안 되는 금액에 각각 분리해서 설명해주시고, 좋을 때는 좋은 대로 나쁠 때는 개운법으로 대처 방법까지 남겨주셔서 놀라면서 읽었습니다. 왜 내가 지금 이런 상황일 수밖에 없는지까지 알려주셔서 너무 감사합니다.',name:'당*임니당',av:'당'},
+  {star:'★★★★★',date:'2026.05.07',source:'당근마켓 후기',text:'철학관에서 보는 것보다 더 나에 대해 잘 꼬집어서 얘기해주시는 것 같아 마음에 와닿았어요. 저의 성격을 정확하게 파악하신 것 같아 놀라웠습니다.',name:'코*랑하니',av:'코'},
+  {star:'★★★★★',date:'2026.05.03',source:'당근마켓 후기',text:'말로 대화하듯이 풀어주셔서 이해하게 되었습니다. 궁금한 부분도 중점적으로 설명해주셔서 정말 도움이 됐어요.',name:'후*하하',av:'후'},
+  {star:'★★★★★',date:'2026.04.28',source:'당근마켓 후기',text:'사주풀이 하면 이해하기가 어려운 부분이 많은데 꼼꼼한 설명과 디테일한 풀이에 매우 만족합니다. 2~3년 후의 미래까지 봐주시는 게 대박인 것 같아요.',name:'사*72',av:'사'},
+  {star:'★★★★★',date:'2026.04.22',source:'네이버 후기',text:'요즘 뭔가 막히고 불안했는데 기질상 혼란스러운 시기라는 말이 너무 솔직하게 와닿더라고요. 개운법까지 알려주셔서 오늘부터 바로 실천해보고 있어요.',name:'강*희',av:'강'},
+  {star:'★★★★★',date:'2026.04.15',source:'카카오 후기',text:'오랫동안 연애운이 안 풀려서 혹시나 했는데 보고서 보면서 마음이 조금 가벼워졌어요. 2027년에 인연이 올 수 있다는 말도 설레었어요.',name:'이*수',av:'이'},
+  {star:'★★★★★',date:'2026.04.10',source:'카카오 후기',text:'이직 시기를 고민하던 차에 2028년에 시작하라는 흐름을 보고 믿음이 생겼습니다. 면접 때 어떤 방향 회사를 가면 좋은지까지 알려주신 게 신기하고 도움이 됐습니다.',name:'김*현',av:'김'},
+  {star:'★★★★★',date:'2026.03.28',source:'네이버 후기',text:'돈복 항목에서 실제 실패했던 게 딱 나와있어서 너무 신기했어요. 12시간 안에 빠르게 받았고, 내용도 길고 꼼꼼해서 비용 대비 정말 만족스러워요.',name:'최*민',av:'최'},
+];
+
+var shown = 4;
+function renderReviews() {
+  var grid = document.getElementById('reviewGrid');
+  grid.innerHTML = '';
+  reviews.slice(0, shown).forEach(function(r) {
+    grid.innerHTML += '<div class="review-card">'
+      + '<div class="review-top"><div class="review-stars">' + r.star + '</div><div class="review-date">' + r.date + '</div></div>'
+      + '<div class="review-source">📍 ' + r.source + '</div>'
+      + '<div class="review-text">"' + r.text + '"</div>'
+      + '<div class="review-author"><div class="review-avatar">' + r.av + '</div>' + r.name + '</div>'
+      + '</div>';
+  });
+  document.getElementById('moreBtn').style.display = shown >= reviews.length ? 'none' : 'inline-block';
+}
+function loadMore() { shown += 3; renderReviews(); }
+renderReviews();
+
 var observer = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
     if (e.isIntersecting) {
