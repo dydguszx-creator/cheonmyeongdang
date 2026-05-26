@@ -744,7 +744,7 @@ function getVal(id) {
 }
 
 function submitForm() {
-  var y = getVal('y'), m = getVal('m'), d = getVal('d');
+  var y = getVal('f-year'), m = getVal('f-month'), d = getVal('f-day');
   var errEl = document.getElementById('formErr');
   if (!y || !m || !d) {
     errEl.textContent = '생년월일은 필수입니다.';
@@ -753,15 +753,15 @@ function submitForm() {
   }
   errEl.style.display = 'none';
 
-  var name = getVal('name');
-  var gender = getVal('gender') || '남성';
-  var cal = getVal('cal') || '양력';
-  var h = getVal('h'), mn = getVal('mn');
+  var name = getVal('f-name');
+  var gender = getVal('f-gender') || '남성';
+  var cal = getVal('f-cal') || '양력';
+  var h = getVal('f-hour'), mn = getVal('f-min');
   var time = h ? h+'시 '+(mn||'00')+'분' : '미상';
 
   var qArr = [];
   document.querySelectorAll('.cat-btn.on').forEach(function(c) { qArr.push(c.getAttribute('data-val')); });
-  var qDirect = getVal('q');
+  var qDirect = getVal('f-q');
   if (qDirect) qArr.push(qDirect);
 
   var copyText = '✦ 천명당 사주 신청\n'
