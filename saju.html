@@ -730,105 +730,118 @@ function buildHtmlTable(rows) {
   return html+'</table>';
 }
 
-function applyMarkup(text) {
-  text = text.replace(/==([^=]+)==/g, '<span class="mk-gold">$1</span>');
-  text = text.replace(/!!([^!]+)!!/g, '<span class="mk-red">$1</span>');
-  text = text.replace(/\+\+([^+]+)\+\+/g, '<span class="mk-green">$1</span>');
-  text = text.replace(/~~([^~]+)~~/g, '<span class="mk-blue">$1</span>');
-  return text;
+function applyMarkup(t) {
+  if(!t) return t;
+  t = t.replace(/==([^=]+)==/g,'<span class="mk-gold">$1</span>');
+  t = t.replace(/!!([^!]+)!!/g,'<span class="mk-red">$1</span>');
+  t = t.replace(/[+][+]([^+]+)[+][+]/g,'<span class="mk-green">$1</span>');
+  t = t.replace(/~~([^~]+)~~/g,'<span class="mk-blue">$1</span>');
+  return t;
 }
+
 function renderBody(raw) {
-  raw=raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  if(!raw) return '';
+  raw = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
 
-  // ① 깨진/불필요한 내용 제거
-  raw=raw.replace(/^#{1,2}[^\n]*(\n[ \t]*[-·•][^\n]*)*/gm,'');  // ## 블록+불릿 제거
-  raw=raw.replace(/^---+$/gm,'');                           // --- 구분선 제거
-  raw=raw.replace(/^[-·•] /gm,'');                          // 불릿 제거
-  raw=raw.replace(/^> [^\n]*/gm,'');                        // > 인용 제거
-  raw=raw.replace(/\[핵심 요약[^\]]*\][^\n]*/g,'');         // [핵심 요약...] 제거
+  // STEP1: 불필요한 내용 제거
+  raw = raw.replace(/^#{1,2}(?!#)[^\n]*(\n[ \t]*[-\u00b7\u2022][^\n]*)*/gm,'');
+  raw = raw.replace(/^---+$/gm,'');
+  raw = raw.replace(/^[-\u00b7\u2022] /gm,'');
+  raw = raw.replace(/^> [^\n]*/gm,'');
 
-  // ② 다양한 연도 형식 → 표준 ### 🗓️ 형식으로 통일
-  // 형식A: "2026년丙午년" (붙어있음)
-  raw=raw.replace(/(\d{4}년)([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]년)/g,'### 🗓️ $1 $2');
-  // 형식B: "2026년\n丙午년" (줄바꿈)
-  raw=raw.replace(/(\d{4}년)\n([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]년)/g,'### 🗓️ $1 $2');
-  // 형식C: "2026년 丙午년" (공백) - 이미 표준에 가까움
-  raw=raw.replace(/^(\d{4}년) ([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥]년)$/gm,'### 🗓️ $1 $2');
+  // STEP2: 연도 형식 통일 -> ### 🗓️
+  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
+  raw = raw.replace(/(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
+  raw = raw.replace(/^(\d{4}년) ([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
 
-  // ③ 💰 키워드 형식 통일: "💰 재물·직업\n내용" → "💰 재물·직업: 내용"
-  raw=raw.replace(/(💰 재물·직업|❤️ 연애·가족|🌿 건강 주의|🎰 복권·재물운|✨ 핵심 키워드|✨ 키워드|📝 총평)\n([^💰❤️🌿🎰✨📝✅\n][^\n]*)/g,'$1: $2');
-  // "💰 재물·직업내용" (콜론/공백 없이 바로 내용) → 콜론 추가
-  raw=raw.replace(/(💰 재물·직업|❤️ 연애·가족|🌿 건강 주의|🎰 복권·재물운|✨ 핵심 키워드|✨ 키워드|📝 총평)([^:\n][^\n]*)/g,'$1: $2');
-
-  // ✅ 행동조언은 세운 파서 내부에서 처리
-  // fallback: "2026년\n丙午년\n✅..." 형식 처리
-  raw=raw.replace(/(\d{4}년)\n([가-힣A-Za-z]+년)\n([\s\S]*?)(?=\n\d{4}년\n[가-힣A-Za-z]+년|$)/g, function(m, yr, gz, body) {
-    if (m.indexOf('seun-year') !== -1) return m;
-    var action='', lines=body.trim().split('\n');
-    var rows=lines.filter(function(l){
-      if(l.startsWith('✅')){action=l.replace(/^✅\s*/,'').replace(/---$/,'').trim();return false;}
-      return l.trim() && !l.startsWith('---');
-    }).join('<br>');
-    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yr+'</span><span class="seun-year-title">'+gz+'</span></div><div class="seun-year-body"><div class="seun-val" style="width:100%">'+rows+'</div></div>'+(action?'<div class="seun-action">✅ '+action+'</div>':'')+'</div>';
+  // STEP3: 세운 항목 콜론 통일
+  var LK = ['\ud83d\udcb0 재물\u00b7직업','\u2764\ufe0f 연애\u00b7가족','\ud83c\udf3f 건강 주의','\ud83c\udfb0 복권\u00b7재물운','\u2728 핵심 키워드','\u2728 키워드','\ud83d\udcdd 총평'];
+  LK.forEach(function(k){
+    var r1 = new RegExp('('+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')\\n([^\n✅][^\n]*)','g');
+    raw = raw.replace(r1,'$1: $2');
+    var r2 = new RegExp('('+k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')([^:\n][^\n]*)','g');
+    raw = raw.replace(r2,'$1: $2');
   });
-  // 세운 연도 카드 먼저 처리 (마크다운 제거 전)
-  raw=raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\[핵심 요약|$)/g,function(match,yearTitle,content){
-    var rows='',summary='',actionRow='';
+
+  // STEP4: 세운 카드 생성
+  raw = raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\[핵심 요약|$)/g,function(_,yt,content){
+    content = content.replace(/---[\s\S]*/,'').replace(/^[-\u00b7\u2022][^\n]*/gm,'').trim();
     var labels=[
       {key:'\ud83d\udcb0 재물\u00b7직업:',color:'#8a6500',label:'\ud83d\udcb0 재물\u00b7직업'},
       {key:'\u2764\ufe0f 연애\u00b7가족:',color:'#b03060',label:'\u2764\ufe0f 연애\u00b7가족'},
       {key:'\ud83c\udf3f 건강 주의:',color:'#1a7040',label:'\ud83c\udf3f 건강'},
       {key:'\ud83c\udfb0 복권\u00b7재물운:',color:'#5c2dd3',label:'\ud83c\udfb0 복권운'},
       {key:'\u2728 핵심 키워드:',color:'#5c2dd3',label:'\u2728 키워드',bold:true},
+      {key:'\u2728 키워드:',color:'#5c2dd3',label:'\u2728 키워드',bold:true},
       {key:'\ud83d\udcdd 총평:',isSummary:true},
       {key:'행동 조언:',isAction:true},
-      {key:'✅ ',isAction:true}
+      {key:'\u2705 ',isAction:true}
     ];
-    content=content.replace(/^[-·•·][^\n]*/gm,'');  // content 안 불릿 제거
-    content=content.replace(/---/g,'');
-    var positions=[];
-    for(var li=0;li<labels.length;li++){var idx=content.indexOf(labels[li].key);if(idx!==-1)positions.push({idx:idx,info:labels[li]});}
-    positions.sort(function(a,b){return a.idx-b.idx;});
-    for(var pi=0;pi<positions.length;pi++){
-      var pos=positions[pi];var startIdx=pos.idx+pos.info.key.length;
-      var endIdx=pi+1<positions.length?positions[pi+1].idx:content.length;
-      var value=content.slice(startIdx,endIdx).replace(/---[\s\S]*/,'').trim().replace(/^[-·•][^\n]*/gm,'').split('\n')[0].trim();
-      if(!pos.info.isSummary&&!pos.info.isAction)value=applyMarkup(value);
-      if(pos.info.isSummary)summary=value;
-      else if(pos.info.isAction)actionRow=value;
-      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+pos.info.color+'">'+pos.info.label+'</span><span class="seun-val"'+(pos.info.bold?' style="font-weight:700"':'')+'>'+value+'</span></div>';
-    }
-    var yearNum=yearTitle.replace(/년.*/,'년');
-    var yearSub=yearTitle.replace(/\d{4}년\s*/,'');
-    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yearNum+'</span><span class="seun-year-title">'+yearSub+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
+    var pos=[];
+    labels.forEach(function(lb){var i=content.indexOf(lb.key);if(i!==-1)pos.push({idx:i,info:lb});});
+    pos.sort(function(a,b){return a.idx-b.idx;});
+    pos=pos.filter(function(p,i){return i===0||p.idx!==pos[i-1].idx;});
+    var rows='',summary='',actionRow='';
+    pos.forEach(function(p,pi){
+      var s=p.idx+p.info.key.length,e=pi+1<pos.length?pos[pi+1].idx:content.length;
+      var val;
+      if(p.info.isAction||p.info.isSummary){
+        val=content.slice(s,e).split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&!/^[-\u00b7\u2022]/.test(l);})[0]||'';
+      } else {
+        val=content.slice(s,e).replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim();
+        val=applyMarkup(val);
+      }
+      if(p.info.isSummary) summary=val;
+      else if(p.info.isAction) actionRow=val;
+      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+p.info.color+'">'+p.info.label+'</span><span class="seun-val"'+(p.info.bold?' style="font-weight:700"':'')+'>'+val+'</span></div>';
+    });
+    var yN=yt.replace(/년.*/,'년'),yS=yt.replace(/\d{4}년\s*/,'');
+    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yN+'</span><span class="seun-year-title">'+yS+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
   });
-  raw=raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/^---+$/gm,'');
-  raw=raw.replace(/(\d+~\d+세)(\d{4})/g,'$1 / $2').replace(/(\d{4}~\d{4})([가-힣])/g,'$1 / $2');
-  var cm=raw.match(/\[한눈에 보기\]([^\n]*)/); var cardText=cm?cm[1].trim():'';
-  var am=raw.match(/지금 당장 할 수 있는 것[^\n]*(?:\n([^\n]+))?/); var actionText=am?(am[1]||am[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'')).trim():'';
-  var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?([^\n]*\n?)?/g,'');
+
+  // STEP5: 마크다운 제거
+  raw = raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+
+  // STEP6: 한눈에 보기 + 지금 당장 추출
+  var cm=raw.match(/\[한눈에 보기\]([^\n]*)/);
+  var cardText=cm?cm[1].trim():'';
+  var am=raw.match(/지금 당장 할 수 있는 것[^\n]*(?:\n([^\n]+))?/);
+  var actionText='';
+  if(am){
+    var sl=am[0].split('\n')[0].replace(/지금 당장 할 수 있는 것[\uff1a:\u2192\s]*/,'').trim();
+    var nl=(am[1]||'').trim();
+    actionText=sl||nl;
+  }
+
+  // STEP7: bt 구성
+  var bt=raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'').replace(/지금 당장 할 수 있는 것[^\n]*\n?(?:[^\n]+\n?)?/g,'');
+
+  // STEP8: 표 변환
   bt=mdTableToHtml(bt);
-  bt=bt.replace(/\[핵심 요약 3줄\]([\s\S]*?)(?=\n\n|지금 당장|$)/g,function(match,lines){
-    var items=lines.trim().split('\n').filter(function(l){ return l.trim(); });
-    var inner=items.map(function(l){ return '<p>'+l.replace(/^[-·•\s]+/,'').trim()+'</p>'; }).join('');
-    return '<div class="summary-box"><div class="summary-box-label">✦ 핵심 요약</div>'+inner+'</div>';
+  bt=bt.replace(/(<\/table>)\n([^\n])/g,'$1\n\n$2');
+
+  // STEP9: 핵심 요약 박스
+  bt=bt.replace(/\[핵심 요약[^\]]*\]([\s\S]*?)(?=\n{2,}|지금 당장|$)/g,function(_,body){
+    var inner=body.trim().split('\n').filter(function(l){return l.trim();}).map(function(l){return '<p>'+applyMarkup(l.replace(/^[-\u00b7\u2022\s]+/,'').trim())+'</p>';}).join('');
+    return '<div class="summary-box"><div class="summary-box-label">\u2726 핵심 요약</div>'+inner+'</div>';
   });
-  bt=bt.replace(/(■.+)/g,'<div class="sub-h">$1</div>\n');
-  var parts=bt.split(/\n{2,}/); var html='';
-  for (var i=0;i<parts.length;i++) {
-    var p=parts[i].trim(); if (!p) continue;
-    if (p.indexOf('<div')===0||p.indexOf('<table')===0) html+=p;
-    else html+='<p>'+applyMarkup(p.replace(/\n/g,'<br>'))+'</p>';
-  }
+
+  // STEP10: 소제목 변환 (■ → sub-h)
+  bt=bt.replace(/(\u25a0.+)/g,'<div class="sub-h">$1</div>\n');
+
+  // STEP11: 단락 → p + 마크업
+  var bh='';
+  bt.split(/\n{2,}/).forEach(function(p){
+    p=p.trim(); if(!p) return;
+    if(/^<(div|table)/.test(p)) bh+=p;
+    else bh+='<p>'+applyMarkup(p.replace(/\n/g,'<br>'))+'</p>';
+  });
+
   var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+applyMarkup(cardText)+'</p></div>':'';
-  var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>&#9989; '+actionText+'</p></div>':'';
-  // 세운 카드 사이 고아 텍스트 제거 (세운 섹션인 경우)
-  if (html.includes('seun-year')) {
-    html = html.replace(/<\/div>(<p>[^<]{0,200}<\/p>)+(<div class="seun-year)/g, '</div>$2');
-    html = html.replace(/<\/div>(<p>[^<]*<\/p>)(<div class="fin|$)/g, '</div>$2');
-  }
-  return sh+html+ah;
+  var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>\u2705 '+actionText+'</p></div>':'';
+  return sh+bh+ah;
 }
+
 
 function buildPDF() {
   var result=document.getElementById('result')?document.getElementById('result').value.trim():'';
