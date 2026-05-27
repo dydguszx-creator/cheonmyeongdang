@@ -168,12 +168,12 @@ footer .gold{color:var(--gold)}
 
 <div class="price-section">
   <div style="text-align:center">
-    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
+    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상의 고객 분들의 소개로 이어지는 프리미엄 사주.</div>
     <div style="font-size:12px;color:#4a6a7a;margin-bottom:6px">감사의 의미로, 매일 선착순 10명</div>
-    <div class="price-original">정가 28,000원</div>
+    <div class="price-original">정가 48,000원</div>
     <div class="price-main">
       <span class="price-badge-sale">50% OFF</span>
-      <span class="price-amount">14,000원</span>
+      <span class="price-amount">24,000원</span>
     </div>
     <div class="stock-bar">
       <div class="stock-text">오늘 남은 할인 자리</div>
@@ -217,7 +217,6 @@ footer .gold{color:var(--gold)}
       </div>
     </div>
   </div>
-  <!-- ✅ 수정: 시+분 입력 + 24시간 예시 -->
   <div class="form-group">
     <label>태어난 시각 <span style="font-size:11px;color:#bbb;font-weight:400">(모를 경우 비워두세요)</span></label>
     <div style="font-size:12px;color:#7a5800;background:#fffbeb;border:1px solid #fcd34d;padding:8px 12px;border-radius:8px;margin-bottom:8px;line-height:1.7">
@@ -242,11 +241,9 @@ footer .gold{color:var(--gold)}
     </div>
   </div>
 
-  <!-- 신청 버튼 -->
   <div id="formErr" style="color:#e74c3c;font-size:13px;margin-bottom:8px;display:none"></div>
   <button class="submit-btn" id="submitBtn" onclick="submitForm()">신청하기 →</button>
 
-  <!-- 완료 화면 -->
   <div id="completeStep" style="display:none;margin-top:16px;background:#fff;border:2px solid #C9A84C;border-radius:16px;overflow:hidden">
     <div style="background:#1C2B3A;padding:16px 20px;text-align:center">
       <div style="font-size:11px;letter-spacing:2px;color:#C9A84C;margin-bottom:4px">신청 완료</div>
@@ -262,7 +259,6 @@ footer .gold{color:var(--gold)}
     </div>
   </div>
 
-  <!-- 완료 화면 -->
   <div id="complete-section" style="display:none;padding:24px 16px">
     <div style="background:#fff;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.08);max-width:480px;margin:0 auto">
       <div style="text-align:center;margin-bottom:20px">
@@ -270,16 +266,10 @@ footer .gold{color:var(--gold)}
         <div style="font-size:18px;font-weight:700;color:#1C2B3A">신청 정보가 복사됐어요!</div>
         <div style="font-size:13px;color:#888;margin-top:4px">아래 버튼으로 카카오 채팅방에 입장 후 붙여넣기 해주세요</div>
       </div>
-
-      
-
-      
-
       <a href="https://open.kakao.com/o/sFcws2si" target="_blank"
         style="display:block;width:100%;padding:14px;border-radius:10px;background:#FEE500;color:#1a1a1a;font-size:15px;font-weight:700;text-align:center;text-decoration:none;box-sizing:border-box">
         💬 카카오 오픈채팅 입장하기
       </a>
-
       <div style="margin-top:14px;padding:12px 16px;background:#fffbf0;border-radius:8px;border-left:3px solid #C9A84C">
         <div style="font-size:12px;color:#6a4200;line-height:1.8">
           📌 <strong>입장 후 붙여넣기 → 전송</strong>해주시면<br>
@@ -288,191 +278,7 @@ footer .gold{color:var(--gold)}
       </div>
     </div>
   </div>
-<!-- /결제단계 -->l>
-<html lang="ko">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
-<title>천명당 사주 | 나만의 운명 흐름 완전 분석 보고서</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet"/>
-<style>
-:root {
-  --navy: #0E1A26;
-  --gold: #C9A84C;
-  --gold-light: #E8C87A;
-  --cream: #F5EDD8;
-  --bg: #F8F7F4;
-  --card-bg: #fff;
-  --text: #1a1a2e;
-  --sub: #6b7280;
-}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
-header{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(248,247,244,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.15)}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-badge{width:40px;height:40px;border-radius:50%;background:var(--navy);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:15px;color:var(--gold);font-weight:700}
-.logo-text{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;color:var(--navy)}
-.logo-sub{font-size:11px;color:var(--gold);letter-spacing:1px}
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:76px 22px 40px;text-align:center;position:relative;overflow:hidden;background:linear-gradient(170deg,#f0ede6 0%,#f8f7f4 60%)}
-.hero::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 40%,rgba(201,168,76,0.10) 0%,transparent 60%);pointer-events:none}
-.hero-eyebrow{display:inline-block;background:var(--navy);border-radius:20px;padding:7px 18px;font-size:12px;color:var(--gold);letter-spacing:1.5px;margin-bottom:20px;font-weight:600}
-.hero h1{font-family:'Noto Serif KR',serif;font-size:34px;font-weight:900;line-height:1.35;color:var(--navy);margin-bottom:20px;word-break:keep-all}
-.hero h1 em{color:var(--gold);font-style:normal}
-.hero-desc{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 24px rgba(14,26,38,0.10);border:1px solid rgba(201,168,76,0.15)}
-.hero-desc p{font-size:15px;color:#2a2a3a;line-height:1.9;word-break:keep-all;font-weight:400}
-.hero-desc p+p{margin-top:12px;padding-top:12px;border-top:1px solid #f0f0f0}
-.stats-row{display:flex;gap:10px;margin-bottom:22px;justify-content:center}
-.stat-item{flex:1;background:var(--navy);border-radius:14px;padding:14px 8px;text-align:center}
-.stat-num{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:900;color:var(--gold);line-height:1.2}
-.stat-label{font-size:11px;color:#7a98ae;margin-top:4px;word-break:keep-all}
-.cta-btn{width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;letter-spacing:0.5px;box-shadow:0 6px 24px rgba(201,168,76,0.35);transition:all 0.2s;display:block;text-decoration:none;text-align:center}
-.cta-btn:active{transform:scale(0.98)}
-.price-section{background:linear-gradient(135deg,var(--navy),#1a2f42);padding:30px 22px}
-.price-original{font-size:13px;color:#5a7a8a;text-decoration:line-through;margin-bottom:4px}
-.price-main{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px}
-.price-badge-sale{background:var(--gold);color:var(--navy);font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
-.price-amount{font-family:'Noto Serif KR',serif;font-size:38px;font-weight:900;color:#fff}
-.price-notice{font-size:12px;color:#3a5a6a;margin-top:6px;line-height:1.7}
-.stock-bar{background:rgba(255,255,255,0.08);border-radius:10px;padding:12px 16px;margin-top:14px;display:flex;align-items:center;justify-content:space-between}
-.stock-text{font-size:12px;color:#7a98ae}
-.stock-count{font-size:14px;font-weight:700;color:var(--gold)}
-.form-section{background:#fff;padding:32px 22px}
-.form-section h2{font-family:'Noto Serif KR',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:6px;text-align:center}
-.form-section .form-sub{font-size:13px;color:var(--sub);text-align:center;margin-bottom:24px;line-height:1.6}
-.form-group{margin-bottom:16px}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:7px}
-.form-group input,.form-group select{width:100%;padding:13px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);background:#fff;outline:none;transition:border 0.2s}
-.form-group input:focus,.form-group select:focus{border-color:var(--gold)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
-.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.cat-btn{padding:10px 8px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:12px;font-family:inherit;background:#fff;color:var(--sub);cursor:pointer;text-align:center;transition:all 0.2s;word-break:keep-all;line-height:1.4}
-.cat-btn.on{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
-.submit-btn{width:100%;padding:17px;background:var(--gold);color:var(--navy);border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;margin-top:8px;box-shadow:0 4px 16px rgba(201,168,76,0.3)}
-.submit-btn:active{transform:scale(0.98)}
-.form-notice{font-size:11.5px;color:#bbb;text-align:center;margin-top:10px;line-height:1.6}
-.copy-notice{display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12.5px;color:#15803d;line-height:1.7;text-align:center}
-.diff-section{padding:48px 22px;background:var(--bg)}
-.diff-section h2{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:10px;word-break:keep-all;line-height:1.4}
-.diff-section .diff-sub{font-size:15px;color:#3a3a4a;text-align:center;margin-bottom:20px;line-height:1.8;word-break:keep-all;font-weight:400}
-.doubt-box{background:var(--navy);border-radius:16px;padding:22px 20px;margin-bottom:24px;box-shadow:0 4px 20px rgba(14,26,38,0.15)}
-.doubt-q{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:10px;line-height:1.5}
-.doubt-a{font-size:13.5px;color:#c0d0da;line-height:1.9;word-break:keep-all}
-.diff-label{font-size:12px;letter-spacing:2px;color:var(--gold);font-weight:700;text-align:center;margin-bottom:16px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);border-radius:20px;padding:7px 20px;display:inline-block;width:100%}
-.diff-cards{display:flex;flex-direction:column;gap:14px}
-.diff-card{background:#fff;border-radius:16px;padding:20px 20px;box-shadow:0 2px 16px rgba(14,26,38,0.07);border:1px solid rgba(201,168,76,0.12)}
-.diff-card-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.diff-icon{width:42px;height:42px;border-radius:12px;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.diff-card h3{font-size:16px;font-weight:700;color:var(--navy);line-height:1.4;margin:0}
-.diff-card p{font-size:13.5px;color:#4a4a5a;line-height:1.9;word-break:keep-all;margin-bottom:6px}
-.diff-card p:last-child{margin-bottom:0}
-.content-section{padding:44px 22px;background:#fff}
-.content-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:8px;word-break:keep-all;line-height:1.4}
-.content-section .sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:26px;line-height:1.7}
-.content-cards{display:flex;flex-direction:column;gap:12px}
-.content-card{border-radius:16px;padding:20px 18px;display:flex;align-items:flex-start;gap:14px;opacity:0;transform:translateY(20px);transition:all 0.5s ease}
-.content-card.visible{opacity:1;transform:translateY(0)}
-.content-card.blue{background:#EEF2FF}
-.content-card.yellow{background:#FFFBEB}
-.content-card.green{background:#ECFDF5}
-.content-card.pink{background:#FFF1F2}
-.content-card.purple{background:#F5F0FF}
-.content-card.gray{background:#F3F4F6}
-.content-card.teal{background:#F0FDFA}
-.content-card.orange{background:#FFF7ED}
-.card-icon{width:44px;height:44px;border-radius:11px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.card-body h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:7px}
-.card-body p{font-size:13px;color:#4a4a5a;line-height:1.85;word-break:keep-all;margin-bottom:5px}
-.card-body p:last-child{margin-bottom:0}
-.review-section{padding:44px 22px;background:var(--bg)}
-.review-section h2{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:var(--navy);text-align:center;margin-bottom:6px}
-.review-sub{font-size:13.5px;color:#4a4a5a;text-align:center;margin-bottom:24px;line-height:1.7}
-.review-grid{display:flex;flex-direction:column;gap:12px}
-.review-card{background:#fff;border-radius:14px;padding:18px 18px;border:1px solid rgba(0,0,0,0.06);box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-.review-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.review-stars{color:#f59e0b;font-size:13px;letter-spacing:1px}
-.review-date{font-size:11px;color:#bbb}
-.review-source{font-size:10px;color:var(--gold);font-weight:600;margin-bottom:8px}
-.review-text{font-size:13px;color:#333;line-height:1.9;word-break:keep-all}
-.review-author{margin-top:10px;font-size:11px;color:#999;display:flex;align-items:center;gap:6px}
-.review-avatar{width:22px;height:22px;border-radius:50%;background:#e5e7eb;display:flex;align-items:center;justify-content:center;font-size:9px;color:#888}
-.cta-section{background:var(--navy);padding:52px 24px;text-align:center}
-.cta-quote{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:900;color:#fff;line-height:1.6;margin-bottom:28px;word-break:keep-all}
-.cta-quote em{color:var(--gold);font-style:normal}
-.cta-bottom-btn{display:block;width:100%;padding:18px;background:var(--gold);color:var(--navy);border:none;border-radius:14px;font-size:17px;font-weight:900;cursor:pointer;font-family:inherit;box-shadow:0 6px 24px rgba(201,168,76,0.35);text-decoration:none;text-align:center}
-.cta-urgent{margin-top:16px;font-size:13.5px;color:#7a98ae;line-height:1.8}
-.cta-urgent strong{color:var(--gold-light)}
-footer{background:#0a1420;padding:28px 24px;text-align:center}
-footer p{font-size:11px;color:#3d5a6c;line-height:2}
-footer .gold{color:var(--gold)}
-.fade-up{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
-</style>
-</head>
-<body>
-
-
-<header>
-  <div class="logo">
-    <div class="logo-badge">命</div>
-    <div>
-      <div class="logo-text">천명당</div>
-      <div class="logo-sub">사주명리</div>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div style="margin-bottom:18px;margin-top:8px">
-    <div class="hero-eyebrow">✦ 1년간 문의 2,476건 · 만족도 98%</div>
-  </div>
-  <h1>아직 풀리지 않은 질문,<br/><em>사주에 답이 있습니다.</em></h1>
-  <div class="hero-desc">
-    <p>생년월일만 알려주시면<br/>전문가가 <strong>직접 분석</strong>해드립니다.</p>
-    <p>성격 · 재물 · 연애 · 건강 · 대운<br/>9가지 항목 PDF 보고서로 정리해드립니다.</p>
-  </div>
-  <div class="stats-row fade-up">
-    <div class="stat-item">
-      <div class="stat-num">2,476<span style="font-size:13px">건</span></div>
-      <div class="stat-label">1년간 문의</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">98<span style="font-size:13px">%</span></div>
-      <div class="stat-label">고객 만족도</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">12<span style="font-size:13px">h</span></div>
-      <div class="stat-label">최대 발송</div>
-    </div>
-  </div>
-  <a href="#form-section" class="cta-btn" onclick="document.getElementById('form-section').scrollIntoView({behavior:'smooth'});return false;">
-    지금 바로 신청하기 →
-  </a>
-</section>
-
-<div class="price-section">
-  <div style="text-align:center">
-    <div style="font-size:12px;color:var(--gold);letter-spacing:1.5px;font-weight:600;margin-bottom:8px">✦ 매일 50명 이상이 만족해주고 계십니다</div>
-    <div style="font-size:12px;color:#4a6a7a;margin-bottom:6px">감사의 의미로, 매일 선착순 10명</div>
-    <div class="price-original">정가 28,000원</div>
-    <div class="price-main">
-      <span class="price-badge-sale">50% OFF</span>
-      <span class="price-amount">14,000원</span>
-    </div>
-    <div class="stock-bar">
-      <div class="stock-text">오늘 남은 할인 자리</div>
-      <div class="stock-count">⏳ <span id="stockNum2"7</span>명</div>
-    </div>
-    <div class="price-notice">· 계좌이체 · 12시간 이내 PDF 발송<br/>· 카카오 오픈채팅으로 신청</div>
-  </div>
 </div>
-
 
 <section class="diff-section">
   <h2 class="fade-up">과거에 사주를 봤는데<br/>두루뭉술한 말만 들으셨나요?</h2>
@@ -521,7 +327,6 @@ footer .gold{color:var(--gold)}
       <div class="card-icon">🧬</div>
       <div class="card-body">
         <h3>타고난 성격·기질 분석</h3>
-        <!-- ✅ 수정: "이 사람만의 기질" → "본인만의 기질" -->
         <p>본인만의 기질을 직접 분석해드려요. 겉으로 보이는 모습과 속마음이 왜 다른지, 어떤 상황에서 강하고 약한지를 구체적 장면으로 설명해드려요.</p>
         <p>강점을 살리고 약점을 보완하는 방향도 함께 알려드립니다.</p>
       </div>
@@ -608,7 +413,7 @@ footer .gold{color:var(--gold)}
   <div class="cta-urgent">
     하루라도 빨리 알아야<br/>
     <strong>현명한 대처를 할 수 있습니다.</strong><br/>
-    <span style="font-size:12px;color:#3a5a6a">선착순 10명 · 오늘 남은 자리 7명명</span>
+    <span style="font-size:12px;color:#3a5a6a">선착순 10명 · 오늘 남은 자리 7명</span>
   </div>
 </section>
 
@@ -623,7 +428,6 @@ footer .gold{color:var(--gold)}
 var stockOptions = [3, 5, 7];
 var stockNum = stockOptions[Math.floor(Math.random() * stockOptions.length)];
 document.getElementById('stockNum').textContent = stockNum;
-document.getElementById('stockNum2').textContent = stockNum;
 
 document.querySelectorAll('.cat-btn').forEach(function(btn) {
   btn.addEventListener('click', function() { this.classList.toggle('on'); });
