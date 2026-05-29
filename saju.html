@@ -511,8 +511,8 @@ async function doAutoAnalyze() {
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【6. 연애·결혼운】\n배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n오늘 실천: 인간관계·연애 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n오늘 실천: 가족 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위】\n취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n오늘 실천: 건강 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\\n---\\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\\n[현재 시점: '+curDate+']\\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 다른 형식 금지.\\n\\n### 🗓️ YYYY년 干支년\\n💰 재물·직업: 내용\\n❤️ 연애·가족: 내용\\n🌿 건강 주의: 내용\\n🎰 복권·재물운: (재물운 좋은 해만)\\n✨ 핵심 키워드: 키1 / 키2 / 키3\\n📝 총평: 한 문장\\n행동 조언: 한 문장\\n\\n각 연도 사이 빈 줄. 5개년 전부 완성.',
-    hdr+'아래 섹션 1개만 완성하세요:\\n---\\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\\n[현재 시점: '+curDate+']\\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 다른 형식 금지.\\n\\n### 🗓️ YYYY년 干支년\\n💰 재물·직업: 내용\\n❤️ 연애·가족: 내용\\n🌿 건강 주의: 내용\\n🎰 복권·재물운: (재물운 좋은 해만)\\n✨ 핵심 키워드: 키1 / 키2 / 키3\\n📝 총평: 한 문장\\n행동 조언: 한 문장\\n\\n각 연도 사이 빈 줄. 5개년 전부 완성.'
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 줄바꿈 금지.\n\n### 🗓️ YYYY년 干支년\n💰 재물·직업: 세운 천간·지지 십성 의미, 장간 분석 포함. 직업·수입 흐름 3~4문장 이상 상세히.\n❤️ 연애·가족: 세운 기운이 배우자궁·자녀궁에 미치는 영향 3문장 이상 상세히.\n🌿 건강 주의: 세운 기운이 취약 장기에 미치는 영향 2~3문장 이상 상세히.\n🎰 복권·재물운: (재물운 좋은 해만) 구체적 시기·방향 포함.\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 구체적 행동 한 문장.\n\n각 연도 사이 빈 줄. 5개년 전부 완성.',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n[현재 시점: '+curDate+']\n⛔ 반드시 아래 형식 그대로. ### 🗓️ 로 시작 필수. 줄바꿈 금지.\n\n### 🗓️ YYYY년 干支년\n💰 재물·직업: 세운 천간·지지 십성 의미, 장간 분석 포함. 직업·수입 흐름 3~4문장 이상 상세히.\n❤️ 연애·가족: 세운 기운이 배우자궁·자녀궁에 미치는 영향 3문장 이상 상세히.\n🌿 건강 주의: 세운 기운이 취약 장기에 미치는 영향 2~3문장 이상 상세히.\n🎰 복권·재물운: (재물운 좋은 해만) 구체적 시기·방향 포함.\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 구체적 행동 한 문장.\n\n각 연도 사이 빈 줄. 5개년 전부 완성.'
   ];
 
   var parts = ['','','','','','','','','',''];
@@ -533,29 +533,38 @@ async function doAutoAnalyze() {
   }
 
   async function streamFetch(prompt, onChunk, onDone) {
-    var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})});
-    if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
-    var reader=res.body.getReader(); var decoder=new TextDecoder();
-    while(true){
-      var sr=await reader.read(); if(sr.done) break;
-      var chunk=decoder.decode(sr.value,{stream:true});
-      for(var ln of chunk.split('\n')){
-        if(!ln.startsWith('data: ')) continue;
-        try{var j=JSON.parse(ln.slice(6).trim());
-          if(j.text) onChunk(j.text);
-          if(j.done) onDone();
-          if(j.error) throw new Error(j.error);
-        }catch(e2){}
+    var controller=new AbortController();
+    var timer=setTimeout(function(){controller.abort();},90000);
+    try{
+      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt}),signal:controller.signal});
+      if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
+      var reader=res.body.getReader(); var decoder=new TextDecoder();
+      while(true){
+        var sr=await reader.read(); if(sr.done) break;
+        var chunk=decoder.decode(sr.value,{stream:true});
+        for(var ln of chunk.split('\n')){
+          if(!ln.startsWith('data: ')) continue;
+          try{var j=JSON.parse(ln.slice(6).trim());
+            if(j.text) onChunk(j.text);
+            if(j.done) onDone();
+            if(j.error) throw new Error(j.error);
+          }catch(e2){}
+        }
       }
-    }
+    }finally{clearTimeout(timer);}
   }
 
+  // 전체 120초 타임아웃: 미완료 섹션 강제 완료
+  var globalTimer=setTimeout(function(){
+    for(var k=0;k<10;k++){if(!dones[k]){dones[k]=true;if(!parts[k])parts[k]='[시간 초과]';}}
+    updateDisplay();
+  },120000);
   try {
     await Promise.all(prompts.map(function(prompt, i) {
       return new Promise(function(resolve) {
         setTimeout(function() {
           streamFetch(prompt, function(t){parts[i]+=t;updateDisplay();}, function(){dones[i]=true;updateDisplay();resolve();})
-          .catch(function(e){ dones[i]=true; parts[i]='[오류: '+e.message+']'; updateDisplay(); resolve(); });
+          .catch(function(e){ dones[i]=true; parts[i]+='[오류: '+e.message+']'; updateDisplay(); resolve(); });
         }, i * 300);
       });
     }));
@@ -563,7 +572,7 @@ async function doAutoAnalyze() {
     statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';
     statusEl.textContent='❌ 오류: '+err2.message;
     btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
-  }}
+  } finally { clearTimeout(globalTimer); }}
 
 function doGenerate() {
   var y=getVal('y'),m=getVal('m'),d=getVal('d');
