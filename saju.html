@@ -761,8 +761,8 @@ function buildHtmlTable(rows) {
   for (var r=0;r<rows.length;r++) {
     html+='<tr>';
     for (var c=0;c<rows[r].length;c++) {
-      if (r===0) html+='<th style="background:#1C2B3A;color:#C9A84C;padding:8px;text-align:center;font-size:12px">'+escapeHtml(rows[r][c])+'</th>';
-      else html+='<td style="padding:7px 8px;text-align:center;border-bottom:1px solid #eee;word-break:keep-all">'+escapeHtml(rows[r][c])+'</td>';
+      if (r===0) html+='<th style="background:#1C2B3A;color:#C9A84C;padding:8px;text-align:center;font-size:12px">'+rows[r][c]+'</th>';
+      else html+='<td style="padding:7px 8px;text-align:center;border-bottom:1px solid #eee;word-break:keep-all">'+rows[r][c]+'</td>';
     }
     html+='</tr>';
   }
@@ -782,52 +782,79 @@ function renderBody(raw) {
   if(!raw) return '';
   raw = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
 
-  // ── STEP1: 스트림 오류 잔재 제거 ──
+  // ── STEP1: 오류 잔재 제거 ──
   raw = raw.replace(/\[오류:[^\]]*\]/g,'');
   raw = raw.replace(/BodyStreamBuffer was aborted[^\n]*/g,'');
 
-  // ── STEP2: 연도 형식 통일 (### 🗓️ 보호 — 먼저 처리) ──
-  // 이미 ### 🗓️ 형식인 것은 건드리지 않음
-  // 볼드(**2026년 丙午년** 등) → 정규화
-  raw = raw.replace(/\*\*(\d{4}년)\s*([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\*\*/g,'### \ud83d\uddd3\ufe0f $1 $2');
-  // YYYY년干支년 붙어있는 경우
-  raw = raw.replace(/(?<!### \ud83d\uddd3\ufe0f .{0,20})(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
-  // YYYY년\n干支년 두 줄로 온 경우
+  // ── STEP2: [한눈에 보기] / [지금 당장] 를 먼저 추출 — 세운 정규식에 소비되기 전에 ──
+  var cm = raw.match(/\[한눈에 보기\][ \t]*([^\n]*)(?:\n[ \t]*([^\n\[<]{2,}))?/);
+  var cardText = '';
+  if(cm){
+    cardText = (cm[1]||'').trim();
+    if(!cardText) cardText = (cm[2]||'').trim();
+  }
+  var am = raw.match(/지금 당장 할 수 있는 것[ \t]*[:：\->]?[ \t]*([^\n]+)/);
+  var actionText = '';
+  if(am){ actionText = am[1].trim(); }
+  if(!actionText){
+    var am2 = raw.match(/오늘 실천[ \t]*[:：\->]?[ \t]*([^\n]+)/);
+    if(am2) actionText = am2[1].trim();
+  }
+
+  // ── STEP3: [한눈에 보기] / [지금 당장] / [핵심 요약] 라인 제거 및 지금 당장 이후 잘라내기 ──
+  raw = raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'');
+  var _actI = raw.lastIndexOf('지금 당장 할 수 있는 것');
+  if(_actI === -1) _actI = raw.lastIndexOf('오늘 실천');
+  if(_actI !== -1) raw = raw.slice(0, _actI);
+
+  // ── STEP4: 마크다운 볼드를 표 변환 전에 처리 (표 안 bold 태그 노출 방지) ──
+  // **텍스트** → @@BOLD@@텍스트@@ENDBOLD@@ 임시 치환 후 표 변환 후 복원
+  raw = raw.replace(/\*\*([^*\n]+)\*\*/g, '\x01BOLD\x01$1\x01ENDBOLD\x01');
+
+  // ── STEP5: 연도 형식 통일 → ### 🗓️ ──
+  // 볼드 연도: \x01BOLD\x012026년 丙午년\x01ENDBOLD\x01
+  raw = raw.replace(/\x01BOLD\x01(\d{4}년)\s*([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\x01ENDBOLD\x01/g,'### \ud83d\uddd3\ufe0f $1 $2');
+  // YYYY년干支년 붙어있는 경우 (줄 어디든)
+  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g, function(m, y, g){
+    // 이미 ### 🗓️ 뒤에 있으면 건드리지 않음
+    return '### \ud83d\uddd3\ufe0f '+y+' '+g;
+  });
+  // 이미 ### 🗓️ 가 중복 생성된 경우 정리
+  raw = raw.replace(/### \ud83d\uddd3\ufe0f ### \ud83d\uddd3\ufe0f /g,'### \ud83d\uddd3\ufe0f ');
+  // YYYY년\n干支년 두 줄
   raw = raw.replace(/(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
-  // 줄 시작에 YYYY년 干支년 (공백)
+  // 줄 단독 YYYY년 干支년
   raw = raw.replace(/^(\d{4}년) ([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\s*$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
 
-  // ── STEP3: ### 🗓️ 라인을 임시 플레이스홀더로 보호 ──
-  var seunPlaceholders = [];
-  raw = raw.replace(/^### \ud83d\uddd3\ufe0f ([^\n]+)$/gm, function(_, yt) {
-    var ph = '\x00SEUN' + seunPlaceholders.length + '\x00';
-    seunPlaceholders.push(yt);
+  // ── STEP6: ### 🗓️ 라인 플레이스홀더 보호 (h1/h2 제거 전에) ──
+  var seunPH = [];
+  raw = raw.replace(/^### \ud83d\uddd3\ufe0f ([^\n]+)$/gm, function(_, yt){
+    var ph = '\x00S'+seunPH.length+'\x00';
+    seunPH.push(yt.trim());
     return ph;
   });
 
-  // ── STEP4: h1/h2 헤더 제거 (### 은 이미 플레이스홀더로 보호됨) ──
+  // ── STEP7: h1/h2 제거, --- 제거, 인용문 제거 ──
   raw = raw.replace(/^#{1,2} [^\n]*/gm,'');
   raw = raw.replace(/^---+$/gm,'');
   raw = raw.replace(/^> [^\n]*/gm,'');
 
-  // ── STEP5: 플레이스홀더 복원 ──
-  raw = raw.replace(/\x00SEUN(\d+)\x00/g, function(_, idx) {
-    return '### \ud83d\uddd3\ufe0f ' + seunPlaceholders[parseInt(idx)];
-  });
+  // ── STEP8: 플레이스홀더 복원 ──
+  raw = raw.replace(/\x00S(\d+)\x00/g, function(_, i){ return '### \ud83d\uddd3\ufe0f '+seunPH[parseInt(i)]; });
 
-  // ── STEP6: 세운 항목 콜론 통일 ──
-  var LK = ['\ud83d\udcb0 재물\u00b7직업','\u2764\ufe0f 연애\u00b7가족','\ud83c\udf3f 건강 주의','\ud83c\udfb0 복권\u00b7재물운','\u2728 핵심 키워드','\u2728 키워드','\ud83d\udcdd 총평'];
+  // ── STEP9: 세운 항목 콜론 통일 ──
+  var LK=['\ud83d\udcb0 재물\u00b7직업','\u2764\ufe0f 연애\u00b7가족','\ud83c\udf3f 건강 주의','\ud83c\udfb0 복권\u00b7재물운','\u2728 핵심 키워드','\u2728 키워드','\ud83d\udcdd 총평'];
   LK.forEach(function(k){
-    var esc = k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-    raw = raw.replace(new RegExp('('+esc+')\\n([^\n\u2705][^\n]*)','g'),'$1: $2');
-    raw = raw.replace(new RegExp('('+esc+')([^:\n][^\n]*)','g'),'$1: $2');
+    var esc=k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    raw=raw.replace(new RegExp('('+esc+')\\n([^\n\u2705][^\n]*)','g'),'$1: $2');
+    raw=raw.replace(new RegExp('('+esc+')([^:\n][^\n]*)','g'),'$1: $2');
   });
 
-  // ── STEP7: 세운 카드 생성 (마지막 카드 소실 방지: 종결 앵커 추가) ──
+  // ── STEP10: 세운 카드 생성 ──
   raw = raw + '\n\x00END\x00';
-  raw = raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\[핵심 요약|\x00END\x00)/g, function(_,yt,content){
+  raw = raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\x00END\x00)/g, function(_,yt,content){
     content = content.replace(/^-{3,}$/gm,'').replace(/^[-\u00b7\u2022] /gm,'').trim();
-    var labels=[
+    var LABELS=[
       {key:'\ud83d\udcb0 재물\u00b7직업:',color:'#5a3a00',label:'\ud83d\udcb0 재물·직업'},
       {key:'\u2764\ufe0f 연애\u00b7가족:',color:'#7a1840',label:'\u2764\ufe0f 연애·가족'},
       {key:'\ud83c\udf3f 건강 주의:',color:'#1a5030',label:'\ud83c\udf3f 건강 주의'},
@@ -839,89 +866,63 @@ function renderBody(raw) {
       {key:'\u2705 ',isAction:true}
     ];
     var pos=[];
-    labels.forEach(function(lb){
-      var i=content.indexOf(lb.key);
-      if(i!==-1) pos.push({idx:i,info:lb});
-    });
+    LABELS.forEach(function(lb){ var idx=content.indexOf(lb.key); if(idx!==-1) pos.push({idx:idx,info:lb}); });
     pos.sort(function(a,b){return a.idx-b.idx;});
-    // 중복 위치 제거
     pos=pos.filter(function(p,i){return i===0||p.idx!==pos[i-1].idx;});
-    var rows='',summary='',actionRow='';
+    var rowsHtml='',summary='',actionRow='';
     pos.forEach(function(p,pi){
-      var s=p.idx+p.info.key.length;
-      var e=pi+1<pos.length?pos[pi+1].idx:content.length;
+      var s=p.idx+p.info.key.length, e=pi+1<pos.length?pos[pi+1].idx:content.length;
       var val;
       if(p.info.isAction||p.info.isSummary){
         val=content.slice(s,e).split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&!/^[-\u00b7\u2022]/.test(l);})[0]||'';
+        // bold 임시 치환 복원
+        val=val.replace(/\x01BOLD\x01([^\x01]*)\x01ENDBOLD\x01/g,'<strong>$1</strong>');
       } else {
         val=content.slice(s,e).replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim();
+        val=val.replace(/\x01BOLD\x01([^\x01]*)\x01ENDBOLD\x01/g,'<strong>$1</strong>');
         val=applyMarkup(val);
       }
       if(p.info.isSummary) summary=val;
       else if(p.info.isAction) actionRow=val;
-      else rows+='<div class="seun-row"><span class="seun-label" style="color:'+p.info.color+'">'+p.info.label+'</span><span class="seun-val"'+(p.info.bold?' style="font-weight:700;color:#2a1a6a"':'')+'>'+val+'</span></div>';
+      else rowsHtml+='<div class="seun-row"><span class="seun-label" style="color:'+p.info.color+'">'+p.info.label+'</span><span class="seun-val"'+(p.info.bold?' style="font-weight:700;color:#2a1a6a"':'')+'>'+val+'</span></div>';
     });
-    var yN=yt.replace(/년.*/,'년');
-    var yS=yt.replace(/\d{4}년\s*/,'');
-    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yN+'</span><span class="seun-year-title">'+yS+'</span></div><div class="seun-year-body">'+(rows||'<div class="seun-row"><span class="seun-val" style="color:#888">분석 내용이 여기에 표시됩니다.</span></div>')+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
+    var yN=yt.replace(/년.*/,'년'), yS=yt.replace(/\d{4}년\s*/,'');
+    return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yN+'</span><span class="seun-year-title">'+yS+'</span></div><div class="seun-year-body">'+(rowsHtml||'')+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
   });
   raw = raw.replace('\x00END\x00','');
 
-  // ── STEP8: 마크다운 헤더/볼드 처리 ──
+  // ── STEP11: ### 헤더 제거 (세운 처리 후 남은 것) ──
   raw = raw.replace(/^#{1,3} /gm,'');
-  raw = raw.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
 
-  // ── STEP9: [한눈에 보기] 추출 (다음 줄 fallback 포함) ──
-  var cm = raw.match(/\[한눈에 보기\][ \t]*([^\n]*)(?:\n[ \t]*([^\n\[<\x00]{2,}))?/);
-  var cardText = '';
-  if(cm){
-    cardText = (cm[1]||'').trim();
-    if(!cardText) cardText = (cm[2]||'').trim();
-  }
+  // ── STEP12: 볼드 임시 치환 복원 → <strong> ──
+  raw = raw.replace(/\x01BOLD\x01([^\x01]*)\x01ENDBOLD\x01/g,'<strong>$1</strong>');
 
-  // ── STEP10: [지금 당장] 추출 ──
-  var am = raw.match(/지금 당장 할 수 있는 것[ \t]*[:：\->]?[ \t]*([^\n]+)/);
-  var actionText = '';
-  if(am){
-    actionText = am[1].trim();
-  }
-  if(!actionText){
-    var am2 = raw.match(/오늘 실천[ \t]*[:：\->]?[ \t]*([^\n]+)/);
-    if(am2) actionText = am2[1].trim();
-  }
+  // ── STEP13: 마크다운 표 → HTML 표 (볼드 복원 후이므로 escapeHtml 불필요) ──
+  raw = mdTableToHtml(raw);
+  raw = raw.replace(/(<\/table>)\n([^\n])/g,'$1\n\n$2');
 
-  // ── STEP11: bt 구성 — [한눈에 보기] 제거, [지금 당장] 이후 잘라내기 ──
-  var bt = raw.replace(/\[한눈에 보기\][^\n]*\n?/g,'');
-  var _actI = bt.lastIndexOf('지금 당장 할 수 있는 것');
-  if(_actI === -1) _actI = bt.lastIndexOf('오늘 실천');
-  if(_actI !== -1) bt = bt.slice(0, _actI);
-
-  // ── STEP12: 표 변환 ──
-  bt = mdTableToHtml(bt);
-  bt = bt.replace(/(<\/table>)\n([^\n])/g,'$1\n\n$2');
-
-  // ── STEP13: 핵심 요약 박스 ──
-  bt = bt.replace(/\[핵심 요약[^\]]*\]([\s\S]*?)(?=\n{2,}|지금 당장|오늘 실천|$)/g, function(_,body){
-    var inner = body.trim().split('\n').filter(function(l){return l.trim();}).map(function(l){
+  // ── STEP14: 핵심 요약 박스 ──
+  raw = raw.replace(/\[핵심 요약[^\]]*\]([\s\S]*?)(?=\n{2,}|$)/g, function(_,body){
+    var inner=body.trim().split('\n').filter(function(l){return l.trim();}).map(function(l){
       return '<p>'+applyMarkup(l.replace(/^[-\u00b7\u2022\s]+/,'').trim())+'</p>';
     }).join('');
     return '<div class="summary-box"><div class="summary-box-label">\u2726 핵심 요약</div>'+inner+'</div>';
   });
 
-  // ── STEP14: 소제목 (■) 변환 ──
-  bt = bt.replace(/(■.+)/g,'<div class="sub-h">$1</div>\n');
+  // ── STEP15: 소제목 ■ 변환 ──
+  raw = raw.replace(/(■[^\n]+)/g,'<div class="sub-h">$1</div>\n');
 
-  // ── STEP15: 단락 → p 변환 ──
-  var bh = '';
-  bt.split(/\n{2,}/).forEach(function(p){
-    p = p.trim(); if(!p) return;
-    if(/^<(div|table)/.test(p)) bh += p;
-    else bh += '<p>'+applyMarkup(p.replace(/\n/g,'<br>'))+'</p>';
+  // ── STEP16: 단락 → p 변환 ──
+  var bh='';
+  raw.split(/\n{2,}/).forEach(function(p){
+    p=p.trim(); if(!p) return;
+    if(/^<(div|table)/.test(p)) bh+=p;
+    else bh+='<p>'+applyMarkup(p.replace(/\n/g,'<br>'))+'</p>';
   });
 
-  var sh = cardText ? '<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+applyMarkup(cardText)+'</p></div>' : '';
-  var ah = actionText ? '<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>\u2705 '+actionText+'</p></div>' : '';
-  return sh + bh + ah;
+  var sh=cardText?'<div class="sc"><div class="sc-label">한눈에 보기</div><p>'+applyMarkup(cardText)+'</p></div>':'';
+  var ah=actionText?'<div class="ac"><div class="ac-label">오늘 바로 실천</div><p>\u2705 '+actionText+'</p></div>':'';
+  return sh+bh+ah;
 }
 
 
