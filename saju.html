@@ -453,8 +453,11 @@ async function doAutoAnalyze() {
 
   if(currentMode==='mini') {
     // 미니운세 단일 호출
+    var miniController = new AbortController();
+    var miniTimer = setTimeout(function(){ miniController.abort(); }, 90000);
+    var miniDone = false;
     try {
-      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()})});
+      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()}),signal:miniController.signal});
       if(!res.ok){var e=await res.json();throw new Error(e.error||'오류');}
       var reader=res.body.getReader(); var decoder=new TextDecoder(); var fullText='';
       while(true){var sr=await reader.read();if(sr.done)break;
@@ -462,22 +465,27 @@ async function doAutoAnalyze() {
           if(!ln.startsWith('data: '))continue;
           try{var j=JSON.parse(ln.slice(6).trim());
             if(j.text){fullText+=j.text;if(resultArea){resultArea.value=fullText;resultArea.scrollTop=resultArea.scrollHeight;}statusEl.textContent='✍️ 작성 중...('+fullText.length.toLocaleString()+'자)';}
-            if(j.done){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
+            if(j.done && !miniDone){miniDone=true;statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
           }catch(e2){}
         }
       }
-    } catch(err){statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';statusEl.textContent='❌ '+err.message;}
-    finally{btn.disabled=false;btn.textContent='⚡ 자동 분석 (API)';}
+      if(!miniDone){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
+    } catch(err){
+      if(err && (err.name==='AbortError' || (err.message&&err.message.indexOf('aborted')!==-1))){
+        statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+((resultArea&&resultArea.value)||'').length.toLocaleString()+'자';onResultInput();
+      } else {
+        statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';statusEl.textContent='❌ '+err.message;
+      }
+    }
+    finally{clearTimeout(miniTimer);btn.disabled=false;btn.textContent='⚡ 자동 분석 (API)';}
     return;
   }
 
   // 기본 보고서: 섹션 1개씩 10개 병렬 호출
   var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
-  var curDate=sy+'년 '+(now.getMonth()+1)+'월 현재';
-  var info=buildInfo();
-  var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
   var curMonth=now.getMonth()+1;
   var curDate=sy+'년 '+curMonth+'월 현재';
+  var info=buildInfo();
 
   // 공통 헤더
   var hdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
@@ -553,6 +561,13 @@ async function doAutoAnalyze() {
         }
       }
       if(!doneCalled){doneCalled=true; onDone();}
+    } catch(err) {
+      // AbortError(타임아웃) 는 오류가 아니라 정상 종료 — onDone 처리
+      if(err && (err.name==='AbortError' || (err.message&&err.message.indexOf('aborted')!==-1))){
+        if(!doneCalled){doneCalled=true; onDone();}
+      } else {
+        throw err;
+      }
     } finally {
       clearTimeout(timer);
     }
@@ -665,7 +680,14 @@ function buildMiniPrompt() {
     2025:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子'],
     2026:['丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子'],
     2027:['己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子'],
-    2028:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子']
+    2028:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子'],
+    2029:['癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥','甲子'],
+    2030:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子'],
+    2031:['丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子'],
+    2032:['己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子'],
+    2033:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子'],
+    2034:['癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥','甲子'],
+    2035:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子']
   };
   var mj = monthJanji[y] || monthJanji[2026];
   return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객의 사주를 바탕으로 '+y+'년 월별 미니 운세를 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[작성 원칙]\n- 각 달은 재물/직업, 연애/관계, 건강 세 가지 반드시 포함. 각 항목 2~3문장 이상.\n- 이 사주에서만 나오는 구체적인 말로. 일반론 금지.\n- 용신이 강한 달은 ⭐, 기신이 강한 달은 ⚠️ 제목 옆에 표시.\n- 각 달 마지막에 반드시: 💡 이달의 핵심: 한 줄 요약\n- 전문가가 말해주듯 존댓말로 자연스럽게. 한자 금지.\n\n---\n【1월】 '+mj[0]+'월\n【2월】 '+mj[1]+'월\n【3월】 '+mj[2]+'월\n【4월】 '+mj[3]+'월\n【5월】 '+mj[4]+'월\n【6월】 '+mj[5]+'월\n【7월】 '+mj[6]+'월\n【8월】 '+mj[7]+'월\n【9월】 '+mj[8]+'월\n【10월】 '+mj[9]+'월\n【11월】 '+mj[10]+'월\n【12월】 '+mj[11]+'월\n---\n['+y+'년 전체 총평]\n5줄 이상 풍부하게 작성. 올해 전체 흐름·핵심 기회·주의할 시기·마무리 조언 포함.';
@@ -674,7 +696,6 @@ function buildMiniPrompt() {
 function parseSecs(text) {
   text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   var titles=['사주 구조 분석','타고난 성격·기질','대운 흐름 분석','재물·직업운','창업·사업 가능성','연애·결혼운','부모·자녀·가족 관계','건강·취약 부위','연도별 세운 분석'];
-  var altTitles=['사주 구조 분석','성격·적성 분석','재물·직업운','연애·결혼운','건강운','부모·자녀 관계','대운 흐름 분석','연도별 세운 분석','종합 조언'];
   var positions=[];
   for (var i=0;i<9;i++) {
     var idx=-1;
@@ -684,6 +705,12 @@ function parseSecs(text) {
   }
   return titles.map(function(title,i) {
     var si=positions[i]; if (si===-1) return {title:title,body:''};
+    // 섹션9(i===8)는 【9.】가 두 번 등장할 수 있으므로 텍스트 끝까지 전부 포함
+    if (i===8) {
+      var chunk=text.slice(si).trim();
+      var firstNewline=chunk.indexOf('\n');
+      return {title:title,body:firstNewline!==-1?chunk.slice(firstNewline+1).trim():chunk};
+    }
     var ei=text.length;
     for (var j=i+1;j<9;j++) { if (positions[j]!==-1&&positions[j]>si) { ei=positions[j]; break; } }
     var chunk=text.slice(si,ei).trim();
@@ -708,6 +735,10 @@ function parseMiniSecs(text) {
   });
 }
 
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 function mdTableToHtml(text) {
   var lines=text.split('\n'),out=[],rows=[];
   var inTbl=false;
@@ -730,8 +761,8 @@ function buildHtmlTable(rows) {
   for (var r=0;r<rows.length;r++) {
     html+='<tr>';
     for (var c=0;c<rows[r].length;c++) {
-      if (r===0) html+='<th style="background:#1C2B3A;color:#C9A84C;padding:8px;text-align:center;font-size:12px">'+rows[r][c]+'</th>';
-      else html+='<td style="padding:7px 8px;text-align:center;border-bottom:1px solid #eee;word-break:keep-all">'+rows[r][c]+'</td>';
+      if (r===0) html+='<th style="background:#1C2B3A;color:#C9A84C;padding:8px;text-align:center;font-size:12px">'+escapeHtml(rows[r][c])+'</th>';
+      else html+='<td style="padding:7px 8px;text-align:center;border-bottom:1px solid #eee;word-break:keep-all">'+escapeHtml(rows[r][c])+'</td>';
     }
     html+='</tr>';
   }
@@ -970,7 +1001,31 @@ function openPDF(html, fname) {
   var blob=new Blob([html],{type:'text/html;charset=utf-8'}); var url=URL.createObjectURL(blob);
   var overlay=document.createElement('div'); overlay.id='pdfOverlay';
   overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.75);z-index:99999;display:flex;align-items:center;justify-content:center;padding:24px';
-  overlay.innerHTML='<div style="background:#fff;border-radius:18px;padding:30px 24px;width:100%;max-width:420px;text-align:center"><div style="font-size:40px;margin-bottom:14px">📄</div><div style="font-size:18px;font-weight:700;color:#1C2B3A;margin-bottom:8px">보고서 준비 완료!</div><div style="font-size:13px;color:#666;line-height:1.9;margin-bottom:22px">아래 버튼을 누르면 보고서가 열려요.<br>📱 <strong style="color:#1C2B3A">iOS:</strong> 공유(□↑) → 파일에 저장<br>🤖 <strong style="color:#1C2B3A">Android:</strong> 인쇄 → PDF로 저장<br>저장 후 뒤로가기로 돌아오세요.</div><a id="pdfLink" href="'+url+'" target="_blank" style="display:block;width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none;text-align:center">📋 보고서 열기</a><button onclick="document.getElementById(\'pdfOverlay\').remove()" style="width:100%;padding:12px;background:#f0f0f0;color:#666;border:none;border-radius:10px;font-size:14px;cursor:pointer">✕ 취소</button></div>';
+
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:18px;padding:30px 24px;width:100%;max-width:420px;text-align:center';
+
+  var icon=document.createElement('div'); icon.style.cssText='font-size:40px;margin-bottom:14px'; icon.textContent='📄';
+  var title=document.createElement('div'); title.style.cssText='font-size:18px;font-weight:700;color:#1C2B3A;margin-bottom:8px'; title.textContent='보고서 준비 완료!';
+  var desc=document.createElement('div'); desc.style.cssText='font-size:13px;color:#666;line-height:1.9;margin-bottom:22px';
+  desc.innerHTML='아래 버튼을 누르면 보고서가 열려요.<br>📱 <strong style="color:#1C2B3A">iOS:</strong> 공유(□↑) → 파일에 저장<br>🤖 <strong style="color:#1C2B3A">Android:</strong> 인쇄 → PDF로 저장<br>저장 후 뒤로가기로 돌아오세요.';
+
+  var link=document.createElement('a');
+  link.href=url; link.target='_blank';
+  link.style.cssText='display:block;width:100%;padding:15px;background:#1C2B3A;color:#C9A84C;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;text-decoration:none;text-align:center';
+  link.textContent='📋 보고서 열기';
+
+  var cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='width:100%;padding:12px;background:#f0f0f0;color:#666;border:none;border-radius:10px;font-size:14px;cursor:pointer';
+  cancelBtn.textContent='✕ 취소';
+  cancelBtn.addEventListener('click', function(){
+    URL.revokeObjectURL(url);
+    overlay.remove();
+  });
+
+  box.appendChild(icon); box.appendChild(title); box.appendChild(desc);
+  box.appendChild(link); box.appendChild(cancelBtn);
+  overlay.appendChild(box);
   document.body.appendChild(overlay);
 }
 
