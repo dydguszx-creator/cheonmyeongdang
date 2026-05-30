@@ -812,14 +812,17 @@ function renderBody(raw) {
   raw = raw.replace(/\*\*([^*\n]+)\*\*/g, '\x01BOLD\x01$1\x01ENDBOLD\x01');
 
   // ── STEP5: 연도 형식 통일 → ### 🗓️ ──
-  // 볼드 연도: \x01BOLD\x012026년 丙午년\x01ENDBOLD\x01
+  // 干支 유니코드 범위 (천간: 甲乙丙丁戊己庚辛壬癸 / 지지: 子丑寅卯辰巳午未申酉戌亥)
+  var CJ = '[\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]\ub144';
+  // 볼드 **2026년 丙午년**
   raw = raw.replace(/\x01BOLD\x01(\d{4}년)\s*([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\x01ENDBOLD\x01/g,'### \ud83d\uddd3\ufe0f $1 $2');
-  // YYYY년干支년 붙어있는 경우 (줄 어디든)
-  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g, function(m, y, g){
-    // 이미 ### 🗓️ 뒤에 있으면 건드리지 않음
-    return '### \ud83d\uddd3\ufe0f '+y+' '+g;
-  });
-  // 이미 ### 🗓️ 가 중복 생성된 경우 정리
+  // ## 2026년 丙午년 (h2 헤더)
+  raw = raw.replace(/^#{2,4} (\d{4}년)\s*([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)[ \t]*$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
+  // ### 2026년 丙午년 (🗓️ 없는 h3)
+  raw = raw.replace(/^### (\d{4}년)\s*([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)[ \t]*$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
+  // YYYY년干支년 붙어있는 경우
+  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g, function(m, y, g){ return '### \ud83d\uddd3\ufe0f '+y+' '+g; });
+  // 중복 생성된 경우 정리
   raw = raw.replace(/### \ud83d\uddd3\ufe0f ### \ud83d\uddd3\ufe0f /g,'### \ud83d\uddd3\ufe0f ');
   // YYYY년\n干支년 두 줄
   raw = raw.replace(/(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
