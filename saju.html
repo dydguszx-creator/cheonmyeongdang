@@ -1021,8 +1021,14 @@ function buildBasicPDF(result) {
       // 첫 요소는 헤더 전 빈 텍스트일 수 있으므로 실제 연도 카드만 추출
       var yearParts=parts.filter(function(p){return /### 🗓️ \d{4}년/.test(p);});
       if (yearParts.length>5) {
-        cards.push({title:s.title,body:yearParts.slice(0,5).join(''),eyebrow:'🗓 세운 '+sy+'~'+(sy+4)});
-        cards.push({title:s.title,body:yearParts.slice(5).join(''),eyebrow:'🗓 세운 '+(sy+5)+'~'+(sy+9)});
+        var half=Math.ceil(yearParts.length/2);
+        var firstBody=yearParts.slice(0,half).join('');
+        var secondBody=yearParts.slice(half).join('');
+        // 앞 그룹: 첫 연도~+4, 뒤 그룹: +5~+9
+        var firstYear=sy, lastYear=sy+yearParts.length-1;
+        var midYear=sy+half-1;
+        cards.push({title:s.title,body:firstBody,eyebrow:'🗓 세운 '+firstYear+'~'+midYear});
+        if(secondBody) cards.push({title:s.title,body:secondBody,eyebrow:'🗓 세운 '+(midYear+1)+'~'+lastYear});
       } else cards.push({title:s.title,body:s.body,eyebrow:null});
     } else cards.push({title:s.title,body:s.body,eyebrow:null});
   }
