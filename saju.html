@@ -909,7 +909,16 @@ function renderBody(raw) {
     pos=pos.filter(function(p,i){return i===0||p.idx!==pos[i-1].idx;});
     var rowsHtml='',summary='',actionRow='';
     pos.forEach(function(p,pi){
-      var s=p.idx+p.info.key.length, e=pi+1<pos.length?pos[pi+1].idx:content.length;
+      // 총평(isSummary)은 다음 항목이 행동 조언뿐이므로 범위를 넉넉하게
+      var s=p.idx+p.info.key.length;
+      var e=content.length;
+      if(pi+1<pos.length){
+        // 총평 다음이 행동 조언뿐이면 content 끝까지 허용, 그 외는 다음 항목 위치
+        var nextInfo=pos[pi+1].info;
+        if(!(p.info.isSummary && nextInfo.isAction)){
+          e=pos[pi+1].idx;
+        }
+      }
       var val;
       if(p.info.isAction||p.info.isSummary){
         val=content.slice(s,e).split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&!/^[-\u00b7\u2022]/.test(l);})[0]||'';
@@ -923,6 +932,8 @@ function renderBody(raw) {
       else if(p.info.isAction) actionRow=val;
       else rowsHtml+='<div class="seun-row"><span class="seun-label" style="color:'+p.info.color+'">'+p.info.label+'</span><span class="seun-val"'+(p.info.bold?' style="font-weight:700;color:#2a1a6a"':'')+'>'+val+'</span></div>';
     });
+    // rowsHtml이 비어있으면(항목 파싱 실패) 세운 카드 자체를 생성하지 않고 원문 텍스트로 반환
+    if(!rowsHtml && !summary && !actionRow) return _+yt+'\n'+content;
     var yN=yt.replace(/년.*/,'년');
     var yS=yt.replace(/\d{4}년\s*/,'');
     // 干支를 한글 음으로 병기: 丙午년 → 丙午년 (병오년)
@@ -1007,9 +1018,11 @@ function buildBasicPDF(result) {
     if (s.title.indexOf('세운')!==-1||s.title.indexOf('대운')!==-1) {
       var sy=new Date().getFullYear();
       var parts=s.body.split(/(?=### 🗓️ \d{4}년)/);
-      if (parts.length>5) {
-        cards.push({title:s.title,body:parts.slice(0,Math.ceil(parts.length/2)).join(''),eyebrow:'🗓 세운 '+sy+'~'+(sy+4)});
-        cards.push({title:s.title,body:parts.slice(Math.ceil(parts.length/2)).join(''),eyebrow:'🗓 세운 '+(sy+5)+'~'+(sy+9)});
+      // 첫 요소는 헤더 전 빈 텍스트일 수 있으므로 실제 연도 카드만 추출
+      var yearParts=parts.filter(function(p){return /### 🗓️ \d{4}년/.test(p);});
+      if (yearParts.length>5) {
+        cards.push({title:s.title,body:yearParts.slice(0,5).join(''),eyebrow:'🗓 세운 '+sy+'~'+(sy+4)});
+        cards.push({title:s.title,body:yearParts.slice(5).join(''),eyebrow:'🗓 세운 '+(sy+5)+'~'+(sy+9)});
       } else cards.push({title:s.title,body:s.body,eyebrow:null});
     } else cards.push({title:s.title,body:s.body,eyebrow:null});
   }
