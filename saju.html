@@ -535,20 +535,34 @@ async function doAutoAnalyze() {
   }
 
   async function streamFetch(prompt, onChunk, onDone) {
-    var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})});
-    if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
-    var reader=res.body.getReader(); var decoder=new TextDecoder();
-    while(true){
-      var sr=await reader.read(); if(sr.done) break;
-      var chunk=decoder.decode(sr.value,{stream:true});
-      for(var ln of chunk.split('\n')){
-        if(!ln.startsWith('data: ')) continue;
-        try{var j=JSON.parse(ln.slice(6).trim());
-          if(j.text) onChunk(j.text);
-          if(j.done) onDone();
-          if(j.error) throw new Error(j.error);
-        }catch(e2){}
+    var controller = new AbortController();
+    var timer = setTimeout(function(){ controller.abort(); }, 120000);
+    var doneCalled = false;
+    function callDoneOnce(){ if(!doneCalled){ doneCalled=true; onDone(); } }
+    try {
+      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt}),signal:controller.signal});
+      if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
+      var reader=res.body.getReader(); var decoder=new TextDecoder();
+      while(true){
+        var sr=await reader.read(); if(sr.done) break;
+        var chunk=decoder.decode(sr.value,{stream:true});
+        for(var ln of chunk.split('\n')){
+          if(!ln.startsWith('data: ')) continue;
+          try{var j=JSON.parse(ln.slice(6).trim());
+            if(j.text) onChunk(j.text);
+            if(j.done) callDoneOnce();
+            if(j.error) throw new Error(j.error);
+          }catch(e2){}
+        }
       }
+      // 스트림 정상 종료 시 j.done 없어도 완료 처리
+      callDoneOnce();
+    } catch(err) {
+      // 타임아웃(abort) 포함 모든 오류 → 완료로 처리해서 멈춤 방지
+      callDoneOnce();
+      if(err && err.name !== 'AbortError') throw err;
+    } finally {
+      clearTimeout(timer);
     }
   }
 
