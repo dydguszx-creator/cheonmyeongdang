@@ -768,6 +768,10 @@ function renderBody(raw) {
   raw = raw.replace(/^#{2,4} (\d{4}년[^\n]*)$/gm, function(m,y){ return /[\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678]/.test(y) ? '### \ud83d\uddd3\ufe0f '+y : m; });
   // 플레이스홀더 복원
   raw = raw.replace(/\x00SY(\d+)\x00/g, function(_,i){ return _seunPH[parseInt(i)]; });
+  // ## 🗓️ → ### 🗓️ (헤더 레벨 통일)
+  raw = raw.replace(/^## \ud83d\uddd3\ufe0f? /gm, '### \ud83d\uddd3\ufe0f ');
+  // **YYYY년 干支년** 단독 줄 → ### 🗓️ (굵게 처리된 연도 헤더)
+  raw = raw.replace(/^\*\*(\d{4}년) ?([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\*\*$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
   // 중복 ### 🗓️ 정리
   raw = raw.replace(/(### \ud83d\uddd3\ufe0f ){2,}/g, '### \ud83d\uddd3\ufe0f ');
 
