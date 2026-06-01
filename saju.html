@@ -783,10 +783,13 @@ function renderBody(raw) {
     pos=pos.filter(function(p,i){return i===0||p.idx!==pos[i-1].idx;});
     var rows='',summary='',actionRow='';
     pos.forEach(function(p,pi){
-      var s=p.idx+p.info.key.length,e=pi+1<pos.length?pos[pi+1].idx:content.length;
-      // 각 항목은 한 줄에만 작성되므로 줄바꿈 이후는 잘라냄 (마지막 항목 과잉 텍스트 방지)
-      var lineEnd=content.indexOf('\n',s);
-      if(lineEnd!==-1&&lineEnd<e) e=lineEnd;
+      var s=p.idx+p.info.key.length;
+      // 다음 라벨 위치 또는 content 끝
+      var e=pi+1<pos.length?pos[pi+1].idx:content.length;
+      // 마지막 항목이 content 전체를 가져오는 버그 방지:
+      // 각 항목 값은 첫 번째 빈 줄(연속 줄바꿈) 이전까지만 읽음
+      var doubleNewline=content.indexOf('\n\n',s);
+      if(doubleNewline!==-1&&doubleNewline<e) e=doubleNewline;
       var val;
       if(p.info.isAction||p.info.isSummary){
         val=content.slice(s,e).split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&!/^[-\u00b7\u2022]/.test(l);})[0]||'';
