@@ -512,24 +512,26 @@ async function doAutoAnalyze() {
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n오늘 실천: 가족 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위】\n취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n오늘 실천: 건강 관련 행동 1가지',
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n각 연도를 아래 형식으로 작성하세요.\n\nYYYY년 干支년\n💰 재물·직업: 세운 천간·지지 십성 의미, 직업·수입 흐름 3~4문장.\n❤️ 연애·가족: 배우자궁·자녀궁에 미치는 영향 3문장.\n🌿 건강 주의: 취약 장기에 미치는 영향 2~3문장.\n🎰 복권·재물운: (재물운 좋은 해만)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 한 문장.\n행동 조언: 한 문장.\n\n각 연도 사이 빈 줄. 5개년 전부 완성.',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n[현재 시점: '+curDate+']\n각 연도를 아래 형식으로 작성하세요.\n\nYYYY년 干支년\n💰 재물·직업: 세운 천간·지지 십성 의미, 직업·수입 흐름 3~4문장.\n❤️ 연애·가족: 배우자궁·자녀궁에 미치는 영향 3문장.\n🌿 건강 주의: 취약 장기에 미치는 영향 2~3문장.\n🎰 복권·재물운: (재물운 좋은 해만)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 한 문장.\n행동 조언: 한 문장.\n\n각 연도 사이 빈 줄. 5개년 전부 완성.',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【10. 나다운 삶의 방향 & 개운법 실천 가이드】\n이 사람은 어떤 사람이고 어떻게 살아야 맞는 삶인지 · 지금까지 왜 맞지 않는 방향으로 살아왔는지 사주 구조로 설명 · 타고난 에너지를 살리는 삶의 방향 구체적으로 제시\n\n[개운법 — 반드시 모두 포함, 모호한 표현 금지]\n- 이 사주에 힘이 되는 색상(구체적 색명)\n- 방향(동서남북 명시)\n- 음식(구체적 식품명)\n- 장소(구체적 장소 유형)\n- 복권 구매 방향·요일\n- 계약·이사 좋은 타이밍\n- 차량 색상 추천\n- 오늘부터 바로 실천할 수 있는 개운법 3가지 이상\n오늘 실천: 나다운 삶을 위해 오늘 당장 바꿀 수 있는 것 1가지'
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n[현재 시점: '+curDate+']\n각 연도를 아래 형식으로 작성하세요.\n\nYYYY년 干支년\n💰 재물·직업: 세운 천간·지지 십성 의미, 직업·수입 흐름 3~4문장.\n❤️ 연애·가족: 배우자궁·자녀궁에 미치는 영향 3문장.\n🌿 건강 주의: 취약 장기에 미치는 영향 2~3문장.\n🎰 복권·재물운: (재물운 좋은 해만)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 한 문장.\n행동 조언: 한 문장.\n\n각 연도 사이 빈 줄. 5개년 전부 완성.'
   ];
 
-  var parts = ['','','','','','','','','','',''];
-  var dones = [false,false,false,false,false,false,false,false,false,false,false];
+  // ✅ 수정: parts, dones 10개 / 완료 조건 10
+  var parts = ['','','','','','','','','',''];
+  var dones = [false,false,false,false,false,false,false,false,false,false];
 
   function updateDisplay() {
     var combined = parts.join('\n\n').trim();
     if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
     var done_count = dones.filter(Boolean).length;
     var total_chars = combined.length;
-    if(done_count === 11){
+    // ✅ 수정: 완료 조건 10
+    if(done_count === 10){
       statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
       statusEl.innerHTML='✅ 분석 완료! 총 '+total_chars.toLocaleString()+'자';
       onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
     } else {
-      statusEl.innerHTML='✍️ 분석 중... ('+done_count+'/11 완료 · '+total_chars.toLocaleString()+'자)';
+      // ✅ 수정: 진행 표시 10
+      statusEl.innerHTML='✍️ 분석 중... ('+done_count+'/10 완료 · '+total_chars.toLocaleString()+'자)';
     }
   }
 
@@ -754,14 +756,11 @@ function renderBody(raw) {
   raw = raw.replace(/^#{2,4} (\d{4}년)/gm, '**$1');
 
   // STEP3: 세운 카드 생성 — "YYYY년"이 단독으로 시작하는 단락을 카드로 변환
-  // 오직 \d{4}년 패턴만 감지. Claude가 어떤 형식으로 써도 동작.
-  // 연도 단락 사이를 분리해서 각각 카드로 만듦
   var seunCardHtml = '';
   var hasSeun = /(?:^|\n\n)\*{0,2}(?:🗓️ ?)?\d{4}년/.test(raw);
   if(hasSeun) {
-    // 연도 시작 위치 기준으로 분리
     var seunBlocks = raw.split(/(?=(?:^|\n)\*{0,2}(?:🗓️ ?)?\d{4}년)/m);
-    var preSeun = ''; // 연도 카드 이전 텍스트
+    var preSeun = '';
     var cardBlocks = [];
     seunBlocks.forEach(function(block) {
       if(/^\*{0,2}(?:🗓️ ?)?\d{4}년/.test(block.trim())) {
@@ -774,13 +773,10 @@ function renderBody(raw) {
     if(cardBlocks.length > 0) {
       var cards = cardBlocks.map(function(block) {
         var lines = block.split('\n');
-        // 첫 줄에서 연도명 추출
         var titleLine = lines[0].replace(/\*+/g,'').replace(/🗓️ ?/,'').trim();
         var bodyLines = lines.slice(1).join('\n').trim();
-        // 본문에 마크업 적용
         bodyLines = bodyLines.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
         bodyLines = applyMarkup(bodyLines);
-        // 빈 줄 기준으로 단락 분리
         var paras = bodyLines.split(/\n{2,}/).map(function(p){
           p = p.trim(); if(!p) return '';
           if(/^</.test(p)) return p;
@@ -792,7 +788,6 @@ function renderBody(raw) {
           +'</div>';
       }).join('');
 
-      // preSeun은 일반 renderBody로, 카드는 seunCardHtml에 저장
       raw = preSeun;
       seunCardHtml = cards;
     }
