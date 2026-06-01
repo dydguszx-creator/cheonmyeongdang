@@ -833,17 +833,20 @@ function renderBody(raw) {
         // ** bold 변환 (applyMarkup은 ** 미처리)
         val=val.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
         val=applyMarkup(val);
-        // 항목별 120자 초과 시 자르기 (균일한 연도별 표시)
+        // 항목별 80자 균일 자르기 (모든 연도 동일 분량)
         var _plainLen = val.replace(/<[^>]+>/g,'').length;
-        if(_plainLen > 120){
+        if(_plainLen > 80){
           var _cut = 0, _cnt = 0;
           for(var _ci=0;_ci<val.length;_ci++){
             if(val[_ci]==='<'){ while(_ci<val.length&&val[_ci]!=='>'){_ci++;} continue; }
             _cnt++;
-            if(_cnt>=120 && (val[_ci]==='.' || val[_ci]==='!' || val[_ci]==='요' || val[_ci]==='다' || val[_ci]==='.')){ _cut=_ci+1; break; }
+            // 60~80자 사이에서 문장 끝 만나면 자르기
+            if(_cnt>=60 && _cnt<=80 && (val[_ci]==='요' || val[_ci]==='다' || val[_ci]==='.' || val[_ci]==='!' || val[_ci]==='?')){ _cut=_ci+1; }
+            // 80자 초과하면 무조건 마지막 자른 위치 사용 또는 강제 자르기
+            if(_cnt>80){ break; }
           }
           if(_cut>0) val = val.slice(0,_cut)+'…';
-          else if(_plainLen > 150){ val = val.slice(0, Math.floor(val.length*120/_plainLen))+'…'; }
+          else val = val.slice(0, Math.floor(val.length*75/_plainLen))+'…';
         }
       }
       if(p.info.isSummary) summary=val;
