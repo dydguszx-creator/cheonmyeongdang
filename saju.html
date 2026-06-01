@@ -342,7 +342,7 @@ var MANSE = (function() {
   return {calc:calc, toPromptText:toPromptText, CG:CG, JJ:JJ};
 })();
 
-var formData = {};
+var formData = {name:'',gender:'남성',cal:'양력',y:'',m:'',d:'',h:'',min:''};
 var promptText = '';
 var currentMode = 'basic';
 
@@ -473,11 +473,9 @@ async function doAutoAnalyze() {
 
   // 기본 보고서: 섹션 1개씩 10개 병렬 호출
   var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
-  var curDate=sy+'년 '+(now.getMonth()+1)+'월 현재';
-  var info=buildInfo();
-  var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
   var curMonth=now.getMonth()+1;
   var curDate=sy+'년 '+curMonth+'월 현재';
+  var info=buildInfo();
 
   // 공통 헤더
   var hdr='당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n\n'
@@ -491,72 +489,50 @@ async function doAutoAnalyze() {
     +'① 이 사람에게만 해당하는 말만. 일반론 금지.\n'
     +'② 간결하고 중복 없이. 분량 채우기 금지.\n'
     +'③ 전문가가 옆에서 말해주듯 존댓말 구어체. AI 느낌 X.\n'
-    +'- 나쁜 시기엔 반드시 대처법.\n'
-    +'- 소제목은 반드시 ■ 이모지 형식. 예: ■ 💰 재물 구조\n'
-    +'- **핵심 내용 굵게** 표시.\n'
+    +'- 나쁜 시기엔 반드시 대처법. 섹션 1에서만 한자 허용.\n'
+    +'- 소제목(■)마다 이모지. **핵심 내용 굵게**.\n'
     +'- 마크업: ==텍스트==(금색/핵심) !!텍스트!!(빨간/주의) ++텍스트++(초록/기회) ~~텍스트~~(파란/전환점)\n'
-    +'- 섹션 1에서만 한자 허용. 섹션 2~10 본문에 한자 절대 금지.\n'
-    +'- 세운 간지: 2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑 2034=甲寅 2035=乙卯\n\n'
-    +'[형식 규칙 — 반드시 준수]\n'
-    +'⛔ 아래 형식은 절대 바꾸지 말 것. 예시 그대로 복사하듯 작성.\n\n'
-    +'① [한눈에 보기] — 반드시 같은 줄에 내용까지. 줄바꿈 금지.\n'
-    +'   올바른 예: [한눈에 보기] ==이 사주는 물 기운이 강한 신강 구조입니다==\n'
-    +'   잘못된 예: [한눈에 보기]\n'
-    +'              물 기운이 강한 신강 구조입니다  ← 이렇게 하면 안 됨\n\n'
-    +'② 지금 당장 할 수 있는 것 — 콜론 뒤 같은 줄에 작성. 줄바꿈 금지.\n'
-    +'   올바른 예: 지금 당장 할 수 있는 것: 황토색 소품 책상에 올려두기\n'
-    +'   잘못된 예: 지금 당장 할 수 있는 것:\n'
-    +'              황토색 소품 책상에 올려두기  ← 이렇게 하면 안 됨\n\n'
-    +'③ 세운 연도 형식 — ### 🗓️ YYYY년 干支년 형식만 허용.\n'
-    +'   올바른 예: ### 🗓️ 2026년 丙午년\n'
-    +'   잘못된 예: ## 2026년, **2026년**, 2026년 丙午년  ← 이렇게 하면 안 됨\n\n'
-    +'④ 세운 항목 — 이모지+항목명+콜론+내용을 반드시 같은 줄에.\n'
-    +'   올바른 예: 💰 재물·직업: 이 해는 재물운이 상승하는 시기입니다.\n'
-    +'   잘못된 예: 💰 재물·직업:\n'
-    +'              이 해는 재물운이 상승하는 시기입니다.  ← 이렇게 하면 안 됨\n\n'
-    +'[섹션 마무리 형식 — 모든 섹션 끝에 반드시 포함]\n'
+    +'- 섹션 1에서만 한자 허용. 이후 한자 금지.\n'
+    +'- 세운 간지: 2026=丙午 2027=丁未 2028=戊申 2029=己酉 2030=庚戌 2031=辛亥 2032=壬子 2033=癸丑 2034=甲寅 2035=乙卯\n- [한눈에 보기] 반드시 같은 줄에 내용까지. 줄바꿈 절대 금지. 예: [한눈에 보기] ==핵심==\n- 세운 연도는 반드시 ### 🗓️ YYYY년 干支년 형식. 다른 형식 금지.\n- 지금 당장 할 수 있는 것: 콜론 뒤 같은 줄에 작성. 줄바꿈 금지.\n\n'
+    +'[섹션 마무리 형식]\n'
     +'[한눈에 보기] 핵심 한 문장\n'
-    +'[핵심 요약 3줄]\n'
-    +'- 요약1\n'
-    +'- 요약2\n'
-    +'- 요약3\n'
-    +'지금 당장 할 수 있는 것: '+curDate+' 기준 오늘 실행 가능한 행동 1가지\n\n';
+    +'[핵심 요약 3줄] - 요약1\n- 요약2\n- 요약3\n'
+    +'지금 당장 할 수 있는 것: '+curDate+' 기준 오늘 실행 가능한 행동 1가지 (해당 섹션 주제와 일치)\n\n';
 
-  // 섹션별 프롬프트 11개
+  // 섹션별 프롬프트 10개
   var prompts = [
     hdr+'아래 섹션 1개만 완성하세요:\n---\n【1. 사주 구조 분석】\n사주팔자 8글자 도표(년/월/일/시×천간/지지) · 오행 분포 표 · 신강/신약 판단 · 용신·희신·기신 도출 · 일간 핵심 성격\n오늘 실천: 오행 관련 소품/색상/음식 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【2. 타고난 성격·기질】\n일간·십성 기반 핵심 성격 · 겉으로 보이는 모습과 속마음이 왜 다른지 · 어떤 상황에서 강하고 어떤 상황에서 약한지 구체적 장면으로 설명 · 강점을 살리고 약점을 보완하는 방향 · 인간관계 패턴\n오늘 실천: 오늘 강점을 활용할 수 있는 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【3. 대운 흐름 분석】\n전체 대운 목록 표(나이/기간/간지/핵심테마) · 현재 대운 상세 · 직전·다음 대운 비교 · 어느 대운이 기회이고 어느 대운이 조심해야 하는지 명확히 · 투자/이직/창업/결혼 등 중요 결정을 어느 대운에 해야 하는지 구체적으로 · 지금 해야 할 행동\n오늘 실천: 현재 대운에 맞는 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【4. 재물·직업운】\n타고난 재물 구조 · 어떤 방식으로 돈 버는 게 이 사주에 맞는지 · 직장형/사업형 판단 · 이직·전직 최적 타이밍 · 어울리는 직종 방향 3가지 이상 · 수입 안정 시기\n오늘 실천: 돈·커리어 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【5. 창업·사업 가능성】\n창업 사주인지 직장 사주인지 판단 · 어울리는 업종 방향 3가지 이상 · 시작 타이밍 · 파트너(동업자) 선택 기준 · 규모 결정 조언 · 주의사항\n오늘 실천: 창업·사업 준비 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【6. 연애·결혼운】\n배우자 자리 에너지 분석 · 어떤 사람과 잘 맞고 어떤 사람과 잘 맞지 않는지 · 인연 오는 시기 · 주의할 연애 패턴 · 반복되는 연애 패턴이 왜 생기는지 이유와 극복법\n오늘 실천: 인간관계·연애 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n부모와의 관계 에너지 · 가족 내 역할 · 자녀 인연의 유무와 시기 · 양육 스타일과 자녀와의 관계에서 주의할 점 · 반복되는 가족 패턴과 원인\n오늘 실천: 가족 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위 & 개운법】\n취약 장기·신체 부위 · 스트레스가 몸 어디로 나타나는지 · 조심해야 할 시기 · 맞춤 음식·운동·생활습관 · [개운법] 이 사주에 힘이 되는 색상/방향/음식/장소 · 복권 구매 방향·요일 · 계약·이사 타이밍 · 차량 색상 추천\n오늘 실천: 건강 또는 개운 관련 행동 1가지',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n\n⛔ 아래 형식을 글자 하나도 바꾸지 말고 그대로 복사하듯 작성. 다른 형식 절대 금지.\n\n[올바른 형식 예시]\n### 🗓️ 2026년 丙午년\n💰 재물·직업: 丙火가 이 사주에 미치는 영향을 분석한 내용을 여기에 한 줄로 작성.\n❤️ 연애·가족: 배우자궁·자녀궁에 미치는 영향을 여기에 한 줄로 작성.\n🌿 건강 주의: 취약 장기에 미치는 영향을 여기에 한 줄로 작성.\n🎰 복권·재물운: 재물운 좋은 해만 작성. 아니면 이 줄 생략.\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n⚠️ 절대 금지 사항:\n- 항목 이름 뒤에서 줄바꿈 후 내용 작성 금지\n- ## 2026년 같은 다른 헤더 형식 금지\n- **굵게** 처리된 연도 헤더 금지\n\n위 형식으로 '+sy+'년~'+(sy+4)+'년 5개년 전부 작성. 각 연도 사이 빈 줄 삽입.',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n[현재 시점: '+curDate+']\n\n⛔ 아래 형식을 글자 하나도 바꾸지 말고 그대로 복사하듯 작성. 다른 형식 절대 금지.\n\n[올바른 형식 예시]\n### 🗓️ 2031년 辛亥년\n💰 재물·직업: 辛金이 이 사주에 미치는 영향을 분석한 내용을 여기에 한 줄로 작성.\n❤️ 연애·가족: 배우자궁·자녀궁에 미치는 영향을 여기에 한 줄로 작성.\n🌿 건강 주의: 취약 장기에 미치는 영향을 여기에 한 줄로 작성.\n🎰 복권·재물운: 재물운 좋은 해만 작성. 아니면 이 줄 생략.\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n⚠️ 절대 금지 사항:\n- 항목 이름 뒤에서 줄바꿈 후 내용 작성 금지\n- ## 2031년 같은 다른 헤더 형식 금지\n- **굵게** 처리된 연도 헤더 금지\n\n위 형식으로 '+(sy+5)+'년~'+(sy+9)+'년 5개년 전부 작성. 각 연도 사이 빈 줄 삽입.',
-    hdr+'아래 섹션 1개만 완성하세요:\n---\n【10. 나다운 삶의 방향 & 개운법 실천 가이드】\n이 사람은 어떤 사람이고 어떻게 살아야 맞는 삶인지 · 지금까지 왜 맞지 않는 방향으로 살아왔는지 사주 구조로 설명 · 타고난 에너지를 살리는 삶의 방향 구체적으로 제시 · 오늘부터 바로 실천할 수 있는 개운법: 이 사주에 힘이 되는 색상/방향/음식/장소 · 복권 구매 방향·요일 · 계약·이사·여행 타이밍 · 차량 색상 · 전반적 생활 맞춤 조언\n오늘 실천: 나다운 삶을 위해 오늘 당장 바꿀 수 있는 것 1가지'
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【2. 타고난 성격·기질】\n일간과 십성 기반 핵심 성격 · 구체적 생활 장면으로 묘사 · 강점·약점 · 인간관계 패턴\n오늘 실천: 오늘 강점을 활용할 수 있는 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【3. 대운 흐름 분석】\n전체 대운 목록 표(나이/기간/간지/핵심테마) · 현재 대운 상세 · 직전·다음 대운 비교 · 지금 해야 할 행동\n오늘 실천: 현재 대운에 맞는 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【4. 재물·직업운】\n재물 구조 · 직장형/사업형 판단 · 이직 타이밍 · 재물운 개선 방법\n오늘 실천: 돈·커리어 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【5. 창업·사업 가능성】\n창업 사주 여부 · 어울리는 업종 · 시작 타이밍 · 주의사항\n오늘 실천: 창업·사업 준비 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【6. 연애·결혼운】\n배우자 자리 에너지 · 이상형 · 인연 오는 시기 · 반복 패턴과 극복법\n오늘 실천: 인간관계·연애 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【7. 부모·자녀·가족 관계】\n가족 내 역할 · 자녀 인연 시기 · 주의 패턴\n오늘 실천: 가족 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【8. 건강·취약 부위】\n취약 장기 · 조심할 시기 · 맞춤 음식·운동·생활습관\n오늘 실천: 건강 관련 행동 1가지',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+sy+'년~'+(sy+4)+'년 5개년\n[현재 시점: '+curDate+']\n\n⛔ 형식 규칙 (반드시 준수)\n1. 각 연도는 반드시 ### 🗓️ YYYY년 干支년 으로 시작\n2. 각 항목은 이모지+항목명+콜론+내용을 반드시 한 줄에. 줄바꿈 후 내용 절대 금지.\n3. 💰 재물·직업: 2문장 이내\n4. ❤️ 연애·가족: 2문장 이내\n5. 🌿 건강 주의: 1~2문장 이내\n6. 🎰 복권·재물운: 재물운 좋은 해만, 1문장\n7. ✨ 핵심 키워드: 키1 / 키2 / 키3\n8. 📝 총평: 1문장\n9. 행동 조언: 1문장\n\n[형식 예시 — 이 구조 그대로 복사해서 사용]\n### 🗓️ 2026년 丙午년\n💰 재물·직업: (이 사주 맞춤 재물·직업 흐름 2문장 이내)\n❤️ 연애·가족: (이 사주 맞춤 연애·가족 흐름 2문장 이내)\n🌿 건강 주의: (이 사주 맞춤 건강 주의 1~2문장)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: (이 해 전반 한 문장)\n행동 조언: (이 해 실천 행동 한 문장)\n\n위 예시 형식 그대로 '+sy+'년~'+(sy+4)+'년 5개년 전부 완성. 각 연도 사이 빈 줄 1개.',
+    hdr+'아래 섹션 1개만 완성하세요:\n---\n【9. 연도별 세운 분석】 '+(sy+5)+'년~'+(sy+9)+'년 5개년\n[현재 시점: '+curDate+']\n\n⛔ 형식 규칙 (반드시 준수)\n1. 각 연도는 반드시 ### 🗓️ YYYY년 干支년 으로 시작\n2. 각 항목은 이모지+항목명+콜론+내용을 반드시 한 줄에. 줄바꿈 후 내용 절대 금지.\n3. 💰 재물·직업: 2문장 이내\n4. ❤️ 연애·가족: 2문장 이내\n5. 🌿 건강 주의: 1~2문장 이내\n6. 🎰 복권·재물운: 재물운 좋은 해만, 1문장\n7. ✨ 핵심 키워드: 키1 / 키2 / 키3\n8. 📝 총평: 1문장\n9. 행동 조언: 1문장\n\n[형식 예시 — 이 구조 그대로 복사해서 사용]\n### 🗓️ 2031년 辛亥년\n💰 재물·직업: (이 사주 맞춤 재물·직업 흐름 2문장 이내)\n❤️ 연애·가족: (이 사주 맞춤 연애·가족 흐름 2문장 이내)\n🌿 건강 주의: (이 사주 맞춤 건강 주의 1~2문장)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: (이 해 전반 한 문장)\n행동 조언: (이 해 실천 행동 한 문장)\n\n위 예시 형식 그대로 '+(sy+5)+'년~'+(sy+9)+'년 5개년 전부 완성. 각 연도 사이 빈 줄 1개.'
   ];
 
-  var parts = ['','','','','','','','','','',''];
-  var dones = [false,false,false,false,false,false,false,false,false,false,false];
+  var parts = ['','','','','','','','','',''];
+  var dones = [false,false,false,false,false,false,false,false,false,false];
 
   function updateDisplay() {
     var combined = parts.join('\n\n').trim();
     if(resultArea){resultArea.value=combined;resultArea.scrollTop=resultArea.scrollHeight;}
     var done_count = dones.filter(Boolean).length;
     var total_chars = combined.length;
-    if(done_count === 11){
+    if(done_count === 10){
       statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';
       statusEl.innerHTML='✅ 분석 완료! 총 '+total_chars.toLocaleString()+'자';
       onResultInput(); btn.disabled=false; btn.textContent='⚡ 자동 분석 (API)';
     } else {
-      statusEl.innerHTML='✍️ 분석 중... ('+done_count+'/11 완료 · '+total_chars.toLocaleString()+'자)';
+      statusEl.innerHTML='✍️ 분석 중... ('+done_count+'/10 완료 · '+total_chars.toLocaleString()+'자)';
     }
   }
 
   async function streamFetch(prompt, onChunk, onDone) {
     var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, 120000);
+    var timer = setTimeout(function(){ controller.abort(); }, 90000);
     var doneCalled = false;
     function callDoneOnce(){ if(!doneCalled){ doneCalled=true; onDone(); } }
     try {
@@ -578,7 +554,7 @@ async function doAutoAnalyze() {
       // 스트림 정상 종료 시 j.done 없어도 완료 처리
       callDoneOnce();
     } catch(err) {
-      // 타임아웃(abort) 포함 모든 오류 → 완료로 처리해서 멈춤 방지
+      // abort(타임아웃) 포함 모든 오류 → 완료 처리해서 멈춤 방지
       callDoneOnce();
       if(err && err.name !== 'AbortError') throw err;
     } finally {
@@ -683,7 +659,7 @@ function onResultInput() {
 function buildBasicPrompt() {
   var info=buildInfo(); var now=new Date();
   var sy=now.getFullYear(), ey=sy+9;
-  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객 정보를 바탕으로 9개 섹션을 순서대로 빠짐없이 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 직접 말해주듯 존댓말로 자연스럽게. AI 보고서 느낌 절대 금지.\n- 두루뭉술·일반론 절대 금지. 이 사람 사주에서만 나올 수 있는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 본문에 한자 절대 금지. 쉬운 말로 풀어서.\n- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로.\n- 각 섹션 최소 1,500자 이상. 전체 최소 20,000자 이상. 절대 요약·생략 금지.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축 2034=갑인 2035=을묘\n\n[섹션별 작성 지침]\n\n【1. 사주 구조 분석】\n- 사주팔자 8글자 도표 (년/월/일/시 × 천간/지지) 마크다운 표로\n- 오행 분포 표 (木火土金水 각 개수와 강약)\n- 신강/신약 판단 근거\n- 용신·희신·기신 도출\n- 일간 성격 핵심 요약 3줄\n\n【2. 타고난 성격·기질】\n- 이 사람만의 기질을 구체적 생활 장면으로\n- 강점·약점·대인관계 패턴·스트레스 반응\n- 직장·연애·일상에서 어떻게 나타나는지\n\n【3. 대운 흐름 분석】\n- 전체 대운 목록 표 (나이/기간/간지/핵심테마)\n- 현재 대운 상세 분석\n- 직전·다음 대운 비교\n- 지금 해야 할 행동 조언\n\n【4. 재물·직업운】\n- 재성 분석·직업 유형\n- 직장형/사업형 판단\n- 이직·전직 최적 타이밍\n- 수입 안정 시기\n\n【5. 창업·사업 가능성】\n- 창업 사주 여부\n- 어울리는 업종 방향 3가지 이상\n- 시작 타이밍·동업 적합성\n\n【6. 연애·결혼운】\n- 배우자 자리 에너지 분석\n- 이상형 유형·인연 오는 시기\n- 반복되는 연애 패턴과 극복법\n\n【7. 부모·자녀·가족 관계】\n- 가족 내 역할 에너지\n- 자녀 인연 시기\n- 반복되는 패턴과 주의점\n\n【8. 건강·취약 부위】\n- 취약 장기·신체 부위\n- 조심해야 할 시기\n- 맞춤 음식·운동·생활습관 조언\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'+sy+'년부터 '+ey+'년까지 10개년을 각 연도별로 반드시 아래 형식으로 작성:\n\n### 🗓️ YYYY년 간지년\n💰 재물·직업: (이 사주에 맞는 상세한 재물·직업 흐름)\n❤️ 연애·가족: (이 사주에 맞는 상세한 연애·가족 흐름)\n🌿 건강 주의: (이 사주에 맞는 건강 주의사항)\n✨ 핵심 키워드: 키워드1 / 키워드2 / 키워드3\n📝 총평: 이 해 전반 분위기 한 문장.\n행동 조언: 이 해에 해야 할 구체적 행동 한 문장.\n\n각 연도 사이 반드시 빈 줄 삽입. 10개년 모두 빠짐없이 작성.\n\n【10. 나다운 삶의 방향 & 개운법 실천 가이드】\n- "나는 어떤 사람이고 어떻게 살아야 맞는 삶인가?" 사주 구조에서 직접 답을 찾아드릴 것\n- 지금까지 왜 맞지 않는 방향으로 살아왔는지 사주 구조로 설명\n- 타고난 에너지를 살리는 삶의 방향 구체적으로 제시\n- 개운법: 이 사주에 힘이 되는 색상·방향·음식·장소\n- 복권 구매 방향·요일, 계약·이사 타이밍, 차량 색상 추천\n- 오늘부터 바로 실천할 수 있는 개운법 3가지 이상';
+  return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객 정보를 바탕으로 9개 섹션을 순서대로 빠짐없이 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[만세력 정확성 주의]\n⛔ [앱 자동계산 사주팔자]가 있으면 그대로 사용. 직접 계산 절대 금지.\n⛔ 오행 분포, 대운 정보도 제공된 값 그대로 사용.\n\n[작성 원칙]\n- 전문가가 고객 옆에서 직접 말해주듯 존댓말로 자연스럽게. AI 보고서 느낌 절대 금지.\n- 두루뭉술·일반론 절대 금지. 이 사람 사주에서만 나올 수 있는 말로.\n- 섹션 1에서만 한자 허용. 섹션 2 이후 본문에 한자 절대 금지. 쉬운 말로 풀어서.\n- 좋은 건 확실히 좋다고, 나쁜 건 가감 없이 팩트로.\n- 각 섹션 최소 1,500자 이상. 전체 최소 20,000자 이상. 절대 요약·생략 금지.\n- 세운 간지: 2026=병오 2027=정미 2028=무신 2029=기유 2030=경술 2031=신해 2032=임자 2033=계축 2034=갑인 2035=을묘\n\n[섹션별 작성 지침]\n\n【1. 사주 구조 분석】\n- 사주팔자 8글자 도표 (년/월/일/시 × 천간/지지) 마크다운 표로\n- 오행 분포 표 (木火土金水 각 개수와 강약)\n- 신강/신약 판단 근거\n- 용신·희신·기신 도출\n- 일간 성격 핵심 요약 3줄\n\n【2. 타고난 성격·기질】\n- 이 사람만의 기질을 구체적 생활 장면으로\n- 강점·약점·대인관계 패턴·스트레스 반응\n- 직장·연애·일상에서 어떻게 나타나는지\n\n【3. 대운 흐름 분석】\n- 전체 대운 목록 표 (나이/기간/간지/핵심테마)\n- 현재 대운 상세 분석\n- 직전·다음 대운 비교\n- 지금 해야 할 행동 조언\n\n【4. 재물·직업운】\n- 재성 분석·직업 유형\n- 직장형/사업형 판단\n- 이직·전직 최적 타이밍\n- 수입 안정 시기\n\n【5. 창업·사업 가능성】\n- 창업 사주 여부\n- 어울리는 업종 방향 3가지 이상\n- 시작 타이밍·동업 적합성\n\n【6. 연애·결혼운】\n- 배우자 자리 에너지 분석\n- 이상형 유형·인연 오는 시기\n- 반복되는 연애 패턴과 극복법\n\n【7. 부모·자녀·가족 관계】\n- 가족 내 역할 에너지\n- 자녀 인연 시기\n- 반복되는 패턴과 주의점\n\n【8. 건강·취약 부위】\n- 취약 장기·신체 부위\n- 조심해야 할 시기\n- 맞춤 음식·운동·생활습관 조언\n\n【9. 연도별 세운 분석 ('+sy+'~'+ey+')】\n'+sy+'년부터 '+ey+'년까지 10개년.\n\n⛔ 형식 규칙 (반드시 준수)\n1. 각 연도는 반드시 ### 🗓️ YYYY년 干支년 으로 시작\n2. 각 항목은 이모지+항목명+콜론+내용을 반드시 한 줄에. 줄바꿈 후 내용 절대 금지.\n3. 💰 재물·직업: 2문장 이내\n4. ❤️ 연애·가족: 2문장 이내\n5. 🌿 건강 주의: 1~2문장 이내\n6. 🎰 복권·재물운: 재물운 좋은 해만, 1문장\n7. ✨ 핵심 키워드: 키1 / 키2 / 키3\n8. 📝 총평: 1문장\n9. 행동 조언: 1문장\n\n[형식 예시]\n### 🗓️ YYYY년 干支년\n💰 재물·직업: (재물·직업 흐름 2문장 이내)\n❤️ 연애·가족: (연애·가족 흐름 2문장 이내)\n🌿 건강 주의: (건강 주의 1~2문장)\n✨ 핵심 키워드: 키1 / 키2 / 키3\n📝 총평: (이 해 전반 한 문장)\n행동 조언: (이 해 실천 행동 한 문장)\n\n각 연도 사이 빈 줄 1개. 10개년 전부 완성.';
 }
 
 function buildMiniPrompt() {
@@ -693,7 +669,9 @@ function buildMiniPrompt() {
     2025:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子'],
     2026:['丁丑','戊寅','己卯','庚辰','辛巳','壬午','癸未','甲申','乙酉','丙戌','丁亥','戊子'],
     2027:['己丑','庚寅','辛卯','壬辰','癸巳','甲午','乙未','丙申','丁酉','戊戌','己亥','庚子'],
-    2028:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子']
+    2028:['辛丑','壬寅','癸卯','甲辰','乙巳','丙午','丁未','戊申','己酉','庚戌','辛亥','壬子'],
+    2029:['癸丑','甲寅','乙卯','丙辰','丁巳','戊午','己未','庚申','辛酉','壬戌','癸亥','甲子'],
+    2030:['乙丑','丙寅','丁卯','戊辰','己巳','庚午','辛未','壬申','癸酉','甲戌','乙亥','丙子']
   };
   var mj = monthJanji[y] || monthJanji[2026];
   return '당신은 천명당(天命堂) 소속 30년 경력의 사주명리학 전문가입니다.\n아래 고객의 사주를 바탕으로 '+y+'년 월별 미니 운세를 작성해주세요.\n\n[고객 정보]\n'+info+'\n\n[작성 원칙]\n- 각 달은 재물/직업, 연애/관계, 건강 세 가지 반드시 포함. 각 항목 2~3문장 이상.\n- 이 사주에서만 나오는 구체적인 말로. 일반론 금지.\n- 용신이 강한 달은 ⭐, 기신이 강한 달은 ⚠️ 제목 옆에 표시.\n- 각 달 마지막에 반드시: 💡 이달의 핵심: 한 줄 요약\n- 전문가가 말해주듯 존댓말로 자연스럽게. 한자 금지.\n\n---\n【1월】 '+mj[0]+'월\n【2월】 '+mj[1]+'월\n【3월】 '+mj[2]+'월\n【4월】 '+mj[3]+'월\n【5월】 '+mj[4]+'월\n【6월】 '+mj[5]+'월\n【7월】 '+mj[6]+'월\n【8월】 '+mj[7]+'월\n【9월】 '+mj[8]+'월\n【10월】 '+mj[9]+'월\n【11월】 '+mj[10]+'월\n【12월】 '+mj[11]+'월\n---\n['+y+'년 전체 총평]\n5줄 이상 풍부하게 작성. 올해 전체 흐름·핵심 기회·주의할 시기·마무리 조언 포함.';
@@ -701,10 +679,9 @@ function buildMiniPrompt() {
 
 function parseSecs(text) {
   text=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
-  var titles=['사주 구조 분석','타고난 성격·기질','대운 흐름 분석','재물·직업운','창업·사업 가능성','연애·결혼운','부모·자녀·가족 관계','건강·취약 부위 & 개운법','연도별 세운 분석','나다운 삶의 방향 & 개운법 실천 가이드'];
-  var altTitles=['사주 구조 분석','성격·적성 분석','재물·직업운','연애·결혼운','건강운','부모·자녀 관계','대운 흐름 분석','연도별 세운 분석','종합 조언'];
+  var titles=['사주 구조 분석','타고난 성격·기질','대운 흐름 분석','재물·직업운','창업·사업 가능성','연애·결혼운','부모·자녀·가족 관계','건강·취약 부위','연도별 세운 분석'];
   var positions=[];
-  for (var i=0;i<10;i++) {
+  for (var i=0;i<9;i++) {
     var idx=-1;
     var tries=['\u3010'+(i+1)+'.','【'+(i+1)+'.','\n'+(i+1)+'. ',(i+1)+'. '];
     for (var t=0;t<tries.length;t++) { idx=text.indexOf(tries[t]); if (idx!==-1) break; }
@@ -713,11 +690,11 @@ function parseSecs(text) {
   return titles.map(function(title,i) {
     var si=positions[i]; if (si===-1) return {title:title,body:''};
     var ei=text.length;
-    for (var j=i+1;j<10;j++) { if (positions[j]!==-1&&positions[j]>si) { ei=positions[j]; break; } }
+    for (var j=i+1;j<9;j++) { if (positions[j]!==-1&&positions[j]>si) { ei=positions[j]; break; } }
     var chunk=text.slice(si,ei).trim();
     var firstNewline=chunk.indexOf('\n');
     var body=firstNewline!==-1?chunk.slice(firstNewline+1).trim():chunk;
-    // 섹션9(i===8): 병렬 호출 두 덩어리 합산 시 두 번째 【9.】 헤더가 중간에 끼므로 제거
+    // 섹션9(i===8): 병렬 호출 두 덩어리 합산 시 두 번째 【9.】 헤더 제거
     if(i===8){ body=body.replace(/【9\.[^】\n]*】[^\n]*/g,'').trim(); }
     return {title:title,body:body};
   });
@@ -783,46 +760,35 @@ function renderBody(raw) {
   raw = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
 
   // STEP1: 불필요한 내용 제거
-  raw = raw.replace(/^#{1,2}(?!#)[^\n]*/gm,'');
+  // ## 헤더 제거 시 연도 포함 세운 헤더는 보호 (STEP2에서 처리)
+  raw = raw.replace(/^#{1,2}(?!#)(?! \d{4}년)[^\n]*/gm,'');
   raw = raw.replace(/^---+$/gm,'');
   raw = raw.replace(/^[-\u00b7\u2022] /gm,'');
   raw = raw.replace(/^> [^\n]*/gm,'');
 
   // STEP2: 연도 형식 통일 -> ### 🗓️
-  // variation selector 없는 🗓 → 🗓️로 정규화
-  raw = raw.replace(/### \ud83d\uddd3(?!\ufe0f)/g, '### \ud83d\uddd3\ufe0f');
-  // 이미 ### 🗓️ YYYY년 형식인 것 보호 (중복 변환 방지)
-  var _seunPH = []; var _seunIdx = 0;
-  raw = raw.replace(/^### \ud83d\uddd3\ufe0f [^\n]+$/gm, function(m){ var ph='\x00SY'+(_seunIdx++)+'\x00'; _seunPH.push(m); return ph; });
-  // 다양한 헤더 패턴 → ### 🗓️
-  raw = raw.replace(/^(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/gm,'### \ud83d\uddd3\ufe0f $1 $2');
+  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
   raw = raw.replace(/(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
   raw = raw.replace(/^(\d{4}년) ([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
-  // ## / #### 형태 헤더 연도도 처리
-  raw = raw.replace(/^#{2,4} (\d{4}년[^\n]*)$/gm, function(m,y){ return /[\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678]/.test(y) ? '### \ud83d\uddd3\ufe0f '+y : m; });
-  // 플레이스홀더 복원
-  raw = raw.replace(/\x00SY(\d+)\x00/g, function(_,i){ return _seunPH[parseInt(i)]; });
-  // ## 🗓️ → ### 🗓️ (헤더 레벨 통일)
-  raw = raw.replace(/^## \ud83d\uddd3\ufe0f? /gm, '### \ud83d\uddd3\ufe0f ');
-  // **YYYY년 干支년** 단독 줄 → ### 🗓️ (굵게 처리된 연도 헤더)
-  raw = raw.replace(/^\*\*(\d{4}년) ?([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)\*\*$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
-  // 중복 ### 🗓️ 정리
-  raw = raw.replace(/(### \ud83d\uddd3\ufe0f ){2,}/g, '### \ud83d\uddd3\ufe0f ');
 
   // STEP3: 세운 항목 콜론 통일
+  // Claude가 "💰 재물·직업\n내용" 또는 "💰 재물·직업 내용" 형태로 쓸 때 "💰 재물·직업: 내용"으로 통일
   var LK = ['\ud83d\udcb0 재물\u00b7직업','\u2764\ufe0f 연애\u00b7가족','\ud83c\udf3f 건강 주의','\ud83c\udfb0 복권\u00b7재물운','\u2728 핵심 키워드','\u2728 키워드','\ud83d\udcdd 총평'];
   LK.forEach(function(k){
     var ek = k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-    // 콜론 없이 줄바꿈된 경우만 처리 (이미 콜론 있는 경우 제외)
-    var r1 = new RegExp('('+ek+')(?!:)\\n([^\n\u2705][^\n]*)','g');
-    raw = raw.replace(r1,'$1: $2');
-    // 콜론도 줄바꿈도 없이 바로 내용이 오는 경우만 처리
-    var r2 = new RegExp('('+ek+')(?!:|\\s*\\n)([^\n][^\n]*)','g');
-    raw = raw.replace(r2,'$1: $2');
+    // 케이스1: 항목명 뒤 줄바꿈 후 내용이 오는 경우 → 같은 줄로 합치기
+    // 단, 이미 콜론이 있는 경우는 건드리지 않음
+    raw = raw.replace(new RegExp('('+ek+')(?!:)[ \t]*\n([ \t]*)([^\n#\ud83d\uddd3✅\[])','g'), function(_,key,sp,next){
+      return key+': '+next;
+    });
+    // 케이스2: 항목명 바로 뒤 콜론 없이 내용이 오는 경우 (공백 하나 이상)
+    // 단, 이미 콜론이 있는 경우는 건드리지 않음
+    raw = raw.replace(new RegExp('('+ek+')(?!:[ \t]|:$)[ \t]+([^\n:])','g'), function(_,key,next){
+      return key+': '+next;
+    });
   });
 
-  // STEP4: 세운 카드 생성
-  // 끝에 sentinel 추가해서 마지막 연도 lookahead 문제 해결
+  // STEP4: 세운 카드 생성 (sentinel로 마지막 연도 content 유실 방지)
   raw = raw + '\n\x00END_SEUN\x00';
   raw = raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\x00END_SEUN\x00)/g,function(_,yt,content){
     content = content.replace(/^-{3,}$/gm,'').replace(/^[-\u00b7\u2022] /gm,'').trim();
@@ -847,52 +813,28 @@ function renderBody(raw) {
       var val;
       if(p.info.isAction||p.info.isSummary){
         val=content.slice(s,e).split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&!/^[-\u00b7\u2022]/.test(l);})[0]||'';
-        val=val.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
       } else {
         val=content.slice(s,e).replace(/\n/g,' ').replace(/\s{2,}/g,' ').trim();
-        // ** bold 변환 (applyMarkup은 ** 미처리)
         val=val.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
         val=applyMarkup(val);
-        // 항목별 균일 자르기: 60자 이후 첫 문장 끝에서 자름 (MAX 90자)
-        (function(){
-          var _plain = val.replace(/<[^>]+>/g,'');
-          if(_plain.length <= 60) return; // 60자 이하는 그대로
-          var _cut = 0, _cnt = 0;
-          for(var _ci=0;_ci<val.length;_ci++){
-            if(val[_ci]==='<'){ while(_ci<val.length&&val[_ci]!=='>'){_ci++;} continue; }
-            _cnt++;
-            if(_cnt>60 && _cnt<=90 && (val[_ci]==='요'||val[_ci]==='다'||val[_ci]==='.'||val[_ci]==='!'||val[_ci]==='?')){ _cut=_ci+1; break; }
-            if(_cnt>90){ break; }
-          }
-          if(_cut>0) val = val.slice(0,_cut)+'…';
-          else val = val.slice(0, Math.floor(val.length*75/_plain.length))+'…';
-        })();
       }
       if(p.info.isSummary) summary=val;
       else if(p.info.isAction) actionRow=val;
       else rows+='<div class="seun-row"><span class="seun-label" style="color:'+p.info.color+'">'+p.info.label+'</span><span class="seun-val"'+(p.info.bold?' style="font-weight:700"':'')+'>'+val+'</span></div>';
     });
     var yN=yt.replace(/년.*/,'년'),yS=yt.replace(/\d{4}년\s*/,'');
-    // rows가 비어있으면 content를 fallback으로 단락 렌더링
-    if(!rows && !summary && !actionRow){
-      var fbHtml=content.replace(/^[-\u00b7\u2022]\s*/gm,'').trim().split(/\n{1,}/).filter(function(l){return l.trim();}).map(function(l){return '<p style="font-size:12px;line-height:1.8;color:#333;margin-bottom:8px">'+applyMarkup(l.trim())+'</p>';}).join('');
-      return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yN+'</span><span class="seun-year-title">'+yS+'</span></div><div class="seun-year-body" style="padding:12px 14px">'+fbHtml+'</div></div>';
-    }
     return '<div class="seun-year"><div class="seun-year-hd"><span class="seun-year-num">'+yN+'</span><span class="seun-year-title">'+yS+'</span></div><div class="seun-year-body">'+rows+'</div>'+(summary?'<div class="seun-summary"><div class="seun-summary-label">\ud83d\udcdd 총평</div><div class="seun-summary-text">'+summary+'</div></div>':'')+(actionRow?'<div class="seun-action">\u2705 '+actionRow+'</div>':'')+'</div>';
   });
-
+  // sentinel 제거
   raw = raw.replace(/\x00END_SEUN\x00/g,'');
+
   // STEP5: 마크다운 제거
   raw = raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
 
   // STEP6: 한눈에 보기 + 지금 당장 추출
-  var cm=raw.match(/\[한눈에 보기\][ \t]*([^\n]*)/);
+  var cm=raw.match(/\[한눈에 보기\][ \t]*([^\n]*)(?:\n[ \t]*([^\n\[<]+))?/);
   var cardText='';
-  if(cm){
-    cardText=(cm[1]||'').trim();
-    // 80자 초과 시 자르기 (fallback 단락이 들어오는 경우 방지)
-    if(cardText.replace(/<[^>]+>/g,'').length>80) cardText=cardText.slice(0,80)+'…';
-  }
+  if(cm){cardText=(cm[1]||'').trim()||(cm[2]||'').trim();}
   var am=raw.match(/지금 당장 할 수 있는 것[^\n]*(?:\n([^\n]+))?/);
   var actionText='';
   if(am){
@@ -912,11 +854,8 @@ function renderBody(raw) {
   bt=bt.replace(/(<\/table>)\n([^\n])/g,'$1\n\n$2');
 
   // STEP9: 핵심 요약 박스
-  bt=bt.replace(/\[핵심 요약[^\]]*\]((?:[^\n]*\n?){1,6})/g,function(_,body){
-    var lines=body.split('\n').map(function(l){return l.trim();}).filter(function(l){return l&&l!=='-';});
-    // 최대 3줄만 표시
-    lines=lines.slice(0,3);
-    var inner=lines.map(function(l){return '<p>'+applyMarkup(l.replace(/^[-\u00b7\u2022\s]+/,'').trim())+'</p>';}).join('');
+  bt=bt.replace(/\[핵심 요약[^\]]*\]([\s\S]*?)(?=\n{2,}|지금 당장|$)/g,function(_,body){
+    var inner=body.trim().split('\n').filter(function(l){return l.trim();}).map(function(l){return '<p>'+applyMarkup(l.replace(/^[-\u00b7\u2022\s]+/,'').trim())+'</p>';}).join('');
     return '<div class="summary-box"><div class="summary-box-label">\u2726 핵심 요약</div>'+inner+'</div>';
   });
 
@@ -1018,11 +957,11 @@ function openPDF(html, fname) {
 }
 
 function getBasePDFStyle(name) {
-  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/><title>'+name+' 사주 분석 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;height:100%;overflow:hidden;background:#f5f5f7;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}.deck{display:flex;width:100%;height:100dvh;overflow-x:scroll;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:#f5f5f7}.deck::-webkit-scrollbar{display:none}.card{flex:0 0 100vw;width:100vw;height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;overflow:hidden;position:relative}.cover-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 28px}.cv-eyebrow{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:24px}.cv-moon{font-size:44px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:26px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:6px}.cv-sub{font-size:11px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:32px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:18px 24px;width:100%;max-width:280px;text-align:left;margin-bottom:24px}.cv-row{display:flex;gap:12px;margin-bottom:7px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:9px;color:#C9A84C;width:52px;flex-shrink:0;letter-spacing:1px;padding-top:2px;font-weight:600}.cv-v{font-size:11px;color:#c0d0da;font-weight:400}.cv-date{font-size:8px;color:#1a2a34;letter-spacing:2px}.cv-swipe{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4050;letter-spacing:2px;white-space:nowrap}.toc-card{background:#1C2B3A;padding:36px 24px 20px;justify-content:flex-start}.toc-label{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.toc-title{font-family:"Noto Serif KR",serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:24px;line-height:1.3}.toc-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;scrollbar-width:none}.toc-list::-webkit-scrollbar{display:none}.toc-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #111}.toc-item:last-child{border-bottom:none}.toc-n{font-size:10px;font-weight:900;color:#C9A84C;width:18px;flex-shrink:0}.toc-t{font-size:13px;color:#888;font-weight:400;letter-spacing:.2px}.sec-card{background:#fff;display:flex;flex-direction:column;border:1.5px solid #e8edf5}.sec-header{flex-shrink:0;padding:24px 22px 14px;background:linear-gradient(180deg,#1C2B3A 0%,#2d4a6b 40%,#f0f4f8 100%)}.sec-eyebrow{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:7px}.sec-title{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:900;color:#1C2B3A;line-height:1.3}.sec-divider{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:10px 22px 0}.sec-body{flex:1;overflow-y:auto;padding:18px 22px 28px;scrollbar-width:none}.sec-body::-webkit-scrollbar{display:none}.sb{font-size:13.5px;line-height:2.1;color:#2a2a2a;font-weight:400;word-break:keep-all}.sb p{margin-bottom:20px;line-height:2.1;color:#333}.sb p:last-child{margin-bottom:0}.summary-box{background:rgba(201,168,76,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:14px 16px;margin:16px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:12.5px;color:#6b4c00;line-height:1.85;margin-bottom:6px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.sb strong{color:#1C2B3A;font-weight:700}.mk-gold{color:#7a4f00;font-weight:700;background:#fef3c7;padding:1px 5px;border-radius:3px}.mk-red{color:#991b1b;font-weight:700;background:#fee2e2;padding:1px 5px;border-radius:3px}.mk-green{color:#166534;font-weight:700;background:#dcfce7;padding:1px 5px;border-radius:3px}.mk-blue{color:#1e40af;font-weight:700;background:#dbeafe;padding:1px 5px;border-radius:3px}.sub-h{font-size:12px;font-weight:700;color:#1C2B3A;margin:20px 0 10px;padding:8px 14px 8px 16px;background:linear-gradient(90deg,rgba(28,43,58,.08),rgba(28,43,58,.02));border-left:3px solid #C9A84C;border-radius:0 8px 8px 0;letter-spacing:.3px}.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:4px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:14px 18px;margin:14px 0;box-shadow:0 2px 8px rgba(201,168,76,.15)}.sc-label{font-size:7px;letter-spacing:3px;color:#C9A84C;margin-bottom:6px;font-weight:700}.sc p{font-size:13.5px;font-weight:600;color:#7a5200;line-height:1.85;word-break:keep-all;margin:0}.ac{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border:1px solid rgba(39,174,96,.3);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 18px;margin-top:16px}.ac-label{font-size:7px;letter-spacing:3px;color:#27ae60;margin-bottom:6px;font-weight:700}.ac p{font-size:13px;font-weight:700;color:#1a6b3c;line-height:1.8;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#1C2B3A,#2d4a6b);padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.3)}.seun-year-num{font-size:8px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fafbfc;padding:12px 14px;overflow:hidden}.seun-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eef0f3;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11px;font-weight:700;flex-shrink:0;width:76px;padding-top:2px;color:#C9A84C}.seun-val{font-size:11px;line-height:1.75;color:#333;flex:1;word-break:keep-all;font-weight:400}.seun-val strong{font-weight:700;color:#1C2B3A;font-size:11px}.seun-summary{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border-left:3px solid #27ae60;padding:10px 14px;border-top:1px solid rgba(39,174,96,.2)}.seun-summary-label{font-size:7px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#1a6b3c;font-weight:700;word-break:keep-all}.card-counter{position:absolute;top:16px;right:18px;font-size:9px;color:#888;letter-spacing:1px;font-weight:500}.fin-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 32px}.fin-moon{font-size:36px;margin-bottom:16px}.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}.fin-t{font-family:"Noto Serif KR",serif;font-size:17px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}.fin-s{font-size:10px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:24px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:13px;color:#C9A84C;font-weight:700;letter-spacing:2px}.fin-date{font-size:8px;color:#141e24;letter-spacing:2px;margin-top:6px}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}.card{page-break-after:always}}</style></head><body style="background:#f5f5f7"><div class="deck">';
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/><title>'+name+' 사주 분석 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{width:100%;height:100%;overflow:hidden;background:#f5f5f7;font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif}.deck{display:flex;width:100%;height:100dvh;overflow-x:scroll;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;background:#f5f5f7}.deck::-webkit-scrollbar{display:none}.card{flex:0 0 100vw;width:100vw;height:100dvh;scroll-snap-align:start;display:flex;flex-direction:column;overflow:hidden;position:relative}.cover-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 28px}.cv-eyebrow{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:24px}.cv-moon{font-size:44px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:26px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:6px}.cv-sub{font-size:11px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:32px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:18px 24px;width:100%;max-width:280px;text-align:left;margin-bottom:24px}.cv-row{display:flex;gap:12px;margin-bottom:7px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:9px;color:#C9A84C;width:52px;flex-shrink:0;letter-spacing:1px;padding-top:2px;font-weight:600}.cv-v{font-size:11px;color:#c0d0da;font-weight:400}.cv-date{font-size:8px;color:#1a2a34;letter-spacing:2px}.cv-swipe{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:9px;color:#2a4050;letter-spacing:2px;white-space:nowrap}.toc-card{background:#1C2B3A;padding:36px 24px 20px;justify-content:flex-start}.toc-label{font-size:8px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.toc-title{font-family:"Noto Serif KR",serif;font-size:20px;font-weight:900;color:#fff;margin-bottom:24px;line-height:1.3}.toc-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;scrollbar-width:none}.toc-list::-webkit-scrollbar{display:none}.toc-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #111}.toc-item:last-child{border-bottom:none}.toc-n{font-size:10px;font-weight:900;color:#C9A84C;width:18px;flex-shrink:0}.toc-t{font-size:13px;color:#888;font-weight:400;letter-spacing:.2px}.sec-card{background:#fff;display:flex;flex-direction:column;border:1.5px solid #e8edf5}.sec-header{flex-shrink:0;padding:24px 22px 14px;background:linear-gradient(180deg,#1C2B3A 0%,#2d4a6b 40%,#f0f4f8 100%)}.sec-eyebrow{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:7px}.sec-title{font-family:"Noto Serif KR",serif;font-size:19px;font-weight:900;color:#1C2B3A;line-height:1.3}.sec-divider{height:1px;background:linear-gradient(90deg,#C9A84C 40%,rgba(201,168,76,.2) 80%,transparent);margin:10px 22px 0}.sec-body{flex:1;overflow-y:auto;padding:18px 22px 28px;scrollbar-width:none}.sec-body::-webkit-scrollbar{display:none}.sb{font-size:13.5px;line-height:2.1;color:#2a2a2a;font-weight:400;word-break:keep-all}.sb p{margin-bottom:20px;line-height:2.1;color:#333}.sb p:last-child{margin-bottom:0}.summary-box{background:rgba(201,168,76,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:10px;padding:14px 16px;margin:16px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:12.5px;color:#6b4c00;line-height:1.85;margin-bottom:6px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.sb strong{color:#1C2B3A;font-weight:700}.mk-gold{color:#7a4f00;font-weight:700;background:#fef3c7;padding:1px 5px;border-radius:3px}.mk-red{color:#991b1b;font-weight:700;background:#fee2e2;padding:1px 5px;border-radius:3px}.mk-green{color:#166534;font-weight:700;background:#dcfce7;padding:1px 5px;border-radius:3px}.mk-blue{color:#1e40af;font-weight:700;background:#dbeafe;padding:1px 5px;border-radius:3px}.sub-h{font-size:12px;font-weight:700;color:#1C2B3A;margin:20px 0 10px;padding:8px 14px 8px 16px;background:linear-gradient(90deg,rgba(28,43,58,.08),rgba(28,43,58,.02));border-left:3px solid #C9A84C;border-radius:0 8px 8px 0;letter-spacing:.3px}.sc{background:linear-gradient(135deg,#fffbf0,#fff8e6);border:1px solid rgba(201,168,76,.4);border-left:4px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:14px 18px;margin:14px 0;box-shadow:0 2px 8px rgba(201,168,76,.15)}.sc-label{font-size:7px;letter-spacing:3px;color:#C9A84C;margin-bottom:6px;font-weight:700}.sc p{font-size:13.5px;font-weight:600;color:#7a5200;line-height:1.85;word-break:keep-all;margin:0}.ac{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border:1px solid rgba(39,174,96,.3);border-left:4px solid #2ecc71;border-radius:4px 10px 10px 4px;padding:14px 18px;margin-top:16px}.ac-label{font-size:7px;letter-spacing:3px;color:#27ae60;margin-bottom:6px;font-weight:700}.ac p{font-size:13px;font-weight:700;color:#1a6b3c;line-height:1.8;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#1C2B3A,#2d4a6b);padding:9px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.3)}.seun-year-num{font-size:8px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fafbfc;padding:12px 14px}.seun-row{display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #eef0f3;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11px;font-weight:700;flex-shrink:0;width:76px;padding-top:2px;color:#C9A84C}.seun-val{font-size:11px;line-height:1.75;color:#333;flex:1;word-break:keep-all;font-weight:400}.seun-summary{background:linear-gradient(135deg,#f0fff4,#e8f8f0);border-left:3px solid #27ae60;padding:10px 14px;border-top:1px solid rgba(39,174,96,.2)}.seun-summary-label{font-size:7px;letter-spacing:3px;color:#27ae60;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#1a6b3c;font-weight:700;word-break:keep-all}.card-counter{position:absolute;top:16px;right:18px;font-size:9px;color:#888;letter-spacing:1px;font-weight:500}.fin-card{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);justify-content:center;align-items:center;text-align:center;padding:0 32px}.fin-moon{font-size:36px;margin-bottom:16px}.fin-line{width:36px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 16px}.fin-t{font-family:"Noto Serif KR",serif;font-size:17px;color:#fff;font-weight:700;margin-bottom:8px;line-height:1.6}.fin-s{font-size:10px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:24px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:13px;color:#C9A84C;font-weight:700;letter-spacing:2px}.fin-date{font-size:8px;color:#141e24;letter-spacing:2px;margin-top:6px}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}.card{page-break-after:always}}</style></head><body style="background:#f5f5f7"><div class="deck">';
 }
 
 function getLinearCSS(name) {
-  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>'+name+' 사주 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:0}.cover{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.cv-moon{font-size:52px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}.cv-sub{font-size:12px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:36px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600;letter-spacing:1px}.cv-v{font-size:12px;color:#c0d0da;font-weight:300}.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}.sec{background:#f5f5f7;page-break-before:always;border-bottom:2px solid #e0e0e0;overflow:hidden}.sec:last-child{border-bottom:none}.sec-header-block{display:flex;align-items:stretch;background:#0d1a26;border-bottom:3px solid #C9A84C;min-height:56px}.sec-num{font-size:11px;font-weight:900;color:#C9A84C;background:#071020;padding:0 14px;letter-spacing:1px;flex-shrink:0;width:50px;text-align:center;border-right:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center}.sec-title-txt{font-family:"Noto Serif KR",serif;font-size:18px;font-weight:900;color:#fff;padding:14px 18px;line-height:1.4;display:flex;align-items:center;flex:1}.sec-body-content{padding:24px 28px 40px}.sb{font-size:14px;line-height:2.15;color:#333;font-weight:400;word-break:keep-all}.sb strong{color:#1C2B3A;font-weight:700}.mk-gold{color:#7a4f00;font-weight:700;background:#fef3c7;padding:1px 5px;border-radius:3px}.mk-red{color:#991b1b;font-weight:700;background:#fee2e2;padding:1px 5px;border-radius:3px}.mk-green{color:#166534;font-weight:700;background:#dcfce7;padding:1px 5px;border-radius:3px}.mk-blue{color:#1e40af;font-weight:700;background:#dbeafe;padding:1px 5px;border-radius:3px}.sb p{margin-bottom:22px}.sb p:last-child{margin-bottom:0}.sub-h{font-size:12.5px;font-weight:700;color:#0d1a26;margin:22px 0 10px;padding:8px 16px 8px 18px;background:rgba(14,26,38,.06);border:1px solid rgba(14,26,38,.15);border-left:4px solid #C9A84C;border-radius:0 8px 8px 0}.sc{background:#fffdf5;border:1.5px solid rgba(201,168,76,.35);border-left:5px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:16px 20px;margin:0 0 20px 0}.sc-label{font-size:8px;letter-spacing:3px;color:#a07820;margin-bottom:8px;font-weight:700}.sc p{font-size:14px;font-weight:600;color:#5a3a00;line-height:1.9;word-break:keep-all;margin:0}.summary-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:16px 20px;margin:20px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:13px;color:#d4b96a;line-height:1.9;margin-bottom:7px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.ac{background:#f0fdf4;border:1.5px solid rgba(39,174,96,.3);border-left:4px solid #27ae60;border-radius:4px 10px 10px 4px;padding:14px 20px;margin-top:20px}.ac-label{font-size:8px;letter-spacing:3px;color:#166534;margin-bottom:7px;font-weight:700}.ac p{font-size:13.5px;font-weight:700;color:#155724;line-height:1.85;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#0f1c2a,#111);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.12)}.seun-year-num{font-size:9px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fff;padding:10px 16px}.seun-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #131313;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11.5px;font-weight:700;flex-shrink:0;width:80px;color:#C9A84C;padding-top:2px}.seun-val{font-size:12px;line-height:1.8;color:#555;flex:1;word-break:keep-all;font-weight:400}.seun-val strong{font-weight:700;color:#1C2B3A;font-size:12px}.seun-summary{background:#f0fdf4;border-top:1.5px solid #bbf7d0;padding:12px 16px}.seun-summary-label{font-size:8px;letter-spacing:3px;color:#166534;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#166534;font-weight:600;word-break:keep-all}.seun-action{background:#fff;border-top:2px dashed #4ade80;padding:10px 16px;font-size:12px;color:#166534;font-weight:600}.fin{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);padding:60px 40px;text-align:center;page-break-before:always;min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center}.fin-moon{font-size:44px;margin-bottom:18px}.fin-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 18px}.fin-t{font-family:"Noto Serif KR",serif;font-size:19px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.6}.fin-s{font-size:11px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:26px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}th{background:#0f1c2a;color:#C9A84C;padding:8px 14px;text-align:left;font-weight:700;border-bottom:1px solid rgba(201,168,76,.2)}td{padding:8px 14px;border-bottom:1px solid #161616;color:#999;font-weight:300}tr:last-child td{border-bottom:none}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}}</style></head><body style="background:#f5f5f7">';
+  return '<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>'+name+' 사주 보고서</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:#f5f5f7;color:#1a1a1a;padding:0}.cover{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 32px;page-break-after:always}.cv-ey{font-size:9px;letter-spacing:4px;color:#C9A84C;font-weight:700;margin-bottom:20px}.cv-moon{font-size:52px;margin-bottom:14px}.cv-title{font-family:"Noto Serif KR",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.5;margin-bottom:8px}.cv-sub{font-size:12px;color:#3a5060;font-weight:300;letter-spacing:1px;margin-bottom:36px}.cv-info{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:20px 28px;text-align:left;margin-bottom:28px;max-width:300px}.cv-row{display:flex;gap:12px;margin-bottom:8px}.cv-row:last-child{margin-bottom:0}.cv-k{font-size:10px;color:#C9A84C;width:54px;flex-shrink:0;font-weight:600;letter-spacing:1px}.cv-v{font-size:12px;color:#c0d0da;font-weight:300}.cv-date{font-size:9px;color:#1a2a34;letter-spacing:2px}.sec{background:#f5f5f7;page-break-before:always;border-bottom:2px solid #e0e0e0;overflow:hidden}.sec:last-child{border-bottom:none}.sec-header-block{display:flex;align-items:stretch;background:#0d1a26;border-bottom:3px solid #C9A84C;min-height:56px}.sec-num{font-size:11px;font-weight:900;color:#C9A84C;background:#071020;padding:0 14px;letter-spacing:1px;flex-shrink:0;width:50px;text-align:center;border-right:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center}.sec-title-txt{font-family:"Noto Serif KR",serif;font-size:18px;font-weight:900;color:#fff;padding:14px 18px;line-height:1.4;display:flex;align-items:center;flex:1}.sec-body-content{padding:24px 28px 40px}.sb{font-size:14px;line-height:2.15;color:#333;font-weight:400;word-break:keep-all}.sb strong{color:#1C2B3A;font-weight:700}.mk-gold{color:#7a4f00;font-weight:700;background:#fef3c7;padding:1px 5px;border-radius:3px}.mk-red{color:#991b1b;font-weight:700;background:#fee2e2;padding:1px 5px;border-radius:3px}.mk-green{color:#166534;font-weight:700;background:#dcfce7;padding:1px 5px;border-radius:3px}.mk-blue{color:#1e40af;font-weight:700;background:#dbeafe;padding:1px 5px;border-radius:3px}.sb p{margin-bottom:22px}.sb p:last-child{margin-bottom:0}.sub-h{font-size:12.5px;font-weight:700;color:#0d1a26;margin:22px 0 10px;padding:8px 16px 8px 18px;background:rgba(14,26,38,.06);border:1px solid rgba(14,26,38,.15);border-left:4px solid #C9A84C;border-radius:0 8px 8px 0}.sc{background:#fffdf5;border:1.5px solid rgba(201,168,76,.35);border-left:5px solid #C9A84C;border-radius:4px 10px 10px 4px;padding:16px 20px;margin:0 0 20px 0}.sc-label{font-size:8px;letter-spacing:3px;color:#a07820;margin-bottom:8px;font-weight:700}.sc p{font-size:14px;font-weight:600;color:#5a3a00;line-height:1.9;word-break:keep-all;margin:0}.summary-box{background:rgba(201,168,76,.06);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:16px 20px;margin:20px 0}.summary-box-label{font-size:8px;letter-spacing:3px;color:#C9A84C;font-weight:700;margin-bottom:10px}.summary-box p{font-size:13px;color:#d4b96a;line-height:1.9;margin-bottom:7px;padding-left:14px;position:relative}.summary-box p::before{content:"·";position:absolute;left:4px;color:#C9A84C;font-weight:900}.ac{background:#f0fdf4;border:1.5px solid rgba(39,174,96,.3);border-left:4px solid #27ae60;border-radius:4px 10px 10px 4px;padding:14px 20px;margin-top:20px}.ac-label{font-size:8px;letter-spacing:3px;color:#166534;margin-bottom:7px;font-weight:700}.ac p{font-size:13.5px;font-weight:700;color:#155724;line-height:1.85;word-break:keep-all;margin:0}.seun-year{margin-bottom:16px;border:1.5px solid #d0dae8;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.06)}.seun-year-hd{background:linear-gradient(90deg,#0f1c2a,#111);padding:10px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(201,168,76,.12)}.seun-year-num{font-size:9px;font-weight:700;color:#C9A84C;letter-spacing:2px}.seun-year-title{font-size:14px;font-weight:900;color:#fff}.seun-year-body{background:#fff;padding:10px 16px}.seun-row{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #131313;align-items:flex-start}.seun-row:last-child{border-bottom:none}.seun-label{font-size:11.5px;font-weight:700;flex-shrink:0;width:80px;color:#C9A84C;padding-top:2px}.seun-val{font-size:12px;line-height:1.8;color:#444;flex:1;word-break:keep-all;font-weight:400}.seun-summary{background:#f0fdf4;border-top:1.5px solid #bbf7d0;padding:12px 16px}.seun-summary-label{font-size:8px;letter-spacing:3px;color:#166534;font-weight:700;margin-bottom:5px}.seun-summary-text{font-size:12px;line-height:1.8;color:#166534;font-weight:600;word-break:keep-all}.seun-action{background:#fff;border-top:2px dashed #4ade80;padding:10px 16px;font-size:12px;color:#166534;font-weight:600}.fin{background:linear-gradient(160deg,#0d1a26 0%,#050c12 100%);padding:60px 40px;text-align:center;page-break-before:always;min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center}.fin-moon{font-size:44px;margin-bottom:18px}.fin-line{width:40px;height:1px;background:linear-gradient(90deg,transparent,#C9A84C,transparent);margin:0 auto 18px}.fin-t{font-family:"Noto Serif KR",serif;font-size:19px;color:#fff;font-weight:700;margin-bottom:10px;line-height:1.6}.fin-s{font-size:11px;color:#2a4050;line-height:1.9;font-weight:300;margin-bottom:26px}.fin-brand{font-family:"Noto Serif KR",serif;font-size:14px;color:#C9A84C;font-weight:700;letter-spacing:2px}table{width:100%;border-collapse:collapse;margin:14px 0;font-size:12px}th{background:#0f1c2a;color:#C9A84C;padding:8px 14px;text-align:left;font-weight:700;border-bottom:1px solid rgba(201,168,76,.2)}td{padding:8px 14px;border-bottom:1px solid #161616;color:#999;font-weight:300}tr:last-child td{border-bottom:none}@media print{*{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important}body{background:#f5f5f7 !important}}</style></head><body style="background:#f5f5f7">';
 }
 
 function getMiniCSS() {
