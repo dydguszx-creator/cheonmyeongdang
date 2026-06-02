@@ -457,23 +457,26 @@ async function doAutoAnalyze() {
       var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()})});
       if(!res.ok){var e=await res.json();throw new Error(e.error||'오류');}
       var reader=res.body.getReader(); var decoder=new TextDecoder(); var fullText='';
-      while(true){var sr=await reader.read();if(sr.done)break;
+      var miniDone=false;
+      while(true){
+        var sr=await reader.read(); if(sr.done) break;
         for(var ln of decoder.decode(sr.value,{stream:true}).split('\n')){
           if(!ln.startsWith('data: '))continue;
           try{var j=JSON.parse(ln.slice(6).trim());
             if(j.text){fullText+=j.text;if(resultArea){resultArea.value=fullText;resultArea.scrollTop=resultArea.scrollHeight;}statusEl.textContent='✍️ 작성 중...('+fullText.length.toLocaleString()+'자)';}
-            if(j.done){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
+            if(j.done&&!miniDone){miniDone=true;statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
+            if(j.error) throw new Error(j.error);
           }catch(e2){}
         }
       }
+      // 스트림 종료 시 done 신호 없었으면 강제 완료
+      if(!miniDone){statusEl.style.color='#4ade80';statusEl.style.background='#0d2b1a';statusEl.textContent='✅ 완료! '+fullText.length.toLocaleString()+'자';onResultInput();}
     } catch(err){statusEl.style.color='#f87171';statusEl.style.background='#2b0d0d';statusEl.textContent='❌ '+err.message;}
     finally{btn.disabled=false;btn.textContent='⚡ 자동 분석 (API)';}
     return;
   }
 
   // 기본 보고서: 섹션 1개씩 10개 병렬 호출
-  var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
-  var curDate=sy+'년 '+(now.getMonth()+1)+'월 현재';
   var info=buildInfo();
   var now=new Date(); var sy=now.getFullYear(); var ey=sy+9;
   var curMonth=now.getMonth()+1;
@@ -539,18 +542,22 @@ async function doAutoAnalyze() {
     var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt})});
     if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
     var reader=res.body.getReader(); var decoder=new TextDecoder();
-    while(true){
+    var doneCalled=false;
+    function safeOnDone(){ if(!doneCalled){ doneCalled=true; onDone(); } }
+    outer: while(true){
       var sr=await reader.read(); if(sr.done) break;
       var chunk=decoder.decode(sr.value,{stream:true});
       for(var ln of chunk.split('\n')){
         if(!ln.startsWith('data: ')) continue;
         try{var j=JSON.parse(ln.slice(6).trim());
           if(j.text) onChunk(j.text);
-          if(j.done) onDone();
           if(j.error) throw new Error(j.error);
+          if(j.done){ safeOnDone(); break outer; }
         }catch(e2){}
       }
     }
+    // 스트림이 끝났는데 done 신호가 없었으면 강제로 완료 처리
+    safeOnDone();
   }
 
   try {
