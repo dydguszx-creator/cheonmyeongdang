@@ -1,4 +1,12 @@
 // 천명당 사주 API — 완성본
+// 상수 시간 문자열 비교 (비밀번호 타이밍 공격 방지)
+function safeEqual(a, b) {
+  let diff = a.length ^ b.length;
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) diff |= (a.charCodeAt(i) || 0) ^ (b.charCodeAt(i) || 0);
+  return diff === 0;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -6,7 +14,18 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST만 허용됩니다.' });
 
-  const { prompt } = req.body;
+  // 서버 측 비밀번호 인증 (환경변수 ADMIN_PASSWORD)
+  const adminPassword = process.env.ADMIN_PASSWORD;
+  if (!adminPassword) {
+    return res.status(500).json({ error: '서버에 ADMIN_PASSWORD 환경변수가 설정되지 않았습니다.' });
+  }
+  const { prompt, password, check } = req.body || {};
+  if (!safeEqual(String(password || ''), adminPassword)) {
+    return res.status(401).json({ error: '비밀번호가 올바르지 않습니다.' });
+  }
+  // 로그인 확인 전용 요청 (Anthropic API 호출 없음)
+  if (check === true) return res.status(200).json({ ok: true });
+
   if (!prompt) return res.status(400).json({ error: '프롬프트가 없습니다.' });
 
   res.setHeader('Content-Type', 'text/event-stream');
@@ -28,7 +47,7 @@ export default async function handler(req, res) {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'claude-sonnet-5-5',
         max_tokens: 16000,
         stream: true,
         messages: [{ role: 'user', content: prompt }],
