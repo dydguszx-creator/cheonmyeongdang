@@ -63,19 +63,50 @@ textarea{resize:vertical;line-height:1.7}
   <div id="pwErr" style="color:#f87171;font-size:13px;margin-top:10px;display:none">비밀번호가 틀렸어요</div>
 </div>
 <script>
+var API_URL = 'https://cheonmyeongdang-seven.vercel.app/api/saju';
+var adminPw = '';
+function getAdminPw() {
+  if (adminPw) return adminPw;
+  try { return sessionStorage.getItem('saju_pw') || ''; } catch (e) { return ''; }
+}
+function verifyPw(pw) {
+  return fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw, check: true })
+  }).then(function(r) { return r.status; });
+}
+function unlockOverlay(pw) {
+  adminPw = pw;
+  try { sessionStorage.setItem('saju_pw', pw); } catch (e) {}
+  document.getElementById('pwOverlay').style.display = 'none';
+}
 function checkPw() {
   var pw = document.getElementById('pwInput').value;
-  if (pw === 'saju1234') {
-    document.getElementById('pwOverlay').style.display = 'none';
-    sessionStorage.setItem('saju_auth', '1');
-  } else {
-    document.getElementById('pwErr').style.display = 'block';
-    document.getElementById('pwInput').value = '';
-  }
+  var errEl = document.getElementById('pwErr');
+  if (!pw) { errEl.textContent = '비밀번호를 입력해주세요'; errEl.style.display = 'block'; return; }
+  verifyPw(pw).then(function(status) {
+    if (status === 200) {
+      errEl.style.display = 'none';
+      unlockOverlay(pw);
+    } else {
+      errEl.textContent = status === 401 ? '비밀번호가 틀렸어요' : '서버 오류 (' + status + ')';
+      errEl.style.display = 'block';
+      document.getElementById('pwInput').value = '';
+    }
+  }).catch(function() {
+    errEl.textContent = '서버에 연결할 수 없어요';
+    errEl.style.display = 'block';
+  });
 }
 window.addEventListener('DOMContentLoaded', function() {
-  if (sessionStorage.getItem('saju_auth') === '1') {
-    document.getElementById('pwOverlay').style.display = 'none';
+  try { sessionStorage.removeItem('saju_auth'); } catch (e) {}
+  var saved = getAdminPw();
+  if (saved) {
+    verifyPw(saved).then(function(status) {
+      if (status === 200) { unlockOverlay(saved); }
+      else { adminPw = ''; try { sessionStorage.removeItem('saju_pw'); } catch (e) {} }
+    }).catch(function() {});
   }
 });
 </script>
@@ -454,7 +485,7 @@ async function doAutoAnalyze() {
   if(currentMode==='mini') {
     // 미니운세 단일 호출
     try {
-      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt()})});
+      var res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:buildMiniPrompt(),password:getAdminPw()})});
       if(!res.ok){var e=await res.json();throw new Error(e.error||'오류');}
       var reader=res.body.getReader(); var decoder=new TextDecoder(); var fullText='';
       while(true){var sr=await reader.read();if(sr.done)break;
@@ -535,16 +566,26 @@ async function doAutoAnalyze() {
   }
 
   async function streamFetch(prompt, onChunk, onDone) {
-    var controller = new AbortController();
-    var timer = setTimeout(function(){ controller.abort(); }, 120000);
+    // AbortController/signal 미사용(iOS 사파리 오류 방지) — 타임아웃은 Promise.race로 처리
+    var timedOut = false;
+    var timer = null;
+    var deadline = new Promise(function(resolve){
+      timer = setTimeout(function(){ timedOut = true; resolve({ __timeout: true }); }, 120000);
+    });
     var doneCalled = false;
     function callDoneOnce(){ if(!doneCalled){ doneCalled=true; onDone(); } }
     try {
-      var res=await fetch('/api/saju',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt}),signal:controller.signal});
+      var res = await Promise.race([
+        fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:prompt,password:getAdminPw()})}),
+        deadline
+      ]);
+      if(timedOut || !res || res.__timeout){ callDoneOnce(); return; }
       if(!res.ok){var e=await res.json();throw new Error(e.error||'서버 오류');}
       var reader=res.body.getReader(); var decoder=new TextDecoder();
       while(true){
-        var sr=await reader.read(); if(sr.done) break;
+        var sr = await Promise.race([reader.read(), deadline]);
+        if(timedOut || sr.__timeout){ try{ reader.cancel(); }catch(_c){} break; }
+        if(sr.done) break;
         var chunk=decoder.decode(sr.value,{stream:true});
         for(var ln of chunk.split('\n')){
           if(!ln.startsWith('data: ')) continue;
@@ -555,12 +596,12 @@ async function doAutoAnalyze() {
           }catch(e2){}
         }
       }
-      // 스트림 정상 종료 시 j.done 없어도 완료 처리
+      // 스트림 정상 종료/타임아웃 시 j.done 없어도 완료 처리
       callDoneOnce();
     } catch(err) {
-      // 타임아웃(abort) 포함 모든 오류 → 완료로 처리해서 멈춤 방지
+      // 모든 오류 → 완료로 처리해서 멈춤 방지
       callDoneOnce();
-      if(err && err.name !== 'AbortError') throw err;
+      throw err;
     } finally {
       clearTimeout(timer);
     }
@@ -758,7 +799,7 @@ function applyMarkup(t) {
   return t;
 }
 
-function renderBody(raw) {
+function renderBody(raw, hasSeun) {
   if(!raw) return '';
   raw = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
 
@@ -768,15 +809,16 @@ function renderBody(raw) {
   raw = raw.replace(/^[-\u00b7\u2022] /gm,'');
   raw = raw.replace(/^> [^\n]*/gm,'');
 
+  if (hasSeun) {
   // STEP2: 연도 형식 통일 -> ### 🗓️
   // variation selector 없는 🗓 → 🗓️로 정규화
-  raw = raw.replace(/### \ud83d\uddd3(?!\ufe0f)/g, '### \ud83d\uddd3\ufe0f');
+  raw = raw.replace(/^### \ud83d\uddd3(?!\ufe0f)/gm, '### \ud83d\uddd3\ufe0f');
   // 이미 ### 🗓️ YYYY년 형식인 것 보호 (중복 변환 방지)
   var _seunPH = []; var _seunIdx = 0;
   raw = raw.replace(/^### \ud83d\uddd3\ufe0f [^\n]+$/gm, function(m){ var ph='\x00SY'+(_seunIdx++)+'\x00'; _seunPH.push(m); return ph; });
   // 다양한 헤더 패턴 → ### 🗓️
-  raw = raw.replace(/(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
-  raw = raw.replace(/(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/g,'### \ud83d\uddd3\ufe0f $1 $2');
+  raw = raw.replace(/^(\d{4}년)([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/gm,'### \ud83d\uddd3\ufe0f $1 $2');
+  raw = raw.replace(/^(\d{4}년)\n([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)/gm,'### \ud83d\uddd3\ufe0f $1 $2');
   raw = raw.replace(/^(\d{4}년) ([\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678][\u5b50\u4e11\u5bc5\u536f\u8fb0\u5df3\u5348\u672a\u7533\u9149\u620c\u4ea5]년)$/gm,'### \ud83d\uddd3\ufe0f $1 $2');
   // ## / #### 형태 헤더 연도도 처리
   raw = raw.replace(/^#{2,4} (\d{4}년[^\n]*)$/gm, function(m,y){ return /[\u7532\u4e59\u4e19\u4e01\u620a\u5df1\u5e9a\u8f9b\u58ec\u7678]/.test(y) ? '### \ud83d\uddd3\ufe0f '+y : m; });
@@ -804,7 +846,7 @@ function renderBody(raw) {
   // STEP4: 세운 카드 생성
   // 끝에 sentinel 추가해서 마지막 연도 lookahead 문제 해결
   raw = raw + '\n\x00END_SEUN\x00';
-  raw = raw.replace(/### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=### \ud83d\uddd3\ufe0f |\x00END_SEUN\x00)/g,function(_,yt,content){
+  raw = raw.replace(/^### \ud83d\uddd3\ufe0f ([^\n]+)\n([\s\S]*?)(?=^### \ud83d\uddd3\ufe0f |\x00END_SEUN\x00)/gm,function(_,yt,content){
     content = content.replace(/^-{3,}$/gm,'').replace(/^[-\u00b7\u2022] /gm,'').trim();
     var labels=[
       {key:'\ud83d\udcb0 재물\u00b7직업:',color:'#8a6500',label:'\ud83d\udcb0 재물\u00b7직업'},
@@ -860,6 +902,7 @@ function renderBody(raw) {
   });
 
   raw = raw.replace(/\x00END_SEUN\x00/g,'');
+  } // end hasSeun (STEP2~4: 세운 섹션 전용)
   // STEP5: 마크다운 제거
   raw = raw.replace(/^#{1,3} /gm,'').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
 
@@ -934,7 +977,7 @@ function buildLinearPDF() {
     var sections=parseSecs(result); var time=f.h?f.h+'시 '+(f.min||'00')+'분':'미상';
     var css=getLinearCSS(f.name||'고객');
     var coverHtml='<div class="cover"><div class="cv-ey">✦ CHEONMYEONGDANG · 天命堂</div><div class="cv-moon">🌙</div><div class="cv-title">'+(f.name||'고객')+' 님의<br/>사주 명리 분석 보고서</div><div class="cv-sub">사주팔자 종합 분석 · 프리미엄 에디션</div><div class="cv-info"><div class="cv-row"><span class="cv-k">성 명</span><span class="cv-v">'+(f.name||'미입력')+'</span></div><div class="cv-row"><span class="cv-k">성 별</span><span class="cv-v">'+f.gender+'</span></div><div class="cv-row"><span class="cv-k">생년월일</span><span class="cv-v">'+f.cal+' '+f.y+'년 '+f.m+'월 '+f.d+'일</span></div><div class="cv-row"><span class="cv-k">출생시각</span><span class="cv-v">'+time+'</span></div></div><div class="cv-date">발행일 · '+today+'</div></div>';
-    var secHtml=sections.map(function(s,i){ return '<div class="sec"><div class="sec-header-block"><span class="sec-num">'+( i+1<10?'0':'')+( i+1)+'</span><span class="sec-title-txt">'+s.title+'</span></div><div class="sec-body-content"><div class="sb">'+renderBody(s.body||'')+'</div></div></div>'; }).join('');
+    var secHtml=sections.map(function(s,i){ return '<div class="sec"><div class="sec-header-block"><span class="sec-num">'+( i+1<10?'0':'')+( i+1)+'</span><span class="sec-title-txt">'+s.title+'</span></div><div class="sec-body-content"><div class="sb">'+renderBody(s.body||'', s.title.indexOf('세운')!==-1)+'</div></div></div>'; }).join('');
     var finHtml='<div class="fin"><div class="fin-moon">🌙</div><div class="fin-line"></div><div class="fin-t">'+(f.name||'고객')+' 님의<br/>사주 분석을 마칩니다</div><div class="fin-s">본 보고서가 삶의 방향을 잡는 데<br/>작은 도움이 되기를 바랍니다.</div><div class="fin-brand">天命堂 천명당</div><div style="font-size:9px;color:#1a2a34;letter-spacing:2px;margin-top:8px">천명당은 당신의 방향을 응원합니다</div></div>';
     openPDF(css+coverHtml+'<div style="background:#080808">'+secHtml+'</div>'+finHtml+'</body></html>',(f.name||'고객')+'_사주보고서_전체.html');
   } catch(e) { document.getElementById('err2').textContent='PDF 생성 오류: '+e.message; document.getElementById('err2').style.display='block'; }
@@ -946,7 +989,7 @@ function buildBasicPDF(result) {
   var cards=[];
   for (var i=0;i<sections.length;i++) {
     var s=sections[i];
-    if (s.title.indexOf('세운')!==-1||s.title.indexOf('대운')!==-1) {
+    if (s.title.indexOf('세운')!==-1) {
       var sy=new Date().getFullYear();
       var parts=s.body.split(/(?=### 🗓️ \d{4}년)/);
       if (parts.length>5) {
@@ -960,7 +1003,7 @@ function buildBasicPDF(result) {
   var tocCard='<div class="card toc-card"><div class="toc-label">✦ TABLE OF CONTENTS</div><div class="toc-title">목 차</div><div class="toc-list">'+sections.map(function(s,i){ return '<div class="toc-item"><span class="toc-n">'+(i+1<10?'0':'')+(i+1)+'</span><span class="toc-t">'+s.title+'</span></div>'; }).join('')+'</div><div style="margin-top:14px;font-size:9px;color:#2a2a2a;text-align:center;letter-spacing:1px">총 '+total+'장 · 좌우 스와이프</div></div>';
   var secCards=cards.map(function(c,i){
     var eyebrow; if (c.eyebrow) { eyebrow='✦ '+c.eyebrow; } else { secNum++; eyebrow='✦ SECTION '+(secNum<10?'0':'')+secNum; }
-    return '<div class="card sec-card"><div class="sec-header"><div class="sec-eyebrow">'+eyebrow+'</div><div class="sec-title">'+c.title+'</div></div><div class="sec-divider"></div><div class="sec-body"><div class="sb">'+renderBody(c.body||'')+'</div></div><div class="card-counter">'+(i+3)+' / '+total+'</div></div>';
+    return '<div class="card sec-card"><div class="sec-header"><div class="sec-eyebrow">'+eyebrow+'</div><div class="sec-title">'+c.title+'</div></div><div class="sec-divider"></div><div class="sec-body"><div class="sb">'+renderBody(c.body||'', c.title.indexOf('세운')!==-1)+'</div></div><div class="card-counter">'+(i+3)+' / '+total+'</div></div>';
   }).join('');
   var finCard='<div class="card fin-card"><div class="fin-moon">🌙</div><div class="fin-line"></div><div class="fin-t">'+(f.name||'고객')+' 님의<br/>사주 분석을 마칩니다</div><div class="fin-s">본 보고서가 삶의 방향을 잡는 데<br/>작은 도움이 되기를 바랍니다.</div><div class="fin-brand">天命堂 천명당</div><div class="fin-date">발행일 · '+today+'</div></div>';
   openPDF(getBasePDFStyle(f.name||'고객')+coverCard+tocCard+secCards+finCard+'</div></body></html>',(f.name||'고객')+'_사주보고서.html');
